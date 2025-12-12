@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { PiBarnFill } from 'react-icons/pi';
 import { Pressable, Text, View } from "react-native";
 
@@ -25,7 +26,7 @@ export default function Index() {
                </Text>
 
                <Pressable
-                    // onPress={() => router.push('/ParentLogIn')}
+                    onPress={() => router.push('/login/parentlogin')}
                     className={[
                          'mt-4',
                          'w-4/5',
