@@ -3,20 +3,29 @@ import '../../global.css';
 
 export default function RootLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="index"
         options={{
-          headerShown: false,
           title: 'Welcome',
         }}
       />
-
       <Stack.Screen
         name="login/parentlogin"
         options={{
-          headerShown: false,
           title: 'parentlogin',
+        }}
+      />
+      <Stack.Screen
+        name="login/childlogin"
+        options={{
+          title: 'childlogin',
+        }}
+      />
+      <Stack.Screen
+        name="(child-tabs)"
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>
