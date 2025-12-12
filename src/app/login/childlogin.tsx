@@ -1,13 +1,12 @@
 
-import { Link, router } from 'expo-router';
+import IndexReturn from '@/src/components/IndexReturn';
+import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 export default function childlogin() {
      return (
           <View className="flex-1 items-center justify-center bg-green-500">
-               <Link href="/" className="absolute left-4 top-12">
-                    <Text className="font-bold text-white">← Back</Text>
-               </Link>
+                <IndexReturn />
                <View
                     className={[
                          'h-3/5',
