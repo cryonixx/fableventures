@@ -41,6 +41,7 @@ export default function Index() {
                     </Text>
                </Pressable>
                <Pressable
+                    onPress={() => router.push('/login/childlogin')}
                     className={[
                          'mt-4',
                          'w-4/5',
