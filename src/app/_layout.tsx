@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import '../../global.css';
+import "../../global.css";
 
 export default function RootLayout() {
   return (
@@ -7,19 +7,19 @@ export default function RootLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: 'Welcome',
+          title: "Welcome",
         }}
       />
       <Stack.Screen
         name="login/parentlogin"
         options={{
-          title: 'parentlogin',
+          title: "parentlogin",
         }}
       />
       <Stack.Screen
         name="login/childlogin"
         options={{
-          title: 'childlogin',
+          title: "childlogin",
         }}
       />
       <Stack.Screen
@@ -29,5 +29,5 @@ export default function RootLayout() {
         }}
       />
     </Stack>
-  ) 
+  );
 }

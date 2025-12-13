@@ -1,9 +1,8 @@
-
 import IndexReturn from '@/src/components/IndexReturn';
 import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
-export default function childlogin() {
+export default function ChildLogin() {
      return (
           <View className="flex-1 items-center justify-center bg-green-500">
                 <IndexReturn />

@@ -1,25 +1,43 @@
-import { Link } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from "react-native";
 
-export default function home() {
-     return (
-          <View className="flex-1 items-center justify-center bg-green-500">
-               <Link href="/" className="absolute left-4 top-12">
-                    <Text className="font-bold text-white">← Back</Text>
-               </Link>
-               <View
-                    className={[
-                         'h-3/5',
-                         'w-4/5',
-                         'items-start',
-                         'rounded-xl',
-                         'bg-white',
-                         'p-8',
-                         'drop-shadow-lg',
-                    ].join(' ')}
-               >
-                    <Text className="text-center text-xl text-green-500">HOME PLACEHOLDER</Text>
-               </View>
+export default function Home() {
+  return (
+    <View className="flex-1 bg-amber-50">
+
+      <View className="h-1/4 w-full rounded-b-xl bg-green-400 p-5 drop-shadow-lg">
+        <Text className="text-2xl text-white font-bold">
+          Fable Friends
+        </Text>
+        <Text className="text-md text-white">
+          Learn more about your animal friends!
+        </Text>
+
+        <View className="mt-1 h-1/2 w-full rounded-lg bg-white p-4 drop-shadow-md">
+          <View className="flex-row justify-between gap-2">
+            <Pressable className="flex-1 bg-neutral-100 rounded-lg p-2">
+              <Text className="text-md text-neutral-500 font-bold text-center">
+                    Puzzles
+              </Text>
+            </Pressable>
+            <Pressable className="flex-1 bg-neutral-100 rounded-lg p-2">
+              <Text className="text-md text-neutral-500 font-bold text-center">
+                    Short Stories
+              </Text>
+            </Pressable>
+            <Pressable className="flex-1 bg-neutral-100 rounded p-2">
+              <Text className="text-md text-neutral-500 font-bold text-center">
+                    Mini-games
+              </Text>
+            </Pressable>
           </View>
-     );
+        </View>
+      </View>
+
+      <ScrollView className="flex-1 w-full border border-black">
+        <View className="p-4">
+          <Text>Your scrollable content goes here</Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
 }
