@@ -5,19 +5,19 @@ export default function RootLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="index"
+        name="Index"
         options={{
           title: "Welcome",
         }}
       />
       <Stack.Screen
-        name="login/parentlogin"
+        name="login/ParentLogin"
         options={{
           title: "parentlogin",
         }}
       />
       <Stack.Screen
-        name="login/childlogin"
+        name="login/ChildLogin"
         options={{
           title: "childlogin",
         }}

@@ -1,12 +1,9 @@
-import { Link } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Favorites() {
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
-      <Link href="/" className="absolute left-4 top-12">
-        <Text className="font-bold text-white">← Back</Text>
-      </Link>
+ 
       <View
         className={[
           "h-3/5",

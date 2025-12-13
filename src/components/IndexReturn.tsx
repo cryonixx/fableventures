@@ -3,7 +3,7 @@ import { Text } from "react-native";
 
 function IndexReturn() {
   return (
-    <Link href="/" className="absolute left-4 top-12">
+    <Link href="/Index">
       <Text className="font-bold text-white">← Back</Text>
     </Link>
   );

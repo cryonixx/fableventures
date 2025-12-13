@@ -1,4 +1,4 @@
-import IndexReturn from "@/src/components/IndexReturn";
+import IndexReturn from "../../components/IndexReturn";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function ParentLogin() {

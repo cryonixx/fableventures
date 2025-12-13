@@ -20,7 +20,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
@@ -30,7 +30,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="library"
+        name="Library"
         options={{
           title: "Library",
           tabBarIcon: ({ color, size }) => (
@@ -40,7 +40,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="rewards"
+        name="Rewards"
         options={{
           title: "Rewards",
           tabBarIcon: ({ color, size }) => (
@@ -50,7 +50,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="favorites"
+        name="Favorites"
         options={{
           title: "Favorites",
           tabBarIcon: ({ color, size }) => (
@@ -60,7 +60,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="profile"
+        name="Profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (

@@ -1,6 +1,6 @@
-import IndexReturn from '@/src/components/IndexReturn';
 import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
+import IndexReturn from '../../components/IndexReturn';
 
 export default function ChildLogin() {
      return (
@@ -21,17 +21,17 @@ export default function ChildLogin() {
                          <Text className="text-center text-xl text-green-500">Hello! Tap your name to continue your adventure!</Text>
                     </View>
 
-                    <View className="mt-4 w-full h-2/5 border-2 border-green-500 rounded-xl items-center justify-center">
-                        <text className="text-gray-950 text-lg font-bold">• Child User 1</text>
-                    </View>
+                         <View className="mt-4 w-full h-2/5 border-2 border-green-500 rounded-xl items-center justify-center">
+                              <Text className="text-gray-950 text-lg font-bold">• Child User 1</Text>
+                         </View>
 
                     <Pressable  
-                        onPress={() => router.push('/(child-tabs)/home')}
+                        onPress={() => router.push('/(child-tabs)/Home')}
                         className={[
                               'mt-4',
                               'w-full',
                               'items-center',
-                              'rounded-3xl',
+                              'rounded-xl',
                               'bg-yellow-400',
                          ].join(' ')}
                     >
