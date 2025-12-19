@@ -3,7 +3,6 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 export default function Home() {
   return (
     <View className="flex-1 bg-amber-50">
-
       <View className="h-1/4 w-full rounded-b-xl bg-green-400 p-5 drop-shadow-lg">
         <Text className="mt-8 text-2xl text-white font-bold">
           Fable Friends

@@ -5,7 +5,9 @@ import IndexReturn from '../../components/IndexReturn';
 export default function ChildLogin() {
      return (
           <View className="flex-1 items-center justify-center bg-green-500">
-                <IndexReturn />
+               <View className="w-full h-1/10 flex m-4">
+                    <IndexReturn />
+               </View>
                <View
                     className={[
                          'h-3/5',
@@ -15,6 +17,7 @@ export default function ChildLogin() {
                          'bg-white',
                          'p-8',
                          'drop-shadow-lg',
+                         'm-5'
                     ].join(' ')}
                >
                     <View className="w-full">

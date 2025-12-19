@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 export default function Index() {

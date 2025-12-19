@@ -3,8 +3,8 @@ import { Text } from "react-native";
 
 function IndexReturn() {
   return (
-    <Link href="/Index">
-      <Text className="font-bold text-white">← Back</Text>
+    <Link href="/">
+      <Text className="font-bold text-white m-8">← Back</Text>
     </Link>
   );
 }
