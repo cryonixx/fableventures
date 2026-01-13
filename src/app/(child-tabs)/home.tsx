@@ -15,17 +15,17 @@ export default function Home() {
           <View className="flex-row justify-between gap-2">
             <Pressable className="flex-1 bg-neutral-100 rounded-lg p-2">
               <Text className="text-md text-neutral-500 font-bold text-center">
-                    Puzzles
+                Puzzles
               </Text>
             </Pressable>
             <Pressable className="flex-1 bg-neutral-100 rounded-lg p-2">
               <Text className="text-md text-neutral-500 font-bold text-center">
-                    Short Stories
+                Short Stories
               </Text>
             </Pressable>
             <Pressable className="flex-1 bg-neutral-100 rounded p-2">
               <Text className="text-md text-neutral-500 font-bold text-center">
-                    Mini-games
+                Mini-games
               </Text>
             </Pressable>
           </View>

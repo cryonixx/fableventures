@@ -1,12 +1,9 @@
 import { Pressable, Text, TextInput, View } from "react-native";
-import IndexReturn from "../../components/IndexReturn";
 
 export default function ParentLogin() {
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
-      <View className="w-full h-1/10 flex m-4">
-        <IndexReturn />
-      </View>
+      {/* <IndexReturn /> */}
       <View
         className={[
           "h-3/5",
