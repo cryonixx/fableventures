@@ -1,23 +1,15 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { ChildHeader } from "../../components/ChildHeader";
 
 export default function Profile() {
   return (
-    <View className="flex-1 items-center justify-center bg-green-500">
-      <View
-        className={[
-          "h-3/5",
-          "w-4/5",
-          "items-start",
-          "rounded-xl",
-          "bg-white",
-          "p-8",
-          "drop-shadow-lg",
-        ].join(" ")}
-      >
-        <Text className="text-center text-xl text-green-500">
-          PROFILE PLACEHOLDER
-        </Text>
-      </View>
+    <View className="flex-1 bg-amber-50">
+      <ChildHeader />
+      <ScrollView className="flex-1 w-full">
+        <View className="p-4">
+          <Text>Your scrollable content goes here</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }

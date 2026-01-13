@@ -11,13 +11,13 @@ export default function RootLayout() {
         }}
       />
       <Stack.Screen
-        name="login/ParentLogin"
+        name="login/parentlogin"
         options={{
           title: "parentlogin",
         }}
       />
       <Stack.Screen
-        name="login/ChildLogin"
+        name="login/childlogin"
         options={{
           title: "childlogin",
         }}

@@ -36,7 +36,7 @@ export default function index() {
       </Text>
 
       <Pressable
-        onPress={() => router.push("/login/ParentLogin")}
+        onPress={() => router.push("/login/parentlogin")}
         className={[
           "mt-4",
           "w-4/5",
@@ -51,7 +51,7 @@ export default function index() {
         </Text>
       </Pressable>
       <Pressable
-        onPress={() => router.push("/login/ChildLogin")}
+        onPress={() => router.push("/login/childlogin")}
         className={[
           "mt-4",
           "w-4/5",

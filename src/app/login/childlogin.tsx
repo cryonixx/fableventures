@@ -33,7 +33,7 @@ export default function ChildLogin() {
         </View>
 
         <Pressable
-          onPress={() => router.push("/(child-tabs)/Home")}
+          onPress={() => router.push("/(child-tabs)/home")}
           className={[
             "mt-4",
             "w-full",
