@@ -33,6 +33,7 @@ export function ChildHeader({
           className="mb-4"
           progress={progressValue}
           width={null}
+          height={10}
           color="#16a34a"
           unfilledColor="#f3f4f6"
           borderWidth={0}

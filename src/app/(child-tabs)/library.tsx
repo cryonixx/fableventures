@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "react-native";
-import { ChildHeader } from "../../components/ChildHeader";
+import { ChildHeader } from "../../components/child_components/ChildHeader";
 
 export default function Library() {
   return (

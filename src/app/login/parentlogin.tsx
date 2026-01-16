@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function ParentLogin() {
@@ -59,6 +60,7 @@ export default function ParentLogin() {
           ].join(" ")}
         />
         <Pressable
+          onPress={() => router.push("/parentdashboardtest")}
           className={[
             "mt-4",
             "w-full",

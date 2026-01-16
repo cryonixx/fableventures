@@ -30,6 +30,12 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="parentdashboardtest"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </SafeAreaProvider>
   );

@@ -1,6 +1,6 @@
-import AnimalCardView from "@/src/components/AnimalCardView";
+import AnimalCardView from "@/src/components/child_components/AnimalCardView";
 import { FlatList, View } from "react-native";
-import { ChildHeader } from "../../components/ChildHeader";
+import { ChildHeader } from "../../components/child_components/ChildHeader";
 
 const test = [
   {
