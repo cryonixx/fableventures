@@ -12,13 +12,13 @@ export default function ParentTabBar({
   const tabs = ["Overview", "Progress", "Activity", "Settings"];
 
   return (
-    <View className="flex-row bg-neutral-200 w-auto mx-2 my-4 rounded-full shadow-sm">
+    <View className="flex-row bg-neutral-100 w-auto mx-2 my-4 rounded-full shadow-sm">
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab}
           onPress={() => setActiveTab(tab)}
           className={`flex-1 p-1 m-1 rounded-full justify-center items-center ${
-            activeTab === tab ? "bg-white" : "bg-neutral-200"
+            activeTab === tab ? "bg-white" : "bg-neutral-100"
           }`}
         >
           <Text className="text-center text-xs font-semibold p-1">{tab}</Text>

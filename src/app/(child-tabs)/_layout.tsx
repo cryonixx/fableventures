@@ -19,7 +19,7 @@ export default function TabLayout() {
         },
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="home"
         options={{
           title: "Home",
@@ -27,7 +27,7 @@ export default function TabLayout() {
             <Ionicons name="home" color={color} size={18} />
           ),
         }}
-      />
+      /> */}
 
       <Tabs.Screen
         name="library"

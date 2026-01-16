@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 function ParentHeader() {
@@ -7,12 +8,18 @@ function ParentHeader() {
         <Text className="text-lg font-bold">Parent Dashboard</Text>
         <Text className="text-sm text-gray-600">Manage learning progress</Text>
       </View>
-      <Pressable className="bg-amber-50 shadow-sm border-1 flex-auto px-4 py-2 rounded-full m-2">
+      <Pressable
+        className="bg-amber-50 shadow-sm border-1 flex-auto px-4 py-2 rounded-full m-2"
+        onPress={() => router.push("/login/childlogin")}
+      >
         <Text className="text-black text-xs text-center font-bold">
           Switch to child
         </Text>
       </Pressable>
-      <Pressable className="bg-amber-50 shadow-sm border-1 flex-auto px-4 py-2 rounded-full m-2">
+      <Pressable
+        className="bg-amber-50 shadow-sm border-1 flex-auto px-4 py-2 rounded-full m-2"
+        onPress={() => router.push("/")}
+      >
         <Text className="text-black text-xs text-center font-bold">
           Log Out
         </Text>
