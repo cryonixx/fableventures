@@ -59,6 +59,7 @@ export const initializeDatabase = async () => {
     progressTableInit = await database.prepareAsync(`
       CREATE TABLE IF NOT EXISTS progress (
         child_id INTEGER NOT NULL,
+        animal_id INTEGER NOT NULL,
         total_collected INTEGER DEFAULT 0,
         total_screen_time INTEGER DEFAULT 0,
         PRIMARY KEY (child_id, animal_id),
