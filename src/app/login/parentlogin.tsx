@@ -8,13 +8,13 @@ export default function ParentLogin() {
       <IndexReturn />
       <View
         className={[
-          "h-3/5",
+          "h-2/5",
           "w-4/5",
           "items-start",
           "rounded-xl",
           "bg-white",
           "p-8",
-          "m-5",
+          "m-4",
           "drop-shadow-lg",
         ].join(" ")}
       >
