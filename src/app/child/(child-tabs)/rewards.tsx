@@ -1,5 +1,6 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
+import RewardCard from "../../../components/RewardCard";
 
 export default function Rewards() {
   return (
@@ -7,7 +8,22 @@ export default function Rewards() {
       <ChildHeader />
       <ScrollView className="flex-1 w-full">
         <View className="p-4">
-          <Text>Your scrollable content goes here</Text>
+          <RewardCard
+            name="Beef Burger"
+            description="Juicy beef patty with fresh veggies."
+          />
+          <RewardCard
+            name="Pancakes"
+            description="Fluffy pancakes with syrup."
+          />
+          <RewardCard
+            name="Pancakes"
+            description="Fluffy pancakes with syrup."
+          />
+          <RewardCard
+            name="Pancakes"
+            description="Fluffy pancakes with syrup."
+          />
         </View>
       </ScrollView>
     </View>
