@@ -16,7 +16,16 @@ export function ChildHeader({
   const progressValue = totalprogress > 0 ? currentprogress / totalprogress : 0;
 
   return (
-    <View className="w-full rounded-b-2xl bg-green-400 p-4 pb-6 drop-shadow-lg">
+    <View
+      className={[
+        "w-full",
+        "rounded-b-2xl",
+        "bg-green-400",
+        "p-4",
+        "pb-6",
+        "drop-shadow-lg",
+      ].join(" ")}
+    >
       <Text className="mt-8 mb-2 text-2xl text-white font-bold">{title}</Text>
       <View className="rounded-xl h-auto w-auto bg-white p-4 drop-shadow-md">
         <View className="flex-row justify-between items-center mb-2">
@@ -30,7 +39,7 @@ export function ChildHeader({
           </View>
         </View>
         <Progress.Bar
-          className="mb-4"
+          className={["mb-4"].join(" ")}
           progress={progressValue}
           width={null}
           height={10}
@@ -38,7 +47,7 @@ export function ChildHeader({
           unfilledColor="#f3f4f6"
           borderWidth={0}
         />
-        <Text className="text-sm text-neutral-400">
+        <Text className={["text-sm", "text-neutral-400"].join(" ")}>
           {totalprogress} more friends to discover!
         </Text>
       </View>

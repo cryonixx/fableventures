@@ -3,25 +3,37 @@ import { ChildHeader } from "../../../components/child_components/ChildHeader";
 import RewardCard from "../../../components/child_components/RewardCard";
 export default function Achievements() {
   return (
-    <View className="flex-1 bg-amber-50">
+    <View className={["flex-1", "bg-amber-50"].join(" ")}>
       <ChildHeader />
-      <ScrollView className="flex-1 w-full">
-        <View className="p-4">
+      <ScrollView className={["flex-1", "w-full"].join(" ")}>
+        <View className={["p-4"].join(" ")}>
           <RewardCard
-            name="Beef Burger"
-            description="Juicy beef patty with fresh veggies."
+            name="Named Badge"
+            description="Awarded for completing your profile."
           />
           <RewardCard
-            name="Pancakes"
-            description="Fluffy pancakes with syrup."
+            name="Named Badge"
+            description="Awarded for completing your profile."
           />
           <RewardCard
-            name="Pancakes"
-            description="Fluffy pancakes with syrup."
+            name="Named Badge"
+            description="Awarded for completing your profile."
           />
           <RewardCard
-            name="Pancakes"
-            description="Fluffy pancakes with syrup."
+            name="Named Badge"
+            description="Awarded for completing your profile."
+          />
+          <RewardCard
+            name="Named Badge"
+            description="Awarded for completing your profile."
+          />
+          <RewardCard
+            name="Named Badge"
+            description="Awarded for completing your profile."
+          />
+          <RewardCard
+            name="Named Badge"
+            description="Awarded for completing your profile."
           />
         </View>
       </ScrollView>

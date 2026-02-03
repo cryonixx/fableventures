@@ -10,10 +10,10 @@ import SettingsTab from "../../components/parent_components/SettingsTab";
 export default function ParentDashboardTest() {
   const [activeTab, setActiveTab] = useState("Overview");
   return (
-    <View className="flex-1 bg-amber-100">
+    <View className={["flex-1", "bg-amber-100"].join(" ")}>
       <ParentHeader />
       <ParentTabBar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <View className="flex-1 p-2 m-1">
+      <View className={["flex-1", "p-2", "m-1"].join(" ")}>
         {activeTab === "Overview" && <OverviewTab />}
         {activeTab === "Progress" && <ProgressTab />}
         {activeTab === "Activity" && <ActivityTab />}

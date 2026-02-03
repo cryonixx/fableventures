@@ -1,10 +1,11 @@
 import { router } from "expo-router";
 import { Pressable, Text, TextInput, View } from "react-native";
+import IndexReturn from "../components/IndexReturn";
 
 export default function SignUp() {
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
-      {/* <IndexReturn /> */}
+      <IndexReturn />
       <View
         className={[
           "h-3/5",

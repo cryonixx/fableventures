@@ -16,7 +16,18 @@ export default function AnimalCardView({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="aspect-square w-auto flex-auto m-4 p-4 bg-white rounded-xl drop-shadow-lg justify-around hover:scale-105"
+      className={[
+        "aspect-square",
+        "w-auto",
+        "flex-auto",
+        "m-4",
+        "p-4",
+        "bg-white",
+        "rounded-xl",
+        "drop-shadow-lg",
+        "justify-around",
+        "hover:scale-105",
+      ].join(" ")}
     >
       <Image
         source={

@@ -7,9 +7,22 @@ type RewardCardProps = {
 
 function ChildCard({ name, image }: RewardCardProps) {
   return (
-    <TouchableOpacity className="flex-row items-center bg-green-300 rounded-xl p-4 m-2 shadow-black justify-between">
+    <TouchableOpacity
+      className={[
+        "flex-row",
+        "items-center",
+        "bg-green-300",
+        "rounded-xl",
+        "p-4",
+        "m-2",
+        "shadow-black",
+        "justify-between",
+      ].join(" ")}
+    >
       <View className="flex-1">
-        <Text className="text-lg font-bold mb-1">{name}</Text>
+        <Text className={["text-lg", "font-bold", "mb-1"].join(" ")}>
+          {name}
+        </Text>
       </View>
       <Image
         source={
