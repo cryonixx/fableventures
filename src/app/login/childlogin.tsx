@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import ChildCard from "../../components/ChildCard";
 import IndexReturn from "../../components/IndexReturn";
 
 export default function ChildLogin() {
@@ -17,7 +18,7 @@ export default function ChildLogin() {
           "bg-white",
           "p-8",
           "drop-shadow-lg",
-          "m-5",
+          "m-4",
         ].join(" ")}
       >
         <View className="w-full">
@@ -26,11 +27,15 @@ export default function ChildLogin() {
           </Text>
         </View>
 
-        <View className="mt-4 w-full h-2/5 border-2 border-green-500 rounded-xl items-center justify-center">
-          <Text className="text-gray-950 text-lg font-bold">
-            • Child User 1
-          </Text>
-        </View>
+        <ScrollView
+          className="mt-4 w-full flex-1 border-2 border-green-500 rounded-xl"
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ChildCard name="Alice"></ChildCard>
+        </ScrollView>
 
         <Pressable
           onPress={() => router.push("/child/(child-tabs)/library")}
@@ -39,7 +44,7 @@ export default function ChildLogin() {
             "w-full",
             "items-center",
             "rounded-xl",
-            "bg-yellow-400",
+            "bg-yellow-500",
           ].join(" ")}
         >
           <Text className={["p-4", "font-bold", "text-white"].join(" ")}>

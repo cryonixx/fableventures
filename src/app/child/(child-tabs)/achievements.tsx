@@ -1,8 +1,7 @@
 import { ScrollView, View } from "react-native";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
-import RewardCard from "../../../components/RewardCard";
-
-export default function Rewards() {
+import RewardCard from "../../../components/child_components/RewardCard";
+export default function Achievements() {
   return (
     <View className="flex-1 bg-amber-50">
       <ChildHeader />

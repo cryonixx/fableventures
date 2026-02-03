@@ -1,11 +1,13 @@
 import { Link } from "expo-router";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 function IndexReturn() {
   return (
-    <Link href="/">
-      <Text className="font-bold text-white m-8">Back</Text>
-    </Link>
+    <View className="w-full p-4 border">
+      <Link href="/">
+        <Text className="font-bold text-white">Back</Text>
+      </Link>
+    </View>
   );
 }
 

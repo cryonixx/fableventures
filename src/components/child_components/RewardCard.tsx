@@ -20,7 +20,7 @@ export default function RewardCard({
         source={
           image
             ? { uri: image }
-            : require("../../assets/images/placeholder.png")
+            : require("../../../assets/images/placeholder.png")
         }
         style={{ width: 64, height: 64 }}
       />

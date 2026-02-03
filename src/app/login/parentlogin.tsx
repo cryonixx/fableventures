@@ -1,10 +1,11 @@
+import IndexReturn from "@/src/components/IndexReturn";
 import { router } from "expo-router";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function ParentLogin() {
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
-      {/* <IndexReturn /> */}
+      <IndexReturn />
       <View
         className={[
           "h-3/5",
@@ -13,6 +14,7 @@ export default function ParentLogin() {
           "rounded-xl",
           "bg-white",
           "p-8",
+          "m-5",
           "drop-shadow-lg",
         ].join(" ")}
       >
