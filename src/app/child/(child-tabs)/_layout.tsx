@@ -25,9 +25,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="rewards"
+        name="achievements"
         options={{
-          title: "Rewards",
+          title: "Achievements",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="trophy" color={color} size={18} />
           ),
