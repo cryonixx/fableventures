@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 export default function index() {
@@ -65,6 +65,20 @@ export default function index() {
           Log In as Child
         </Text>
       </Pressable>
+      <Link
+        href="/signup"
+        className={[
+          "mt-6",
+          "w-4/5",
+          "items-center",
+          "rounded-xl",
+          "drop-shadow-lg",
+        ].join(" ")}
+      >
+        <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+          Don't have an account? Sign Up
+        </Text>
+      </Link>
     </View>
   );
 }

@@ -1,6 +1,7 @@
 import AnimalCardView from "@/src/components/child_components/AnimalCardView";
+import { useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
-import { ChildHeader } from "../../components/child_components/ChildHeader";
+import { ChildHeader } from "../../../components/child_components/ChildHeader";
 
 const test = [
   {
@@ -66,6 +67,8 @@ const test = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <View className="flex-1 bg-amber-50">
       <ChildHeader />
@@ -74,6 +77,16 @@ export default function Home() {
         numColumns={2}
         renderItem={({ item }) => (
           <AnimalCardView
+            onPress={() =>
+              router.push({
+                pathname: "../animaldetail",
+                params: {
+                  id: item.id,
+                  name: item.name,
+                  classification: item.classification,
+                },
+              })
+            }
             name={item.name}
             classification={item.classification}
           />

@@ -4,15 +4,20 @@ type AnimalCardProps = {
   image?: string;
   name?: string;
   classification?: string;
+  onPress?: () => void;
 };
 
 export default function AnimalCardView({
   image,
   name,
+  onPress,
   classification,
 }: AnimalCardProps) {
   return (
-    <TouchableOpacity className="aspect-square w-auto flex-auto m-4 p-4 bg-white rounded-xl drop-shadow-lg justify-around hover:scale-105">
+    <TouchableOpacity
+      onPress={onPress}
+      className="aspect-square w-auto flex-auto m-4 p-4 bg-white rounded-xl drop-shadow-lg justify-around hover:scale-105"
+    >
       <Image
         source={
           image

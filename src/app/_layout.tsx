@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 import { initializeDatabase } from "../database/sqlite";
-// import { initializeDatabase, testDatabaseConnection } from "../database/sqlite";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -42,7 +41,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="(child-tabs)"
+          name="child/(child-tabs)"
           options={{
             headerShown: false,
           }}

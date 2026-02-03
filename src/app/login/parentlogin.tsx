@@ -60,7 +60,7 @@ export default function ParentLogin() {
           ].join(" ")}
         />
         <Pressable
-          onPress={() => router.push("/parentdashboardtest")}
+          onPress={() => router.push("./parentdashboardtest")}
           className={[
             "mt-4",
             "w-full",

@@ -1,34 +1,19 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
-import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig from "../../../tailwind.config";
-
-const fullConfig = resolveConfig(tailwindConfig);
-const colors = fullConfig.theme.colors;
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.green[500],
-        tabBarInactiveTintColor: colors.gray[400],
+        tabBarActiveTintColor: "#10b981",
+        tabBarInactiveTintColor: "#9ca3af",
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopColor: colors.gray[200],
+          backgroundColor: "#ffffff",
+          borderTopColor: "#e5e7eb",
         },
       }}
     >
-      {/* <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={18} />
-          ),
-        }}
-      /> */}
-
       <Tabs.Screen
         name="library"
         options={{

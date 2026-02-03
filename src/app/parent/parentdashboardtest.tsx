@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import ActivityTab from "../components/parent_components/ActivityTab";
-import OverviewTab from "../components/parent_components/OverviewTab";
-import ParentHeader from "../components/parent_components/ParentHeader";
-import ParentTabBar from "../components/parent_components/ParentTabBar";
-import ProgressTab from "../components/parent_components/ProgressTab";
-import SettingsTab from "../components/parent_components/SettingsTab";
+import ActivityTab from "../../components/parent_components/ActivityTab";
+import OverviewTab from "../../components/parent_components/OverviewTab";
+import ParentHeader from "../../components/parent_components/ParentHeader";
+import ParentTabBar from "../../components/parent_components/ParentTabBar";
+import ProgressTab from "../../components/parent_components/ProgressTab";
+import SettingsTab from "../../components/parent_components/SettingsTab";
 
 export default function ParentDashboardTest() {
   const [activeTab, setActiveTab] = useState("Overview");
