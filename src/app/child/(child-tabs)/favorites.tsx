@@ -66,7 +66,7 @@ const test = [
   },
 ];
 
-export default function Home() {
+export default function Favorites() {
   const router = useRouter();
 
   return (
@@ -79,7 +79,7 @@ export default function Home() {
           <AnimalCardView
             onPress={() =>
               router.push({
-                pathname: "../animaldetail",
+                pathname: "/child/animaldetail",
                 params: {
                   id: item.id,
                   name: item.name,

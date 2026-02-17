@@ -52,7 +52,6 @@ export default function AnimalDetail() {
           </View>
         </View>
 
-        {/* Centered image with small 3D badge */}
         <View className={["items-center", "mt-6", "mb-2"].join(" ")}>
           <View
             className={["w-56", "h-44", "items-center", "justify-center"].join(
@@ -159,7 +158,6 @@ export default function AnimalDetail() {
           </Pressable>
         </View>
 
-        {/* Content section */}
         <View className={["mt-4", "pb-12", "px-2"].join(" ")}>
           <View
             className={["bg-white", "rounded-xl", "p-4", "drop-shadow"].join(

@@ -2,11 +2,12 @@ import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
+import { initializeAnimals } from "../database/data/animals";
 import { initializeDatabase } from "../database/sqlite";
 
 export default function RootLayout() {
   useEffect(() => {
-    const setupDatabase = async () => {
+    const setup = async () => {
       try {
         console.log("Starting database initialization...");
         await initializeDatabase();
@@ -15,8 +16,16 @@ export default function RootLayout() {
         console.error("Database setup error:", error);
         alert(`Database setup error: ${error}`);
       }
+      try {
+        console.log("Starting animals initialization...");
+        await initializeAnimals();
+        console.log("Animals initialization completed.");
+      } catch (error) {
+        console.error("Animals setup error:", error);
+        alert(`Animals setup error: ${error}`);
+      }
     };
-    setupDatabase();
+    setup();
   }, []);
 
   return (

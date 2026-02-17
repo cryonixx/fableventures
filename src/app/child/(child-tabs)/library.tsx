@@ -1,7 +1,9 @@
+import { useRouter } from "expo-router";
 import { Image, Pressable, View } from "react-native";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
 
 export default function Library() {
+  const router = useRouter();
   return (
     <View className="flex-1 bg-amber-50">
       <ChildHeader />
@@ -10,6 +12,7 @@ export default function Library() {
           className="bg-white rounded-3xl p-4 shadow-lg flex-1 overflow-hidden"
           onPress={() => {
             console.log("Book Pressed");
+            router.push("/child/storybook");
           }}
         >
           <Image
