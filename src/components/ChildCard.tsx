@@ -1,17 +1,20 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 type RewardCardProps = {
-  id?: string;
+  id?: number;
   name: string;
   image?: string;
+  onPress?: () => void;
+  isSelected?: boolean;
 };
 
-function ChildCard({ name, image }: RewardCardProps) {
+function ChildCard({ name, image, onPress, isSelected }: RewardCardProps) {
   return (
     <TouchableOpacity
+      onPress={onPress}
       className={[
         "flex-row",
         "items-center",
-        "bg-green-300",
+        isSelected ? "bg-green-500" : "bg-green-300",
         "rounded-xl",
         "p-4",
         "m-2",
@@ -20,7 +23,14 @@ function ChildCard({ name, image }: RewardCardProps) {
       ].join(" ")}
     >
       <View className="flex-1">
-        <Text className={["text-lg", "font-bold", "mb-1"].join(" ")}>
+        <Text
+          className={[
+            "text-lg",
+            "font-bold",
+            "mb-1",
+            isSelected ? "text-white" : "text-black",
+          ].join(" ")}
+        >
           {name}
         </Text>
       </View>

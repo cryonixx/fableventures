@@ -13,6 +13,8 @@ export const initializeDatabase = async () => {
   let progressTableInit: SQLite.SQLiteStatement | null = null;
   let favoriteAnimalsTableInit: SQLite.SQLiteStatement | null = null;
   let childAchievementsTableInit: SQLite.SQLiteStatement | null = null;
+  let storyProgressTableInit: SQLite.SQLiteStatement | null = null;
+  let collectedAnimalsTableInit: SQLite.SQLiteStatement | null = null;
 
   try {
     animalsTableInit = await database.prepareAsync(`
@@ -31,7 +33,7 @@ export const initializeDatabase = async () => {
         achievement_id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
-        criteria INTEGER
+        criteria TEXT
       );
     `);
 
@@ -89,12 +91,42 @@ export const initializeDatabase = async () => {
       );
     `);
 
+    storyProgressTableInit = await database.prepareAsync(`
+      CREATE TABLE IF NOT EXISTS story_progress (
+        child_id INTEGER NOT NULL,
+        story_id TEXT NOT NULL,
+        current_chapter_id TEXT,
+        current_scene_id TEXT,
+        current_node_index INTEGER DEFAULT 0,
+        completed_chapters TEXT,
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (child_id, story_id),
+        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE
+      );
+    `);
+
+    collectedAnimalsTableInit = await database.prepareAsync(`
+      CREATE TABLE IF NOT EXISTS collected_animals (
+        child_id INTEGER NOT NULL,
+        animal_id INTEGER NOT NULL,
+        collected_from_story TEXT,
+        collected_from_scene TEXT,
+        date_collected TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (child_id, animal_id),
+        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE,
+        FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
+      );
+    `);
+
     await animalsTableInit.executeAsync();
     await achievementsTableInit.executeAsync();
     await parentTableInit.executeAsync();
     await childTableInit.executeAsync();
+    await progressTableInit.executeAsync();
     await favoriteAnimalsTableInit.executeAsync();
     await childAchievementsTableInit.executeAsync();
+    await storyProgressTableInit.executeAsync();
+    await collectedAnimalsTableInit.executeAsync();
 
     console.log("Database initialized successfully.");
   } finally {
@@ -102,9 +134,13 @@ export const initializeDatabase = async () => {
     if (achievementsTableInit) await achievementsTableInit.finalizeAsync();
     if (parentTableInit) await parentTableInit.finalizeAsync();
     if (childTableInit) await childTableInit.finalizeAsync();
+    if (progressTableInit) await progressTableInit.finalizeAsync();
     if (favoriteAnimalsTableInit)
       await favoriteAnimalsTableInit.finalizeAsync();
     if (childAchievementsTableInit)
       await childAchievementsTableInit.finalizeAsync();
+    if (storyProgressTableInit) await storyProgressTableInit.finalizeAsync();
+    if (collectedAnimalsTableInit)
+      await collectedAnimalsTableInit.finalizeAsync();
   }
 };

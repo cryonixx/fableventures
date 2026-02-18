@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
-import { getAnimalCount } from "../../database/data/animals";
 
 type ChildHeaderProps = {
   title?: string;
@@ -12,14 +10,9 @@ type ChildHeaderProps = {
 
 export function ChildHeader({
   title = "Fable Friends",
-  currentprogress = 1, // placeholder value or pass as prop
+  currentprogress = 0,
+  totalprogress = 4,
 }: ChildHeaderProps) {
-  const [totalprogress, setTotalProgress] = useState<number>(0);
-
-  useEffect(() => {
-    getAnimalCount().then(setTotalProgress);
-  }, []);
-
   const progressValue = totalprogress > 0 ? currentprogress / totalprogress : 0;
 
   return (

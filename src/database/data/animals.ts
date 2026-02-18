@@ -5,34 +5,32 @@ export const ANIMALS_DATA = [
     name: "Red Fox",
     category: "Mammal",
     habitat: "Woods",
-    description: "A clever fox with beautiful red fur",
+    description: "A clever fox with beautiful red fur and a quick spirit",
   },
   {
     name: "Turtle",
     category: "Reptile",
-    habitat: "Ponds",
-    description: "A slow-moving turtle with a hard shell",
+    habitat: "Rivers",
+    description: "A thoughtful turtle who knows the wisdom of water",
   },
   {
     name: "Owl",
     category: "Bird",
     habitat: "Woods",
-    description: "A wise owl that hunts at night",
+    description: "A wise owl that has guided many travelers",
   },
   {
     name: "Chicken",
     category: "Bird",
     habitat: "Farms",
-    description: "A friendly chicken that lays eggs",
+    description: "A friendly chicken with a yellow scarf",
   },
 ];
 
 export const initializeAnimals = async () => {
-  // Clear the animals table before seeding (development only)
-  await database.runAsync('DELETE FROM animals');
   for (const animal of ANIMALS_DATA) {
     await database.runAsync(
-      `INSERT INTO animals 
+      `INSERT OR IGNORE INTO animals 
        (name, category, habitat, description) 
        VALUES (?, ?, ?, ?)`,
       [animal.name, animal.category, animal.habitat, animal.description],

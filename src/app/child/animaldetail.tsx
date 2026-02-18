@@ -1,13 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function AnimalDetail() {
   const router = useRouter();
-  const name = "Unknown";
-  const classification = "";
+  const params = useLocalSearchParams();
+  const name = (params.name as string) || "Unknown";
+  const classification = (params.classification as string) || "";
   const image = null;
-  const imageSource = require("../../../assets/images/placeholder.png");
 
   return (
     <ScrollView className={["flex-1", "bg-amber-50"].join(" ")}>
@@ -95,30 +95,6 @@ export default function AnimalDetail() {
             >
               <Ionicons name="volume-high" size={18} color="#f59e0b" />
             </Pressable>
-          </View>
-
-          <View className={["mt-4"].join(" ")}>
-            <Text className={["text-sm", "text-gray-500"].join(" ")}>
-              Learning Progress
-            </Text>
-            <View
-              className={[
-                "w-full",
-                "h-3",
-                "bg-gray-200",
-                "rounded-full",
-                "mt-2",
-                "overflow-hidden",
-              ].join(" ")}
-            >
-              <View
-                className={["h-3", "bg-green-400"].join(" ")}
-                style={{ width: "60%" }}
-              />
-            </View>
-            <Text className={["text-xs", "text-gray-400", "mt-2"].join(" ")}>
-              60% - Complete activities to learn more!
-            </Text>
           </View>
         </View>
 

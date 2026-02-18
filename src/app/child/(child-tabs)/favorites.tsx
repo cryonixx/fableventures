@@ -1,97 +1,123 @@
 import AnimalCardView from "@/src/components/child_components/AnimalCardView";
+import { database } from "@/src/database/sqlite";
+import { getCollectedAnimals } from "@/src/database/storyManager";
+import { getTestChildId } from "@/src/database/testData";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { FlatList, View } from "react-native";
+import { useCallback, useState } from "react";
+import { FlatList, Text, View } from "react-native";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
+import { useChildContext } from "../../../context/ChildContext";
+import { useCollectedAnimalsCount } from "../../../hooks/useCollectedAnimalsCount";
 
-const test = [
-  {
-    id: "1",
-    image: "../assets/lion.png",
-    name: "Lion",
-    classification: "Mammal",
-  },
-  {
-    id: "2",
-    image: "../assets/eagle.png",
-    name: "Eagle",
-    classification: "Bird",
-  },
-  {
-    id: "3",
-    image: "../assets/shark.png",
-    name: "Shark",
-    classification: "Fish",
-  },
-  {
-    id: "4",
-    image: "../assets/frog.png",
-    name: "Frog",
-    classification: "Amphibian",
-  },
-  {
-    id: "5",
-    image: "../assets/crocodile.png",
-    name: "Crocodile",
-    classification: "Reptile",
-  },
-  {
-    id: "6",
-    image: "../assets/elephant.png",
-    name: "Elephant",
-    classification: "Mammal",
-  },
-  {
-    id: "7",
-    image: "../assets/penguin.png",
-    name: "Penguin",
-    classification: "Bird",
-  },
-  {
-    id: "8",
-    image: "../assets/salmon.png",
-    name: "Salmon",
-    classification: "Fish",
-  },
-  {
-    id: "9",
-    image: "../assets/toad.png",
-    name: "Toad",
-    classification: "Amphibian",
-  },
-  {
-    id: "10",
-    image: "../assets/lizard.png",
-    name: "Lizard",
-    classification: "Reptile",
-  },
-];
+interface AnimalCard {
+  id: string;
+  name: string;
+  classification: string;
+  storyId?: string;
+}
 
 export default function Favorites() {
   const router = useRouter();
+  const [animals, setAnimals] = useState<AnimalCard[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [childId, setChildId] = useState<number | null>(null);
+  const collectedCount = useCollectedAnimalsCount();
+  const { selectedChildId } = useChildContext();
+
+  const loadCollectedAnimals = async () => {
+    try {
+      // Use selected child ID from context, fallback to test child
+      const currentChildId = selectedChildId || (await getTestChildId());
+      setChildId(currentChildId);
+
+      const collected = await getCollectedAnimals(currentChildId);
+
+      // Get animal details from database
+      const animalCards: AnimalCard[] = [];
+      for (const animal of collected) {
+        const animalResult = await database.getFirstAsync(
+          `SELECT animal_id, name, category FROM animals WHERE name = ?`,
+          [animal.animal_name],
+        );
+
+        if (animalResult) {
+          const row = animalResult as any;
+          animalCards.push({
+            id: row.animal_id.toString(),
+            name: row.name,
+            classification: row.category,
+            storyId: animal.collected_from_story,
+          });
+        }
+      }
+
+      setAnimals(animalCards);
+    } catch (error) {
+      console.error("Error loading collected animals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Use useFocusEffect to refetch when tab comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadCollectedAnimals();
+    }, [selectedChildId]),
+  );
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-amber-50 justify-center items-center">
+        <Text className="text-lg font-semibold">
+          Loading your collection...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-amber-50">
-      <ChildHeader />
-      <FlatList
-        data={test}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <AnimalCardView
-            onPress={() =>
-              router.push({
-                pathname: "/child/animaldetail",
-                params: {
-                  id: item.id,
-                  name: item.name,
-                  classification: item.classification,
-                },
-              })
-            }
-            name={item.name}
-            classification={item.classification}
-          />
-        )}
-      />
+      <ChildHeader currentprogress={collectedCount} />
+      {animals.length === 0 ? (
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-lg font-semibold text-gray-600">
+            No animals collected yet!
+          </Text>
+          <Text className="text-base text-gray-500 mt-2">
+            Complete stories to collect animals
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={animals}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <AnimalCardView
+              onPress={() =>
+                router.push({
+                  pathname: "/child/animaldetail",
+                  params: {
+                    id: item.id,
+                    name: item.name,
+                    classification: item.classification,
+                  },
+                })
+              }
+              name={item.name}
+              classification={item.classification}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          columnWrapperStyle={{
+            gap: 16,
+            paddingHorizontal: 16,
+            marginBottom: 16,
+          }}
+          contentContainerStyle={{ paddingTop: 16, paddingBottom: 16 }}
+        />
+      )}
     </View>
   );
 }

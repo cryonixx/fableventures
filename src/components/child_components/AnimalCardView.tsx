@@ -16,18 +16,8 @@ export default function AnimalCardView({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={[
-        "aspect-square",
-        "w-auto",
-        "flex-auto",
-        "m-4",
-        "p-4",
-        "bg-white",
-        "rounded-xl",
-        "drop-shadow-lg",
-        "justify-around",
-        "hover:scale-105",
-      ].join(" ")}
+      className="p-4 bg-white rounded-xl drop-shadow-lg items-center justify-center"
+      style={{ width: 160, height: 160 }}
     >
       <Image
         source={
@@ -35,10 +25,15 @@ export default function AnimalCardView({
             ? { uri: image }
             : require("../../../assets/images/placeholder.png")
         }
-        style={{ width: "50%", height: "50%" }}
+        style={{ width: 80, height: 80 }}
+        resizeMode="contain"
       />
-      <Text className="flex-2 text-xl">{name}</Text>
-      <Text className="flex-2 text-md">{classification}</Text>
+      <Text className="text-lg font-semibold mt-2" numberOfLines={1}>
+        {name}
+      </Text>
+      <Text className="text-sm text-gray-600" numberOfLines={1}>
+        {classification}
+      </Text>
     </TouchableOpacity>
   );
 }
