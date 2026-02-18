@@ -1,19 +1,20 @@
 import {
-    collectAnimal,
-    getChildProgress,
-    loadStoryData,
-    saveChildProgress,
+  collectAnimal,
+  getChildProgress,
+  loadStoryData,
+  saveChildProgress,
 } from "@/src/database/storyManager";
 import { Story } from "@/src/types/story";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect, useState } from "react";
 import {
-    Image,
-    Pressable,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    View,
+  Image,
+  ImageBackground,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 
 interface StoryPlayerProps {
@@ -177,16 +178,18 @@ export default function StoryPlayer({
     const animalName = currentScene.animal || currentNode.character;
     switch (animalName?.toLowerCase()) {
       case "owl":
-        return require("@/assets/images/BookCover.png");
+        return require("@/assets/images/animals/owl.png");
       case "chicken":
-        return require("@/assets/images/BookCover.png");
+        return require("@/assets/images/animals/chicken.png");
       case "red fox":
       case "fox":
-        return require("@/assets/images/BookCover.png");
+        return require("@/assets/images/animals/fox.png");
       case "turtle":
-        return require("@/assets/images/BookCover.png");
+        return require("@/assets/images/animals/freshwaterturtle.png");
+      case "little red":
+        return require("@/assets/images/story/littlered.png");
       default:
-        return require("@/assets/images/BookCover.png");
+        return require("@/assets/images/story/BookCover.png");
     }
   };
 
@@ -212,150 +215,157 @@ export default function StoryPlayer({
 
   return (
     <SafeAreaView className="flex-1 bg-amber-100">
-      <View className="flex-1 flex-col">
-        {/* Story Content */}
-        <ScrollView
-          className="flex-1 px-4 py-4"
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "center",
-          }}
-        >
-          {/* Animal/Character Image with Forest Background */}
-          {displayCharacter && currentNode.type !== "minigame" && (
-            <View className="items-center mb-6">
-              <View className="relative w-full">
-                {/* Forest background container */}
-                <View className="bg-gradient-to-b from-green-600 to-green-700 rounded-3xl p-4 items-center overflow-hidden">
-                  {/* Decorative trees/foliage */}
-                  <View className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-green-500 to-transparent opacity-40" />
-
-                  {/* Animal Image */}
-                  <Image
-                    source={getAnimalImage()}
-                    className="w-48 h-48 rounded-2xl my-4 z-10"
-                    resizeMode="cover"
-                  />
-                </View>
+      <ImageBackground
+        source={require("@/assets/images/story/forestbackground.png")}
+        className="flex-1"
+        resizeMode="cover"
+      >
+        <View className="flex-1 flex-col">
+          {/* Story Content */}
+          <ScrollView
+            className="flex-1 px-4 py-4"
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+            }}
+          >
+            {/* Animal/Character Image */}
+            {displayCharacter && currentNode.type !== "minigame" && (
+              <View className="items-center mb-6">
+                <Image
+                  source={getAnimalImage()}
+                  className="w-80 h-80 shadow-lg"
+                  resizeMode="cover"
+                />
               </View>
-            </View>
-          )}
+            )}
 
-          {/* Story Text Content - Narrator and Dialogue */}
-          {(currentNode.type === "narrator" ||
-            currentNode.type === "dialogue") && (
-            <View className="bg-white rounded-2xl p-5 shadow-md mb-4">
-              {currentNode.type === "narrator" && (
-                <Text className="text-base text-gray-800 leading-relaxed">
+            {/* Story Text Content - Narrator and Dialogue */}
+            {currentNode.type === "narrator" && (
+              <View className="bg-white rounded-2xl p-6 shadow-md mb-4 ">
+                <Text className="text-2xl text-gray-800 leading-relaxed">
                   {currentNode.text}
                 </Text>
-              )}
+              </View>
+            )}
 
-              {currentNode.type === "dialogue" && (
-                <View>
-                  <Text className="text-sm font-bold text-green-600 mb-2">
+            {currentNode.type === "dialogue" && (
+              <View className="relative items-center">
+                <ImageBackground
+                  source={require("@/assets/images/ui/dialoguebox.png")}
+                  resizeMode="stretch"
+                  style={{ width: 340, height: 220 }}
+                >
+                  <View className="h-auto m-8 pt-8">
+                    <Text className="text-2xl text-gray-800 leading-relaxed">
+                      {currentNode.text}
+                    </Text>
+                  </View>
+                </ImageBackground>
+                <View
+                  className="absolute bg-green-700 px-4 py-2 rounded-xl"
+                  style={{ top: 5, left: 10 }}
+                >
+                  <Text className="text-white font-bold text-2xl">
                     {currentNode.character}
                   </Text>
-                  <Text className="text-base text-gray-800 leading-relaxed">
-                    {currentNode.text}
+                </View>
+              </View>
+            )}
+
+            {/* Choices Section */}
+            {currentNode.type === "choice" && currentNode.options && (
+              <View>
+                {/* Question prompt */}
+                <View className="bg-white rounded-2xl p-4 mb-4 items-center">
+                  <Text className="text-lg font-bold text-gray-800 mb-1">
+                    What will you say?
+                  </Text>
+                  <Text className="text-xs text-gray-500 italic">
+                    (pick and read one choice)
                   </Text>
                 </View>
-              )}
-            </View>
-          )}
 
-          {/* Choices Section */}
-          {currentNode.type === "choice" && currentNode.options && (
-            <View>
-              {/* Question prompt */}
-              <View className="bg-white rounded-2xl p-4 mb-4 items-center">
-                <Text className="text-lg font-bold text-gray-800 mb-1">
-                  What will you say?
-                </Text>
-                <Text className="text-xs text-gray-500 italic">
-                  (pick and read one choice)
-                </Text>
+                {/* Choice buttons as large cards */}
+                {currentNode.options.map((option, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => handleChoice(index)}
+                    className="bg-green-600 rounded-2xl p-4 mb-3 active:bg-green-700 shadow-md"
+                  >
+                    <Text className="text-white font-bold text-center text-base leading-relaxed">
+                      "{option}"
+                    </Text>
+                  </Pressable>
+                ))}
               </View>
+            )}
 
-              {/* Choice buttons as large cards */}
-              {currentNode.options.map((option, index) => (
+            {/* Minigame Section */}
+            {currentNode.type === "minigame" && (
+              <View className="bg-white rounded-2xl p-5 items-center justify-center shadow-md">
+                <Text className="text-base font-semibold text-gray-800 mb-3 text-center">
+                  {currentScene.description || "Minigame"}
+                </Text>
                 <Pressable
-                  key={index}
-                  onPress={() => handleChoice(index)}
-                  className="bg-green-600 rounded-2xl p-4 mb-3 active:bg-green-700 shadow-md"
+                  onPress={handleMinigame}
+                  className="bg-purple-600 rounded-xl px-6 py-3 active:bg-purple-700"
                 >
-                  <Text className="text-white font-bold text-center text-base leading-relaxed">
-                    "{option}"
-                  </Text>
+                  <Text className="text-white font-bold">Start Minigame</Text>
                 </Pressable>
-              ))}
-            </View>
-          )}
+              </View>
+            )}
+          </ScrollView>
 
-          {/* Minigame Section */}
-          {currentNode.type === "minigame" && (
-            <View className="bg-white rounded-2xl p-5 items-center justify-center shadow-md">
-              <Text className="text-base font-semibold text-gray-800 mb-3 text-center">
-                {currentScene.description || "Minigame"}
-              </Text>
+          {/* Continue Button - Only for narrator/dialogue */}
+          {currentNode.type !== "choice" && currentNode.type !== "minigame" && (
+            <View className="px-4 pb-3">
               <Pressable
-                onPress={handleMinigame}
-                className="bg-purple-600 rounded-xl px-6 py-3 active:bg-purple-700"
+                onPress={handleNodeContinue}
+                className="bg-green-700 rounded-xl p-4 active:bg-green-800 shadow-md"
               >
-                <Text className="text-white font-bold">Start Minigame</Text>
+                <Text className="text-white font-bold text-center text-lg">
+                  Continue
+                </Text>
               </Pressable>
             </View>
           )}
-        </ScrollView>
 
-        {/* Continue Button - Only for narrator/dialogue */}
-        {currentNode.type !== "choice" && currentNode.type !== "minigame" && (
-          <View className="px-4 pb-3">
+          {/* Persistent Footer with Controls */}
+          <View className="bg-green-700 px-4 py-3 flex-row items-center justify-between rounded-t-3xl">
+            {/* Go Back Button */}
+            {onGoBack && (
+              <Pressable
+                onPress={onGoBack}
+                className="bg-yellow-100 rounded-lg px-4 py-2 active:bg-yellow-200 flex-row items-center gap-1"
+              >
+                <Text className="text-green-700 font-bold text-base">
+                  Go Back
+                </Text>
+              </Pressable>
+            )}
+
+            {/* Spacer */}
+            <View className="flex-1" />
+
+            {/* Sound Button */}
             <Pressable
-              onPress={handleNodeContinue}
-              className="bg-green-700 rounded-xl p-4 active:bg-green-800 shadow-md"
+              onPress={() => console.log("Sound button pressed")}
+              className="p-2 active:opacity-70"
             >
-              <Text className="text-white font-bold text-center text-lg">
-                Continue
-              </Text>
+              <MaterialIcons name="volume-up" size={28} color="white" />
+            </Pressable>
+
+            {/* Mute Button */}
+            <Pressable
+              onPress={() => console.log("Mute button pressed")}
+              className="p-2 ml-2 active:opacity-70"
+            >
+              <MaterialIcons name="volume-mute" size={28} color="white" />
             </Pressable>
           </View>
-        )}
-
-        {/* Persistent Footer with Controls */}
-        <View className="bg-green-700 px-4 py-3 flex-row items-center justify-between rounded-t-3xl">
-          {/* Go Back Button */}
-          {onGoBack && (
-            <Pressable
-              onPress={onGoBack}
-              className="bg-yellow-100 rounded-lg px-4 py-2 active:bg-yellow-200 flex-row items-center gap-1"
-            >
-              <Text className="text-green-700 font-bold text-base">
-                Go Back
-              </Text>
-            </Pressable>
-          )}
-
-          {/* Spacer */}
-          <View className="flex-1" />
-
-          {/* Sound Button */}
-          <Pressable
-            onPress={() => console.log("Sound button pressed")}
-            className="p-2 active:opacity-70"
-          >
-            <MaterialIcons name="volume-up" size={28} color="white" />
-          </Pressable>
-
-          {/* Mute Button */}
-          <Pressable
-            onPress={() => console.log("Mute button pressed")}
-            className="p-2 ml-2 active:opacity-70"
-          >
-            <MaterialIcons name="volume-mute" size={28} color="white" />
-          </Pressable>
         </View>
-      </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }

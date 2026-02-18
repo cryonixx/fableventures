@@ -1,18 +1,18 @@
+import { useImage } from "@/src/hooks/useImage";
 import { Image, Text, TouchableOpacity } from "react-native";
 type AnimalCardProps = {
   id?: string;
-  image?: string;
   name?: string;
   classification?: string;
   onPress?: () => void;
 };
 
 export default function AnimalCardView({
-  image,
   name,
   onPress,
   classification,
 }: AnimalCardProps) {
+  const animalImage = useImage(name);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -20,11 +20,7 @@ export default function AnimalCardView({
       style={{ width: 160, height: 160 }}
     >
       <Image
-        source={
-          image
-            ? { uri: image }
-            : require("../../../assets/images/placeholder.png")
-        }
+        source={animalImage ? animalImage : require("../../../assets/images/placeholder.png")}
         style={{ width: 80, height: 80 }}
         resizeMode="contain"
       />

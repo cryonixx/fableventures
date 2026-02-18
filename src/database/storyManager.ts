@@ -1,4 +1,4 @@
-import storyJson from "@/assets/images/script/fable_friends_script.json";
+import storyJson from "@/assets/script/fable_friends_script.json";
 import { ChildStoryProgress, CollectedAnimal, Story } from "@/src/types/story";
 import { awardAchievement } from "./achievementsManager";
 import { database } from "./sqlite";
@@ -78,7 +78,6 @@ export async function saveChildProgress(
       "Could not save progress:",
       error instanceof Error ? error.message : error,
     );
-    // Don't throw - allow story to continue without persistence
   }
 }
 

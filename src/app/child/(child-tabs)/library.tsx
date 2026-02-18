@@ -19,7 +19,7 @@ export default function Library() {
           }}
         >
           <Image
-            source={require("../../../../assets/images/BookCover.png")}
+            source={require("@/assets/images/story/BookCover.png")}
             className="w-full h-full rounded-xl"
           />
         </Pressable>
