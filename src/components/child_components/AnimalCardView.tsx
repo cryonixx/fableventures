@@ -20,7 +20,11 @@ export default function AnimalCardView({
       style={{ width: 160, height: 160 }}
     >
       <Image
-        source={animalImage ? animalImage : require("../../../assets/images/placeholder.png")}
+        source={
+          animalImage
+            ? animalImage
+            : require("../../../assets/images/placeholder.png")
+        }
         style={{ width: 80, height: 80 }}
         resizeMode="contain"
       />

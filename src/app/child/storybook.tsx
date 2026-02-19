@@ -1,21 +1,64 @@
 import StoryPlayer from "@/src/components/child_components/StoryPlayer";
 import { useChildContext } from "@/src/context/ChildContext";
 import {
-    getChildProgress,
-    resetChildProgress,
+  getChildProgress,
+  loadStoryData,
+  saveChildProgress,
 } from "@/src/database/storyManager";
 import { getTestChildId } from "@/src/database/testData";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 
 export default function Storybook() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const chapterIdParam =
+    typeof params.chapterId === "string" ? params.chapterId : null;
   const [childId, setChildId] = useState<number | null>(null);
   const [hasProgress, setHasProgress] = useState<boolean>(false);
   const [showStory, setShowStory] = useState<boolean>(false);
   const [checkingProgress, setCheckingProgress] = useState(true);
+  const [chapterGroupStartId, setChapterGroupStartId] = useState<string | null>(
+    null,
+  );
+  const [chapterGroupEndId, setChapterGroupEndId] = useState<string | null>(
+    null,
+  );
   const { selectedChildId } = useChildContext();
+
+  const getChapterGroup = (chapterId: string | null) => {
+    if (chapterId === "chapter_2") {
+      return { startId: "chapter_2", endId: "chapter_2" };
+    }
+    if (chapterId === "chapter_3") {
+      return { startId: "chapter_3", endId: "chapter_3" };
+    }
+
+    // chapter_1 includes the prologue
+    return { startId: "prologue", endId: "chapter_1" };
+  };
+
+  const setChapterStart = async (
+    childIdValue: number,
+    startId: string,
+    completedChapters: string[],
+  ) => {
+    const storyData = await loadStoryData();
+    const startChapter = storyData.sections.find((ch) => ch.id === startId);
+    const firstScene = startChapter?.scenes[0];
+
+    if (!startChapter || !firstScene) return;
+
+    await saveChildProgress(
+      childIdValue,
+      "fable-friends",
+      startChapter.id,
+      firstScene.id,
+      0,
+      completedChapters,
+    );
+  };
 
   useEffect(() => {
     const loadChildId = async () => {
@@ -25,22 +68,44 @@ export default function Storybook() {
 
       // Check if there's saved progress
       const progress = await getChildProgress(id, "fable-friends");
-      if (progress && progress.current_chapter_id) {
-        setHasProgress(true);
+      const resolvedChapterId =
+        chapterIdParam || progress?.current_chapter_id || "chapter_1";
+      const group = getChapterGroup(resolvedChapterId);
+      setChapterGroupStartId(group.startId);
+      setChapterGroupEndId(group.endId);
+
+      const hasGroupProgress =
+        !!progress &&
+        !!progress.current_chapter_id &&
+        (progress.current_chapter_id === group.startId ||
+          progress.current_chapter_id === group.endId ||
+          (group.startId === "prologue" &&
+            progress.current_chapter_id === "chapter_1"));
+
+      setHasProgress(hasGroupProgress);
+
+      if (chapterIdParam && !hasGroupProgress) {
+        setShowStory(true);
       }
+
       setCheckingProgress(false);
     };
     loadChildId();
-  }, [selectedChildId]);
+  }, [selectedChildId, chapterIdParam]);
 
   const handleContinue = () => {
     setShowStory(true);
   };
 
   const handleStartFresh = async () => {
-    if (childId) {
-      await resetChildProgress(childId, "fable-friends");
-      setHasProgress(false);
+    if (childId && chapterGroupStartId) {
+      const progress = await getChildProgress(childId, "fable-friends");
+      await setChapterStart(
+        childId,
+        chapterGroupStartId,
+        progress?.completed_chapters || [],
+      );
+      setHasProgress(true);
     }
     setShowStory(true);
   };
@@ -49,6 +114,21 @@ export default function Storybook() {
     setShowStory(false);
     setHasProgress(false);
     router.back();
+  };
+
+  const handleChapterComplete = (chapterId: string, chapterTitle: string) => {
+    setShowStory(false);
+    setHasProgress(false);
+    Alert.alert(
+      "Chapter Complete!",
+      `You finished ${chapterTitle}. Great job!`,
+      [
+        {
+          text: "Back to Map",
+          onPress: () => router.replace("/child/levelselect"),
+        },
+      ],
+    );
   };
 
   if (childId === null || checkingProgress) {
@@ -102,6 +182,9 @@ export default function Storybook() {
       <StoryPlayer
         childId={childId}
         storyId="fable-friends"
+        chapterGroupStartId={chapterGroupStartId || undefined}
+        chapterGroupEndId={chapterGroupEndId || undefined}
+        onChapterComplete={handleChapterComplete}
         onComplete={handleComplete}
         onGoBack={handleComplete}
       />

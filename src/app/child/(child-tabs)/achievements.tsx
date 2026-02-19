@@ -5,9 +5,9 @@ import { ChildHeader } from "../../../components/child_components/ChildHeader";
 import RewardCard from "../../../components/child_components/RewardCard";
 import { useChildContext } from "../../../context/ChildContext";
 import {
-    Achievement,
-    getAllAchievements,
-    getChildAchievements,
+  Achievement,
+  getAllAchievements,
+  getChildAchievements,
 } from "../../../database/achievementsManager";
 import { getTestChildId } from "../../../database/testData";
 import { useCollectedAnimalsCount } from "../../../hooks/useCollectedAnimalsCount";

@@ -6,8 +6,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 import { ChildProvider } from "../context/ChildContext";
 import {
-    initializeAchievements,
-    syncAchievementsForCollectedAnimals,
+  initializeAchievements,
+  syncAchievementsForCollectedAnimals,
 } from "../database/achievementsManager";
 import { initializeAnimals } from "../database/data/animals";
 import { initializeDatabase } from "../database/sqlite";
@@ -18,7 +18,6 @@ export default function RootLayout() {
     // Hide navigation bar on Android
     if (Platform.OS === "android") {
       NavigationBar.setVisibilityAsync("hidden");
-      NavigationBar.setBehaviorAsync("overlay-swipe");
     }
 
     const setup = async () => {

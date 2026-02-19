@@ -1,3 +1,4 @@
+import { useImage } from "@/src/hooks/useImage";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
@@ -7,7 +8,7 @@ export default function AnimalDetail() {
   const params = useLocalSearchParams();
   const name = (params.name as string) || "Unknown";
   const classification = (params.classification as string) || "";
-  const image = null;
+  const image = useImage(name);
 
   return (
     <ScrollView className={["flex-1", "bg-amber-50"].join(" ")}>
@@ -59,12 +60,9 @@ export default function AnimalDetail() {
             )}
           >
             <Image
-              source={
-                image
-                  ? { uri: image }
-                  : require("../../../assets/images/placeholder.png")
-              }
-              style={{ width: 180, height: 120 }}
+              source={image}
+              className="border-4 border-white rounded-lg"
+              style={{ width: 200, height: 200 }}
               resizeMode="contain"
             />
           </View>

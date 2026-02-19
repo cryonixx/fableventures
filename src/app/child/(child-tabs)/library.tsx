@@ -14,8 +14,7 @@ export default function Library() {
         <Pressable
           className="bg-white rounded-3xl p-4 shadow-lg flex-1 overflow-hidden"
           onPress={() => {
-            console.log("Book Pressed");
-            router.push("/child/storybook");
+            router.push("/child/levelselect");
           }}
         >
           <Image

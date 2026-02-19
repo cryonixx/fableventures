@@ -4,6 +4,7 @@ import {
   loadStoryData,
   saveChildProgress,
 } from "@/src/database/storyManager";
+import { useImage } from "@/src/hooks/useImage";
 import { Story } from "@/src/types/story";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,9 @@ interface StoryPlayerProps {
   childId: number;
   storyId: string;
   onMinigameNeeded?: (minigameId: string) => void;
+  chapterGroupStartId?: string;
+  chapterGroupEndId?: string;
+  onChapterComplete?: (chapterId: string, chapterTitle: string) => void;
   onComplete?: () => void;
   onGoBack?: () => void;
 }
@@ -29,6 +33,9 @@ export default function StoryPlayer({
   childId,
   storyId,
   onMinigameNeeded,
+  chapterGroupStartId,
+  chapterGroupEndId,
+  onChapterComplete,
   onComplete,
   onGoBack,
 }: StoryPlayerProps) {
@@ -37,6 +44,9 @@ export default function StoryPlayer({
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [completedChapters, setCompletedChapters] = useState<string[]>([]);
+  const [chapterGroupStartIndex, setChapterGroupStartIndex] = useState(0);
+  const [chapterGroupEndIndex, setChapterGroupEndIndex] = useState(0);
 
   useEffect(() => {
     const loadStory = async () => {
@@ -44,16 +54,38 @@ export default function StoryPlayer({
         const storyData = await loadStoryData();
         setStory(storyData);
 
+        const defaultStartId = chapterGroupStartId || storyData.sections[0].id;
+        const defaultEndId =
+          chapterGroupEndId ||
+          storyData.sections[storyData.sections.length - 1].id;
+
+        const startIndex = Math.max(
+          0,
+          storyData.sections.findIndex((ch) => ch.id === defaultStartId),
+        );
+        const endIndex = Math.max(
+          startIndex,
+          storyData.sections.findIndex((ch) => ch.id === defaultEndId),
+        );
+
+        setChapterGroupStartIndex(startIndex);
+        setChapterGroupEndIndex(endIndex);
+
         // Load saved progress
         const savedProgress = await getChildProgress(childId, storyId);
 
         if (savedProgress) {
+          setCompletedChapters(savedProgress.completed_chapters || []);
+
           // Find the indices for the saved chapter and scene
           const chapterIndex = storyData.sections.findIndex(
             (ch) => ch.id === savedProgress.current_chapter_id,
           );
 
-          if (chapterIndex >= 0) {
+          const isInGroup =
+            chapterIndex >= startIndex && chapterIndex <= endIndex;
+
+          if (chapterIndex >= 0 && isInGroup) {
             const sceneIndex = storyData.sections[
               chapterIndex
             ].scenes.findIndex(
@@ -68,6 +100,14 @@ export default function StoryPlayer({
                 `Resuming story from Chapter ${chapterIndex + 1}, Scene ${sceneIndex + 1}, Node ${savedProgress.current_node_index}`,
               );
             }
+          } else {
+            const firstScene = storyData.sections[startIndex].scenes[0];
+            setCurrentChapterIndex(startIndex);
+            setCurrentSceneIndex(0);
+            setCurrentNodeIndex(0);
+            console.log(
+              `Starting story from Chapter ${startIndex + 1}, Scene 1, Node 0`,
+            );
           }
         }
 
@@ -79,7 +119,7 @@ export default function StoryPlayer({
     };
 
     loadStory();
-  }, [childId, storyId]);
+  }, [childId, storyId, chapterGroupStartId, chapterGroupEndId]);
 
   if (loading || !story) {
     return (
@@ -123,14 +163,39 @@ export default function StoryPlayer({
       if (currentSceneIndex < currentChapter.scenes.length - 1) {
         nextSceneIndex = currentSceneIndex + 1;
         nextNodeIndex = 0;
-      } else if (currentChapterIndex < story.sections.length - 1) {
-        // Move to next chapter
+      } else if (currentChapterIndex < chapterGroupEndIndex) {
+        // Move to next chapter within the selected group
         nextChapterIndex = currentChapterIndex + 1;
         nextSceneIndex = 0;
         nextNodeIndex = 0;
       } else {
-        // Story complete
-        if (onComplete) onComplete();
+        // Selected chapter group complete
+        const updatedCompletedChapters = completedChapters.includes(
+          currentChapter.id,
+        )
+          ? completedChapters
+          : [...completedChapters, currentChapter.id];
+
+        setCompletedChapters(updatedCompletedChapters);
+
+        try {
+          await saveChildProgress(
+            childId,
+            storyId,
+            currentChapter.id,
+            currentScene.id,
+            currentNodeIndex,
+            updatedCompletedChapters,
+          );
+        } catch (error) {
+          console.warn("Could not save progress:", error);
+        }
+
+        if (onChapterComplete) {
+          onChapterComplete(currentChapter.id, currentChapter.title);
+        } else if (onComplete) {
+          onComplete();
+        }
         return;
       }
     } else {
@@ -149,6 +214,7 @@ export default function StoryPlayer({
         nextChapter.id,
         nextScene.id,
         nextNodeIndex,
+        completedChapters,
       );
     } catch (error) {
       console.warn("Could not save progress:", error);
@@ -173,25 +239,9 @@ export default function StoryPlayer({
     }
   };
 
-  // Get animal image based on current scene animal
-  const getAnimalImage = () => {
-    const animalName = currentScene.animal || currentNode.character;
-    switch (animalName?.toLowerCase()) {
-      case "owl":
-        return require("@/assets/images/animals/owl.png");
-      case "chicken":
-        return require("@/assets/images/animals/chicken.png");
-      case "red fox":
-      case "fox":
-        return require("@/assets/images/animals/fox.png");
-      case "turtle":
-        return require("@/assets/images/animals/freshwaterturtle.png");
-      case "little red":
-        return require("@/assets/images/story/littlered.png");
-      default:
-        return require("@/assets/images/story/BookCover.png");
-    }
-  };
+  // Get character image based on current scene character or animal
+  const Name = currentScene.animal || currentNode.character;
+  const CharacterImage = useImage(Name);
 
   // Helper function to find the last character who spoke in the current scene
   const getLastDialogueCharacter = (): string | undefined => {
@@ -233,8 +283,8 @@ export default function StoryPlayer({
             {displayCharacter && currentNode.type !== "minigame" && (
               <View className="items-center mb-6">
                 <Image
-                  source={getAnimalImage()}
-                  className="w-80 h-80 shadow-lg"
+                  source={CharacterImage}
+                  className="w-80 h-80"
                   resizeMode="cover"
                 />
               </View>
