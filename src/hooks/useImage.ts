@@ -12,6 +12,10 @@ export const useImage = (Name?: string) => {
         return require("@/assets/images/animals/freshwaterturtle.png");
       case "little red":
         return require("@/assets/images/story/littlered.png");
+      case "farmer":
+        return require("@/assets/images/story/farmer.png");
+      case "grandmother":
+        return require("@/assets/images/story/grandma.png");
       default:
         return require("@/assets/images/story/BookCover.png");
     }

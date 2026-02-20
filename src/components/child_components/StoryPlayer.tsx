@@ -328,10 +328,10 @@ export default function StoryPlayer({
               <View>
                 {/* Question prompt */}
                 <View className="bg-white rounded-2xl p-4 mb-4 items-center">
-                  <Text className="text-lg font-bold text-gray-800 mb-1">
+                  <Text className="text-2xl font-bold text-gray-800 mb-1">
                     What will you say?
                   </Text>
-                  <Text className="text-xs text-gray-500 italic">
+                  <Text className="text-lg text-gray-500 italic">
                     (pick and read one choice)
                   </Text>
                 </View>
@@ -343,7 +343,7 @@ export default function StoryPlayer({
                     onPress={() => handleChoice(index)}
                     className="bg-green-600 rounded-2xl p-4 mb-3 active:bg-green-700 shadow-md"
                   >
-                    <Text className="text-white font-bold text-center text-base leading-relaxed">
+                    <Text className="text-white font-bold text-center text-xl leading-relaxed">
                       "{option}"
                     </Text>
                   </Pressable>

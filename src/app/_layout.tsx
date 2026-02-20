@@ -1,19 +1,34 @@
+import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
-import { Platform } from "react-native";
+import { Platform, Text, TextInput } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 import { ChildProvider } from "../context/ChildContext";
 import {
-  initializeAchievements,
-  syncAchievementsForCollectedAnimals,
+    initializeAchievements,
+    syncAchievementsForCollectedAnimals,
 } from "../database/achievementsManager";
 import { initializeAnimals } from "../database/data/animals";
 import { initializeDatabase } from "../database/sqlite";
 import { resetRedTestChild, seedTestData } from "../database/testData";
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Nunito_400Regular: require("../../assets/fonts/Nunito_400Regular.ttf"),
+    Nunito_600SemiBold: require("../../assets/fonts/Nunito_600SemiBold.ttf"),
+    Nunito_700Bold: require("../../assets/fonts/Nunito_700Bold.ttf"),
+  });
+
+  if (fontsLoaded) {
+    Text.defaultProps = Text.defaultProps || {};
+    Text.defaultProps.style = { fontFamily: "Nunito_400Regular" };
+
+    TextInput.defaultProps = TextInput.defaultProps || {};
+    TextInput.defaultProps.style = { fontFamily: "Nunito_400Regular" };
+  }
+
   useEffect(() => {
     // Hide navigation bar on Android
     if (Platform.OS === "android") {
@@ -68,6 +83,10 @@ export default function RootLayout() {
     };
     setup();
   }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <ChildProvider>

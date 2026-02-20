@@ -171,7 +171,7 @@ export default function LevelSelectScreen() {
           onPress={() => router.replace("/child/(child-tabs)/library")}
           className="bg-white/90 rounded-full px-4 py-2"
         >
-          <Text className="text-green-700 font-bold text-base">Back</Text>
+          <Text className="text-green-700 font-bold text-base">Go to Home</Text>
         </Pressable>
       </View>
 

@@ -6,7 +6,24 @@ module.exports = {
   ],
   presets: [require("nativewind/preset")],
   theme: {
+    fontFamily: {
+      sans: ["Nunito_400Regular"],
+    },
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".font-medium": {
+          fontFamily: "Nunito_600SemiBold",
+        },
+        ".font-semibold": {
+          fontFamily: "Nunito_700Bold",
+        },
+        ".font-bold": {
+          fontFamily: "Nunito_700Bold",
+        },
+      });
+    },
+  ],
 };
