@@ -30,8 +30,8 @@ const ACHIEVEMENTS = [
     criteria: "Chicken",
   },
   {
-    title: "Fable Friends Complete",
-    description: "Finished the whole Fable Friends adventure",
+    title: "The tale of little red complete",
+    description: "Finished The tale of little red adventure",
     criteria: "story_complete_fable_friends",
   },
 ];
@@ -111,9 +111,9 @@ export async function awardAchievementByCriteria(
       return;
     }
 
-    // Award the achievement
+    // Award the achievement (idempotent in case of duplicate/race calls)
     await database.runAsync(
-      `INSERT INTO child_achievements (child_id, achievement_id, date_earned)
+      `INSERT OR IGNORE INTO child_achievements (child_id, achievement_id, date_earned)
        VALUES (?, ?, datetime('now'))`,
       [childId, achievementId],
     );

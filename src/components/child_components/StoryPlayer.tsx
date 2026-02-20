@@ -45,7 +45,6 @@ export default function StoryPlayer({
   const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [completedChapters, setCompletedChapters] = useState<string[]>([]);
-  const [chapterGroupStartIndex, setChapterGroupStartIndex] = useState(0);
   const [chapterGroupEndIndex, setChapterGroupEndIndex] = useState(0);
 
   useEffect(() => {
@@ -68,7 +67,6 @@ export default function StoryPlayer({
           storyData.sections.findIndex((ch) => ch.id === defaultEndId),
         );
 
-        setChapterGroupStartIndex(startIndex);
         setChapterGroupEndIndex(endIndex);
 
         // Load saved progress
@@ -101,7 +99,6 @@ export default function StoryPlayer({
               );
             }
           } else {
-            const firstScene = storyData.sections[startIndex].scenes[0];
             setCurrentChapterIndex(startIndex);
             setCurrentSceneIndex(0);
             setCurrentNodeIndex(0);
@@ -120,6 +117,13 @@ export default function StoryPlayer({
 
     loadStory();
   }, [childId, storyId, chapterGroupStartId, chapterGroupEndId]);
+
+  const characterImageName =
+    story?.sections[currentChapterIndex]?.scenes[currentSceneIndex]?.animal ||
+    story?.sections[currentChapterIndex]?.scenes[currentSceneIndex]?.nodes[
+      currentNodeIndex
+    ]?.character;
+  const characterImage = useImage(characterImageName);
 
   if (loading || !story) {
     return (
@@ -231,7 +235,7 @@ export default function StoryPlayer({
     setCurrentNodeIndex(nextNodeIndex);
   };
 
-  const handleChoice = async (choiceIndex: number) => {
+  const handleChoice = async () => {
     // For "illusion of choice", just continue regardless of selection
     await handleNodeContinue();
   };
@@ -243,10 +247,6 @@ export default function StoryPlayer({
       }
     }
   };
-
-  // Get character image based on current scene character or animal
-  const Name = currentScene.animal || currentNode.character;
-  const CharacterImage = useImage(Name);
 
   // Helper function to find the last character who spoke in the current scene
   const getLastDialogueCharacter = (): string | undefined => {
@@ -288,7 +288,7 @@ export default function StoryPlayer({
             {displayCharacter && currentNode.type !== "minigame" && (
               <View className="items-center mb-6">
                 <Image
-                  source={CharacterImage}
+                  source={characterImage}
                   className="w-80 h-80"
                   resizeMode="cover"
                 />
@@ -360,14 +360,14 @@ export default function StoryPlayer({
                 {currentNode.options.map((option, index) => (
                   <Pressable
                     key={index}
-                    onPress={() => handleChoice(index)}
+                    onPress={handleChoice}
                     className="bg-green-600 rounded-2xl p-4 mb-3 active:bg-green-700 shadow-md"
                   >
                     <Text
                       className="text-white text-center text-xl leading-relaxed"
                       style={{ fontFamily: "LilitaOne_400Regular" }}
                     >
-                      "{option}"
+                      &quot;{option}&quot;
                     </Text>
                   </Pressable>
                 ))}

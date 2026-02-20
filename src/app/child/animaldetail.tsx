@@ -1,14 +1,42 @@
 import { useImage } from "@/src/hooks/useImage";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useChildContext } from "../../context/ChildContext";
+import {
+  isFavoriteAnimal,
+  toggleFavoriteAnimal,
+} from "../../database/favoriteAnimalsManager";
+import { getTestChildId } from "../../database/testData";
 
 export default function AnimalDetail() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const { selectedChildId } = useChildContext();
   const name = (params.name as string) || "Unknown";
   const classification = (params.classification as string) || "";
   const image = useImage(name);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadFavoriteState = async () => {
+        const childId = selectedChildId || (await getTestChildId());
+        const currentState = await isFavoriteAnimal(childId, name);
+        setIsFavorite(currentState);
+      };
+
+      loadFavoriteState();
+    }, [name, selectedChildId]),
+  );
+
+  const onToggleFavorite = async () => {
+    const childId = selectedChildId || (await getTestChildId());
+    const nextState = await toggleFavoriteAnimal(childId, name);
+    setIsFavorite(nextState);
+  };
 
   return (
     <ScrollView className={["flex-1", "bg-amber-50"].join(" ")}>
@@ -39,16 +67,29 @@ export default function AnimalDetail() {
 
           <View className={["flex-row", "items-center"].join(" ")}>
             <Pressable
-              className={["p-2", "mr-2", "rounded-full", "bg-white/10"].join(
-                " ",
-              )}
+              onPress={onToggleFavorite}
+              className={[
+                "px-4",
+                "py-2.5",
+                "rounded-full",
+                isFavorite ? "bg-rose-500" : "bg-white/20",
+                "border",
+                isFavorite ? "border-rose-500" : "border-white/30",
+              ].join(" ")}
             >
-              <Ionicons name="heart" size={18} color="#fff" />
-            </Pressable>
-            <Pressable
-              className={["p-2", "rounded-full", "bg-white/10"].join(" ")}
-            >
-              <Ionicons name="share-social" size={18} color="#fff" />
+              <View className={["flex-row", "items-center"].join(" ")}>
+                <Ionicons
+                  name={isFavorite ? "heart" : "heart-outline"}
+                  size={24}
+                  color="#fff"
+                />
+                <Text
+                  className={["ml-2", "text-white", "text-base"].join(" ")}
+                  style={{ fontFamily: "LilitaOne_400Regular" }}
+                >
+                  Favorite
+                </Text>
+              </View>
             </Pressable>
           </View>
         </View>

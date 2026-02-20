@@ -34,7 +34,7 @@ export default function index() {
         ].join(" ")}
         style={{ fontFamily: "Pangolin_400Regular" }}
       >
-        Choose how you'd like to explore.
+        Choose how you&apos;d like to explore.
       </Text>
 
       <Pressable
@@ -87,7 +87,7 @@ export default function index() {
           className={["p-4", "text-white"].join(" ")}
           style={{ fontFamily: "LilitaOne_400Regular" }}
         >
-          Don't have an account? Sign Up
+          Don&apos;t have an account? Sign Up
         </Text>
       </Link>
     </View>

@@ -1,7 +1,3 @@
-export interface Choice {
-  text: string;
-}
-
 export interface Node {
   type: "narrator" | "dialogue" | "choice" | "minigame";
   text?: string;

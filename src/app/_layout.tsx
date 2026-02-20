@@ -4,26 +4,33 @@ import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
-import { Platform, Text, TextInput } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 import { ChildProvider } from "../context/ChildContext";
+import { ParentAccessProvider } from "../context/ParentAccessContext";
 import {
-    initializeAchievements,
-    syncAchievementsForCollectedAnimals,
+  initializeAchievements,
+  syncAchievementsForCollectedAnimals,
 } from "../database/achievementsManager";
 import { initializeAnimals } from "../database/data/animals";
 import { initializeDatabase } from "../database/sqlite";
 import { resetRedTestChild, seedTestData } from "../database/testData";
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     LilitaOne_400Regular,
     Pangolin_400Regular,
   });
 
   useEffect(() => {
-    if (!fontsLoaded) return;
+    if (!fontsLoaded || fontError) return;
 
     Text.defaultProps = Text.defaultProps || {};
     Text.defaultProps.style = [
@@ -93,46 +100,52 @@ export default function RootLayout() {
     setup();
   }, []);
 
-  if (!fontsLoaded) {
-    return null;
+  if (!fontsLoaded && !fontError) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <ActivityIndicator size="large" color="#16a34a" />
+      </View>
+    );
   }
 
   return (
-    <ChildProvider>
-      <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Welcome",
-            }}
-          />
-          <Stack.Screen
-            name="login/parentlogin"
-            options={{
-              title: "parentlogin",
-            }}
-          />
-          <Stack.Screen
-            name="login/childlogin"
-            options={{
-              title: "childlogin",
-            }}
-          />
-          <Stack.Screen
-            name="child/(child-tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="parentdashboardtest"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </SafeAreaProvider>
-    </ChildProvider>
+    <ParentAccessProvider>
+      <ChildProvider>
+        <SafeAreaProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="index"
+              options={{
+                title: "Welcome",
+              }}
+            />
+            <Stack.Screen
+              name="login/parentlogin"
+              options={{
+                title: "parentlogin",
+              }}
+            />
+            <Stack.Screen
+              name="login/childlogin"
+              options={{
+                title: "childlogin",
+              }}
+            />
+            <Stack.Screen
+              name="child/(child-tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="parentdashboardtest"
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </SafeAreaProvider>
+      </ChildProvider>
+    </ParentAccessProvider>
   );
 }

@@ -14,55 +14,51 @@ interface AnimalCard {
   id: string;
   name: string;
   classification: string;
-  storyId?: string;
 }
 
 export default function Favorites() {
   const router = useRouter();
   const [animals, setAnimals] = useState<AnimalCard[]>([]);
   const [loading, setLoading] = useState(true);
-  const [childId, setChildId] = useState<number | null>(null);
   const collectedCount = useCollectedAnimalsCount();
   const { selectedChildId } = useChildContext();
-
-  const loadCollectedAnimals = async () => {
-    try {
-      // Use selected child ID from context, fallback to test child
-      const currentChildId = selectedChildId || (await getTestChildId());
-      setChildId(currentChildId);
-
-      const collected = await getCollectedAnimals(currentChildId);
-
-      // Get animal details from database
-      const animalCards: AnimalCard[] = [];
-      for (const animal of collected) {
-        const animalResult = await database.getFirstAsync(
-          `SELECT animal_id, name, category FROM animals WHERE name = ?`,
-          [animal.animal_name],
-        );
-
-        if (animalResult) {
-          const row = animalResult as any;
-          animalCards.push({
-            id: row.animal_id.toString(),
-            name: row.name,
-            classification: row.category,
-            storyId: animal.collected_from_story,
-          });
-        }
-      }
-
-      setAnimals(animalCards);
-    } catch (error) {
-      console.error("Error loading collected animals:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Use useFocusEffect to refetch when tab comes into focus
   useFocusEffect(
     useCallback(() => {
+      const loadCollectedAnimals = async () => {
+        try {
+          // Use selected child ID from context, fallback to test child
+          const currentChildId = selectedChildId || (await getTestChildId());
+
+          const collected = await getCollectedAnimals(currentChildId);
+
+          // Get animal details from database
+          const animalCards: AnimalCard[] = [];
+          for (const animal of collected) {
+            const animalResult = await database.getFirstAsync(
+              `SELECT animal_id, name, category FROM animals WHERE name = ?`,
+              [animal.animal_name],
+            );
+
+            if (animalResult) {
+              const row = animalResult as any;
+              animalCards.push({
+                id: row.animal_id.toString(),
+                name: row.name,
+                classification: row.category,
+              });
+            }
+          }
+
+          setAnimals(animalCards);
+        } catch (error) {
+          console.error("Error loading collected animals:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
       loadCollectedAnimals();
     }, [selectedChildId]),
   );
@@ -85,7 +81,10 @@ export default function Favorites() {
           <Text className="text-lg font-semibold text-gray-600">
             No animals collected yet!
           </Text>
-          <Text className="text-base text-gray-500 mt-2">
+          <Text
+            className="text-base text-gray-500 mt-2"
+            style={{ fontFamily: "Pangolin_400Regular" }}
+          >
             Complete stories to collect animals
           </Text>
         </View>

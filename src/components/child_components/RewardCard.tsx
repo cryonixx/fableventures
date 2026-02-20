@@ -18,6 +18,12 @@ export default function RewardCard({
   isLocked = false,
 }: RewardCardProps) {
   const animalImage = useImage(animalName);
+  const normalizedCriteria = animalName
+    ?.toLowerCase()
+    .replace(/[^a-z0-9]/g, "")
+    .trim();
+  const isStoryCompleteAchievement =
+    normalizedCriteria === "storycompletefablefriends";
 
   return (
     <View
@@ -55,21 +61,25 @@ export default function RewardCard({
         </Text>
       </View>
       {isLocked ? (
-        <View className="bg-gray-300 rounded-full w-16 h-16 items-center justify-center">
+        <View className="h-16 w-16 items-center justify-center rounded-full border-2 border-gray-400 bg-gray-300">
           <MaterialIcons name="lock" size={32} color="#9CA3AF" />
         </View>
       ) : (
-        <Image
-          source={image ? { uri: image } : animalImage}
-          style={{
-            width: 64,
-            height: 64,
-            tintColor: "#D4AF37",
-            borderRadius: 999,
-            borderWidth: 2,
-            borderColor: "#D4AF37",
-          }}
-        />
+        <View className="h-16 w-16 items-center justify-center rounded-full border-2 border-yellow-600 bg-white">
+          {isStoryCompleteAchievement ? (
+            <MaterialIcons name="menu-book" size={34} color="#D4AF37" />
+          ) : (
+            <Image
+              source={image ? { uri: image } : animalImage}
+              style={{
+                width: 44,
+                height: 44,
+                tintColor: "#D4AF37",
+              }}
+              resizeMode="contain"
+            />
+          )}
+        </View>
       )}
     </View>
   );

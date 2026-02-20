@@ -21,27 +21,27 @@ export default function Achievements() {
   const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadAchievements = async () => {
-    try {
-      const childId = selectedChildId || (await getTestChildId());
-
-      // Get all achievements
-      const all = await getAllAchievements();
-      setAllAchievements(all);
-
-      // Get earned achievements
-      const earned = await getChildAchievements(childId);
-      setEarnedAchievements(earned);
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error loading achievements:", error);
-      setLoading(false);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
+      const loadAchievements = async () => {
+        try {
+          const childId = selectedChildId || (await getTestChildId());
+
+          // Get all achievements
+          const all = await getAllAchievements();
+          setAllAchievements(all);
+
+          // Get earned achievements
+          const earned = await getChildAchievements(childId);
+          setEarnedAchievements(earned);
+
+          setLoading(false);
+        } catch (error) {
+          console.error("Error loading achievements:", error);
+          setLoading(false);
+        }
+      };
+
       loadAchievements();
     }, [selectedChildId]),
   );

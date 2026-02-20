@@ -15,8 +15,6 @@ import {
 
 type Level = {
   id: number;
-  title: string;
-  description: string;
   chapter_id: string;
 };
 
@@ -24,20 +22,14 @@ type Level = {
 const LEVELS: Level[] = [
   {
     id: 1,
-    title: "Little Red Riding Hood",
-    description: "A classic tale reimagined",
     chapter_id: "chapter_1",
   },
   {
     id: 2,
-    title: "Level 2",
-    description: "Coming soon",
     chapter_id: "chapter_2",
   },
   {
     id: 3,
-    title: "Level 3",
-    description: "Coming soon",
     chapter_id: "chapter_3",
   },
 ];
@@ -94,7 +86,7 @@ export default function LevelSelectScreen() {
     loadProgress();
   }, [selectedChildId]);
 
-  const handleLevelSelect = (levelId: number, chapterId: string) => {
+  const handleLevelSelect = (chapterId: string) => {
     // Navigate to storybook with the selected chapter
     router.push({
       pathname: "/child/storybook",
@@ -225,7 +217,7 @@ export default function LevelSelectScreen() {
                 <Pressable
                   onPress={() => {
                     if (canPlay) {
-                      handleLevelSelect(level.id, level.chapter_id);
+                      handleLevelSelect(level.chapter_id);
                     }
                   }}
                   disabled={!canPlay}

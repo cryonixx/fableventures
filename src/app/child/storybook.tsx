@@ -251,7 +251,7 @@ export default function Storybook() {
             className="text-base text-gray-700 text-center mb-8"
             style={{ fontFamily: "Pangolin_400Regular" }}
           >
-            You finished the whole Fable Friends adventure and earned a new
+            You finished The tale of little red adventure and earned a new
             achievement!
           </Text>
 

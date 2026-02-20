@@ -90,7 +90,7 @@ export default function ChildLogin() {
             className={["p-4", "text-white"].join(" ")}
             style={{ fontFamily: "LilitaOne_400Regular" }}
           >
-            Let's go!
+            Let&apos;s go!
           </Text>
         </Pressable>
       </View>

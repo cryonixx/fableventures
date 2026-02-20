@@ -20,7 +20,7 @@ export default function TabLayout() {
         name="library"
         options={{
           title: "Library",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="book" color={color} size={18} />
           ),
         }}
@@ -30,7 +30,7 @@ export default function TabLayout() {
         name="achievements"
         options={{
           title: "Achievements",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="trophy" color={color} size={18} />
           ),
         }}
@@ -40,7 +40,7 @@ export default function TabLayout() {
         name="favorites"
         options={{
           title: "Favorites",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="heart" color={color} size={18} />
           ),
         }}
@@ -50,7 +50,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="person" color={color} size={18} />
           ),
         }}

@@ -1,8 +1,11 @@
 import { router } from "expo-router";
 import { Pressable, Text, TextInput, View } from "react-native";
 import IndexReturn from "../components/IndexReturn";
+import { useParentAccessContext } from "../context/ParentAccessContext";
 
 export default function SignUp() {
+  const { grantParentAccess } = useParentAccessContext();
+
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
       <IndexReturn />
@@ -62,7 +65,10 @@ export default function SignUp() {
           ].join(" ")}
         />
         <Pressable
-          onPress={() => router.push("/parent/parentdashboardtest")}
+          onPress={() => {
+            grantParentAccess();
+            router.push("/parent/parentdashboardtest");
+          }}
           className={[
             "mt-4",
             "w-full",
