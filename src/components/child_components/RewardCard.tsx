@@ -57,7 +57,11 @@ export default function RewardCard({
           ].join(" ")}
           style={{ fontFamily: "Pangolin_400Regular" }}
         >
-          {isLocked ? "Meet an animal to unlock" : description}
+          {isLocked
+            ? isStoryCompleteAchievement
+              ? "Finish the story to unlock"
+              : "Meet an animal to unlock"
+            : description}
         </Text>
       </View>
       {isLocked ? (
