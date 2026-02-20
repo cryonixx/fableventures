@@ -7,21 +7,22 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     fontFamily: {
-      sans: ["Nunito_400Regular"],
+      sans: ["Pangolin_400Regular"],
+      heading: ["LilitaOne_400Regular"],
     },
     extend: {},
   },
   plugins: [
     function ({ addUtilities }) {
       addUtilities({
-        ".font-medium": {
-          fontFamily: "Nunito_600SemiBold",
+        ".font-bold": {
+          fontFamily: "LilitaOne_400Regular",
         },
         ".font-semibold": {
-          fontFamily: "Nunito_700Bold",
+          fontFamily: "LilitaOne_400Regular",
         },
-        ".font-bold": {
-          fontFamily: "Nunito_700Bold",
+        ".font-medium": {
+          fontFamily: "Pangolin_400Regular",
         },
       });
     },

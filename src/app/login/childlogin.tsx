@@ -23,13 +23,6 @@ export default function ChildLogin() {
     setSelectedChildId(childId);
   };
 
-  const handleContinue = () => {
-    if (selectedChildId) {
-      setGlobalChildId(selectedChildId);
-      router.push("/child/(child-tabs)/library");
-    }
-  };
-
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
       <View className="w-full h-1/10 flex m-4">
@@ -48,7 +41,10 @@ export default function ChildLogin() {
         ].join(" ")}
       >
         <View className="w-full">
-          <Text className="text-center text-xl text-green-500">
+          <Text
+            className="text-center text-xl text-green-500"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Hello! Tap your name to continue your adventure!
           </Text>
         </View>
@@ -76,17 +72,24 @@ export default function ChildLogin() {
         </ScrollView>
 
         <Pressable
-          onPress={handleContinue}
+          onPress={() => {
+            if (!selectedChildId) return;
+            setGlobalChildId(selectedChildId);
+            router.push("/child/(child-tabs)/library");
+          }}
           disabled={!selectedChildId}
           className={[
             "mt-4",
             "w-full",
             "items-center",
             "rounded-xl",
-            selectedChildId ? "bg-yellow-500" : "bg-gray-400",
+            selectedChildId ? "bg-yellow-500" : "bg-gray-400 opacity-50",
           ].join(" ")}
         >
-          <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+          <Text
+            className={["p-4", "text-white"].join(" ")}
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Let's go!
           </Text>
         </Pressable>

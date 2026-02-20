@@ -1,3 +1,5 @@
+import { LilitaOne_400Regular } from "@expo-google-fonts/lilita-one";
+import { Pangolin_400Regular } from "@expo-google-fonts/pangolin";
 import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
@@ -16,18 +18,25 @@ import { resetRedTestChild, seedTestData } from "../database/testData";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    Nunito_400Regular: require("../../assets/fonts/Nunito_400Regular.ttf"),
-    Nunito_600SemiBold: require("../../assets/fonts/Nunito_600SemiBold.ttf"),
-    Nunito_700Bold: require("../../assets/fonts/Nunito_700Bold.ttf"),
+    LilitaOne_400Regular,
+    Pangolin_400Regular,
   });
 
-  if (fontsLoaded) {
+  useEffect(() => {
+    if (!fontsLoaded) return;
+
     Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.style = { fontFamily: "Nunito_400Regular" };
+    Text.defaultProps.style = [
+      { fontFamily: "Pangolin_400Regular" },
+      Text.defaultProps.style,
+    ];
 
     TextInput.defaultProps = TextInput.defaultProps || {};
-    TextInput.defaultProps.style = { fontFamily: "Nunito_400Regular" };
-  }
+    TextInput.defaultProps.style = [
+      { fontFamily: "Pangolin_400Regular" },
+      TextInput.defaultProps.style,
+    ];
+  }, [fontsLoaded]);
 
   useEffect(() => {
     // Hide navigation bar on Android

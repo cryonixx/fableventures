@@ -1,5 +1,6 @@
 import StoryPlayer from "@/src/components/child_components/StoryPlayer";
 import { useChildContext } from "@/src/context/ChildContext";
+import { awardAchievementByCriteria } from "@/src/database/achievementsManager";
 import {
   getChildProgress,
   loadStoryData,
@@ -8,7 +9,7 @@ import {
 import { getTestChildId } from "@/src/database/testData";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function Storybook() {
   const router = useRouter();
@@ -25,6 +26,10 @@ export default function Storybook() {
   const [chapterGroupEndId, setChapterGroupEndId] = useState<string | null>(
     null,
   );
+  const [showChapterCompletePopup, setShowChapterCompletePopup] =
+    useState(false);
+  const [showStoryCompletePopup, setShowStoryCompletePopup] = useState(false);
+  const [completedChapterTitle, setCompletedChapterTitle] = useState("");
   const { selectedChildId } = useChildContext();
 
   const getChapterGroup = (chapterId: string | null) => {
@@ -116,19 +121,21 @@ export default function Storybook() {
     router.back();
   };
 
-  const handleChapterComplete = (chapterId: string, chapterTitle: string) => {
+  const handleChapterComplete = async (
+    chapterId: string,
+    chapterTitle: string,
+  ) => {
     setShowStory(false);
     setHasProgress(false);
-    Alert.alert(
-      "Chapter Complete!",
-      `You finished ${chapterTitle}. Great job!`,
-      [
-        {
-          text: "Back to Map",
-          onPress: () => router.replace("/child/levelselect"),
-        },
-      ],
-    );
+
+    if (chapterId === "chapter_3" && childId) {
+      await awardAchievementByCriteria(childId, "story_complete_fable_friends");
+      setShowStoryCompletePopup(true);
+      return;
+    }
+
+    setCompletedChapterTitle(chapterTitle);
+    setShowChapterCompletePopup(true);
   };
 
   if (childId === null || checkingProgress) {
@@ -143,10 +150,16 @@ export default function Storybook() {
     return (
       <View className="flex-1 bg-amber-50 justify-center items-center p-8">
         <View className="bg-white rounded-2xl p-8 shadow-lg w-full max-w-md">
-          <Text className="text-2xl font-bold text-green-600 text-center mb-4">
+          <Text
+            className="text-2xl text-green-600 text-center mb-4"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Welcome Back!
           </Text>
-          <Text className="text-base text-gray-700 text-center mb-8">
+          <Text
+            className="text-base text-gray-700 text-center mb-8"
+            style={{ fontFamily: "Pangolin_400Regular" }}
+          >
             You have a story in progress. Would you like to continue where you
             left off?
           </Text>
@@ -155,7 +168,10 @@ export default function Storybook() {
             onPress={handleContinue}
             className="bg-green-500 rounded-xl p-4 mb-4"
           >
-            <Text className="text-white font-bold text-center text-lg">
+            <Text
+              className="text-white text-center text-lg"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
               Continue Story
             </Text>
           </Pressable>
@@ -164,13 +180,109 @@ export default function Storybook() {
             onPress={handleStartFresh}
             className="bg-yellow-500 rounded-xl p-4"
           >
-            <Text className="text-white font-bold text-center text-lg">
+            <Text
+              className="text-white text-center text-lg"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
               Start from Beginning
             </Text>
           </Pressable>
 
           <Pressable onPress={() => router.back()} className="mt-4 p-2">
-            <Text className="text-gray-500 text-center">Go Back</Text>
+            <Text
+              className="text-gray-500 text-center"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
+              Go Back
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
+  if (showChapterCompletePopup) {
+    return (
+      <View className="flex-1 bg-amber-50 justify-center items-center p-8">
+        <View className="bg-white rounded-2xl p-8 shadow-lg w-full max-w-md">
+          <Text
+            className="text-2xl text-green-600 text-center mb-4"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
+            Chapter Complete!
+          </Text>
+          <Text
+            className="text-base text-gray-700 text-center mb-8"
+            style={{ fontFamily: "Pangolin_400Regular" }}
+          >
+            You finished {completedChapterTitle}. Great job!
+          </Text>
+
+          <Pressable
+            onPress={() => {
+              setShowChapterCompletePopup(false);
+              router.replace("/child/levelselect");
+            }}
+            className="bg-green-500 rounded-xl p-4"
+          >
+            <Text
+              className="text-white text-center text-lg"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
+              Back to Map
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
+  if (showStoryCompletePopup) {
+    return (
+      <View className="flex-1 bg-amber-50 justify-center items-center p-8">
+        <View className="bg-white rounded-2xl p-8 shadow-lg w-full max-w-md">
+          <Text
+            className="text-2xl text-green-600 text-center mb-4"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
+            Story Complete!
+          </Text>
+          <Text
+            className="text-base text-gray-700 text-center mb-8"
+            style={{ fontFamily: "Pangolin_400Regular" }}
+          >
+            You finished the whole Fable Friends adventure and earned a new
+            achievement!
+          </Text>
+
+          <Pressable
+            onPress={() => {
+              setShowStoryCompletePopup(false);
+              router.replace("/child/levelselect");
+            }}
+            className="bg-green-500 rounded-xl p-4"
+          >
+            <Text
+              className="text-white text-center text-lg"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
+              Back to Map
+            </Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              setShowStoryCompletePopup(false);
+              router.replace("/child/(child-tabs)/achievements");
+            }}
+            className="bg-yellow-500 rounded-xl p-4 mt-4"
+          >
+            <Text
+              className="text-white text-center text-lg"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
+              View Achievements
+            </Text>
           </Pressable>
         </View>
       </View>

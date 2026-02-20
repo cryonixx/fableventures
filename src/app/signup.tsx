@@ -18,15 +18,17 @@ export default function SignUp() {
         ].join(" ")}
       >
         <View className="w-full">
-          <Text className="text-center text-3xl text-green-500">
+          <Text
+            className="text-center text-3xl text-green-500"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Parent Log In
           </Text>
         </View>
 
         <Text
-          className={["mt-4", "text-gray-950", "text-lg", "font-bold"].join(
-            " ",
-          )}
+          className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           Email
         </Text>
@@ -43,9 +45,8 @@ export default function SignUp() {
         />
 
         <Text
-          className={["mt-4", "text-gray-950", "text-lg", "font-bold"].join(
-            " ",
-          )}
+          className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           Password
         </Text>
@@ -70,7 +71,10 @@ export default function SignUp() {
             "bg-green-500",
           ].join(" ")}
         >
-          <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+          <Text
+            className={["p-4", "text-white"].join(" ")}
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Sign Up
           </Text>
         </Pressable>

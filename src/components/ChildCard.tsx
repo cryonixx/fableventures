@@ -26,10 +26,10 @@ function ChildCard({ name, image, onPress, isSelected }: RewardCardProps) {
         <Text
           className={[
             "text-lg",
-            "font-bold",
             "mb-1",
             isSelected ? "text-white" : "text-black",
           ].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           {name}
         </Text>

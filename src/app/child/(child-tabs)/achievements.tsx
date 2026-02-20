@@ -61,7 +61,10 @@ export default function Achievements() {
         className={["flex-1", "w-full", "overflow-hidden", "p-2"].join(" ")}
       >
         <View className="p-2">
-          <Text className="text-xl font-bold text-green-700 mb-2">
+          <Text
+            className="text-xl text-green-700 mb-2"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             Your Achievements ({earnedAchievements.length}/
             {allAchievements.length})
           </Text>

@@ -4,11 +4,11 @@ export interface Achievement {
   achievement_id: number;
   title: string;
   description: string;
-  criteria: string; // Animal name instead of ID
+  criteria: string;
   date_earned?: string;
 }
 
-const ANIMAL_ACHIEVEMENTS = [
+const ACHIEVEMENTS = [
   {
     title: "Friend of the Fox",
     description: "Met the clever Red Fox in the forest",
@@ -28,6 +28,11 @@ const ANIMAL_ACHIEVEMENTS = [
     title: "Chicken's Kindness",
     description: "Befriended the friendly Chicken",
     criteria: "Chicken",
+  },
+  {
+    title: "Fable Friends Complete",
+    description: "Finished the whole Fable Friends adventure",
+    criteria: "story_complete_fable_friends",
   },
 ];
 
@@ -55,7 +60,7 @@ export async function initializeAchievements() {
       );
     `);
 
-    for (const achievement of ANIMAL_ACHIEVEMENTS) {
+    for (const achievement of ACHIEVEMENTS) {
       await database.runAsync(
         `INSERT INTO achievements (title, description, criteria) 
          VALUES (?, ?, ?)`,
@@ -72,15 +77,22 @@ export async function awardAchievement(
   childId: number,
   animalName: string,
 ): Promise<void> {
+  await awardAchievementByCriteria(childId, animalName);
+}
+
+export async function awardAchievementByCriteria(
+  childId: number,
+  criteria: string,
+): Promise<void> {
   try {
-    // Find the achievement for this animal by name
+    // Find the achievement matching this criteria
     const achievement = await database.getFirstAsync(
       `SELECT achievement_id FROM achievements WHERE criteria = ?`,
-      [animalName],
+      [criteria],
     );
 
     if (!achievement) {
-      console.log(`No achievement found for animal "${animalName}"`);
+      console.log(`No achievement found for criteria "${criteria}"`);
       return;
     }
 

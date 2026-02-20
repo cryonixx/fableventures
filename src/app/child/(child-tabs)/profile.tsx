@@ -31,7 +31,12 @@ export default function Profile() {
       <ChildHeader currentprogress={collectedCount} />
       <ScrollView className={["flex-1", "w-full"].join(" ")}>
         <View className={["p-4", "items-center"].join(" ")}>
-          <Text className="text-2xl font-bold mb-2">{childName}</Text>
+          <Text
+            className="text-2xl mb-2"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
+            {childName}
+          </Text>
         </View>
       </ScrollView>
     </View>

@@ -28,10 +28,18 @@ export default function AnimalCardView({
         style={{ width: 80, height: 80 }}
         resizeMode="contain"
       />
-      <Text className="text-lg font-semibold mt-2" numberOfLines={1}>
+      <Text
+        className="text-lg mt-2"
+        numberOfLines={1}
+        style={{ fontFamily: "LilitaOne_400Regular" }}
+      >
         {name}
       </Text>
-      <Text className="text-sm text-gray-600" numberOfLines={1}>
+      <Text
+        className="text-sm text-gray-600"
+        numberOfLines={1}
+        style={{ fontFamily: "Pangolin_400Regular" }}
+      >
         {classification}
       </Text>
     </TouchableOpacity>

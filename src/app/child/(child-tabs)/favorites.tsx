@@ -70,7 +70,7 @@ export default function Favorites() {
   if (loading) {
     return (
       <View className="flex-1 bg-amber-50 justify-center items-center">
-        <Text className="text-lg font-semibold">
+        <Text className="text-lg" style={{ fontFamily: "Pangolin_400Regular" }}>
           Loading your collection...
         </Text>
       </View>
@@ -111,8 +111,8 @@ export default function Favorites() {
           )}
           keyExtractor={(item) => item.id}
           columnWrapperStyle={{
+            justifyContent: "center",
             gap: 16,
-            paddingHorizontal: 16,
             marginBottom: 16,
           }}
           contentContainerStyle={{ paddingTop: 16, paddingBottom: 16 }}

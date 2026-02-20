@@ -26,14 +26,25 @@ export function ChildHeader({
         "drop-shadow-lg",
       ].join(" ")}
     >
-      <Text className="mt-8 mb-2 text-2xl text-white font-bold">{title}</Text>
+      <Text
+        className="mt-8 mb-2 text-2xl text-white"
+        style={{ fontFamily: "LilitaOne_400Regular" }}
+      >
+        {title}
+      </Text>
       <View className="rounded-xl h-auto w-auto bg-white p-4 drop-shadow-md">
         <View className="flex-row justify-between items-center mb-2">
-          <Text className="items-center py-1 text-lg text-neutral-600 mb-2">
+          <Text
+            className="items-center py-1 text-lg text-neutral-600 mb-2"
+            style={{ fontFamily: "Pangolin_400Regular" }}
+          >
             Collection Progress
           </Text>
           <View className="bg-orange-400 rounded-full px-4 py-1">
-            <Text className="text-white font-bold text-sm">
+            <Text
+              className="text-white text-sm"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
               {currentprogress}/{totalprogress}
             </Text>
           </View>
@@ -47,7 +58,10 @@ export function ChildHeader({
           unfilledColor="#f3f4f6"
           borderWidth={0}
         />
-        <Text className={["text-sm", "text-neutral-400"].join(" ")}>
+        <Text
+          className={["text-sm", "text-neutral-400"].join(" ")}
+          style={{ fontFamily: "Pangolin_400Regular" }}
+        >
           {Math.max(totalprogress - currentprogress, 0)} more friends to
           discover!
         </Text>

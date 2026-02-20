@@ -36,10 +36,10 @@ export default function RewardCard({
         <Text
           className={[
             "text-lg",
-            "font-bold",
             "mb-1",
             isLocked ? "text-gray-400" : "text-gray-800",
           ].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           {isLocked ? "???" : name}
         </Text>
@@ -49,6 +49,7 @@ export default function RewardCard({
             "mb-1",
             isLocked ? "text-gray-400" : "text-gray-500",
           ].join(" ")}
+          style={{ fontFamily: "Pangolin_400Regular" }}
         >
           {isLocked ? "Meet an animal to unlock" : description}
         </Text>

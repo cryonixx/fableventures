@@ -80,10 +80,16 @@ export default function AnimalDetail() {
             )}
           >
             <View>
-              <Text className={["text-2xl", "font-bold"].join(" ")}>
+              <Text
+                className={["text-2xl"].join(" ")}
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
                 {name}
               </Text>
-              <Text className={["text-sm", "text-gray-500", "mt-1"].join(" ")}>
+              <Text
+                className={["text-sm", "text-gray-500", "mt-1"].join(" ")}
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
                 {classification}
               </Text>
             </View>
@@ -105,7 +111,7 @@ export default function AnimalDetail() {
               "drop-shadow",
             ].join(" ")}
           >
-            <Text>Facts</Text>
+            <Text style={{ fontFamily: "LilitaOne_400Regular" }}>Facts</Text>
           </Pressable>
           <Pressable
             className={[
@@ -116,7 +122,7 @@ export default function AnimalDetail() {
               "drop-shadow",
             ].join(" ")}
           >
-            <Text>Habitat</Text>
+            <Text style={{ fontFamily: "LilitaOne_400Regular" }}>Habitat</Text>
           </Pressable>
           <Pressable
             className={[
@@ -127,7 +133,7 @@ export default function AnimalDetail() {
               "drop-shadow",
             ].join(" ")}
           >
-            <Text>Diet</Text>
+            <Text style={{ fontFamily: "LilitaOne_400Regular" }}>Diet</Text>
           </Pressable>
         </View>
 
@@ -137,10 +143,16 @@ export default function AnimalDetail() {
               " ",
             )}
           >
-            <Text className={["font-semibold", "mb-2"].join(" ")}>
+            <Text
+              className={["mb-2"].join(" ")}
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
               Social Butterfly
             </Text>
-            <Text className={["text-sm", "text-gray-600"].join(" ")}>
+            <Text
+              className={["text-sm", "text-gray-600"].join(" ")}
+              style={{ fontFamily: "Pangolin_400Regular" }}
+            >
               Did you know? {name} are herd animals. This means they like
               spending time in large groups around their friends and family!
             </Text>
@@ -155,10 +167,16 @@ export default function AnimalDetail() {
               "mt-4",
             ].join(" ")}
           >
-            <Text className={["font-semibold", "mb-2"].join(" ")}>
+            <Text
+              className={["mb-2"].join(" ")}
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
               Amazing Feature
             </Text>
-            <Text className={["text-sm", "text-gray-600"].join(" ")}>
+            <Text
+              className={["text-sm", "text-gray-600"].join(" ")}
+              style={{ fontFamily: "Pangolin_400Regular" }}
+            >
               Interesting facts about {name} will go here. Replace this with
               real data.
             </Text>

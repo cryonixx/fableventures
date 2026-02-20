@@ -20,6 +20,7 @@ export default function index() {
       </View>
       <Text
         className={["m-4", "text-center", "text-4xl", "text-white"].join(" ")}
+        style={{ fontFamily: "LilitaOne_400Regular" }}
       >
         Welcome to the Farm!
       </Text>
@@ -31,6 +32,7 @@ export default function index() {
           "text-md",
           "text-white",
         ].join(" ")}
+        style={{ fontFamily: "Pangolin_400Regular" }}
       >
         Choose how you'd like to explore.
       </Text>
@@ -46,7 +48,10 @@ export default function index() {
           "drop-shadow-lg",
         ].join(" ")}
       >
-        <Text className={["p-4", "font-bold", "text-green-500"].join(" ")}>
+        <Text
+          className={["p-4", "text-green-500"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
           Log In as Parent
         </Text>
       </Pressable>
@@ -61,7 +66,10 @@ export default function index() {
           "drop-shadow-lg",
         ].join(" ")}
       >
-        <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+        <Text
+          className={["p-4", "text-white"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
           Log In as Child
         </Text>
       </Pressable>
@@ -75,7 +83,10 @@ export default function index() {
           "drop-shadow-lg",
         ].join(" ")}
       >
-        <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+        <Text
+          className={["p-4", "text-white"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
           Don't have an account? Sign Up
         </Text>
       </Link>

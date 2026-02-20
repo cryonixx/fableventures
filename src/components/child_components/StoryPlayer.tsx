@@ -124,7 +124,12 @@ export default function StoryPlayer({
   if (loading || !story) {
     return (
       <View className="flex-1 justify-center items-center bg-amber-50">
-        <Text className="text-lg font-semibold">Loading story...</Text>
+        <Text
+          className="text-lg"
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
+          Loading story...
+        </Text>
       </View>
     );
   }
@@ -293,7 +298,10 @@ export default function StoryPlayer({
             {/* Story Text Content - Narrator and Dialogue */}
             {currentNode.type === "narrator" && (
               <View className="bg-white rounded-2xl p-6 shadow-md mb-4 ">
-                <Text className="text-2xl text-gray-800 leading-relaxed">
+                <Text
+                  className="text-2xl text-gray-800 leading-relaxed"
+                  style={{ fontFamily: "Pangolin_400Regular" }}
+                >
                   {currentNode.text}
                 </Text>
               </View>
@@ -307,16 +315,22 @@ export default function StoryPlayer({
                   style={{ width: 340, height: 220 }}
                 >
                   <View className="h-auto m-8 pt-8">
-                    <Text className="text-2xl text-gray-800 leading-relaxed">
+                    <Text
+                      className="text-2xl text-gray-800 leading-relaxed"
+                      style={{ fontFamily: "Pangolin_400Regular" }}
+                    >
                       {currentNode.text}
                     </Text>
                   </View>
                 </ImageBackground>
                 <View
                   className="absolute bg-green-700 px-4 py-2 rounded-xl"
-                  style={{ top: 5, left: 10 }}
+                  style={{ top: 5, left: 20 }}
                 >
-                  <Text className="text-white font-bold text-2xl">
+                  <Text
+                    className="text-white text-3xl"
+                    style={{ fontFamily: "LilitaOne_400Regular" }}
+                  >
                     {currentNode.character}
                   </Text>
                 </View>
@@ -328,10 +342,16 @@ export default function StoryPlayer({
               <View>
                 {/* Question prompt */}
                 <View className="bg-white rounded-2xl p-4 mb-4 items-center">
-                  <Text className="text-2xl font-bold text-gray-800 mb-1">
+                  <Text
+                    className="text-2xl text-gray-800 mb-1"
+                    style={{ fontFamily: "LilitaOne_400Regular" }}
+                  >
                     What will you say?
                   </Text>
-                  <Text className="text-lg text-gray-500 italic">
+                  <Text
+                    className="text-lg text-gray-500"
+                    style={{ fontFamily: "Pangolin_400Regular" }}
+                  >
                     (pick and read one choice)
                   </Text>
                 </View>
@@ -343,7 +363,10 @@ export default function StoryPlayer({
                     onPress={() => handleChoice(index)}
                     className="bg-green-600 rounded-2xl p-4 mb-3 active:bg-green-700 shadow-md"
                   >
-                    <Text className="text-white font-bold text-center text-xl leading-relaxed">
+                    <Text
+                      className="text-white text-center text-xl leading-relaxed"
+                      style={{ fontFamily: "LilitaOne_400Regular" }}
+                    >
                       "{option}"
                     </Text>
                   </Pressable>
@@ -354,14 +377,22 @@ export default function StoryPlayer({
             {/* Minigame Section */}
             {currentNode.type === "minigame" && (
               <View className="bg-white rounded-2xl p-5 items-center justify-center shadow-md">
-                <Text className="text-base font-semibold text-gray-800 mb-3 text-center">
+                <Text
+                  className="text-base text-gray-800 mb-3 text-center"
+                  style={{ fontFamily: "Pangolin_400Regular" }}
+                >
                   {currentScene.description || "Minigame"}
                 </Text>
                 <Pressable
                   onPress={handleMinigame}
                   className="bg-purple-600 rounded-xl px-6 py-3 active:bg-purple-700"
                 >
-                  <Text className="text-white font-bold">Start Minigame</Text>
+                  <Text
+                    className="text-white"
+                    style={{ fontFamily: "LilitaOne_400Regular" }}
+                  >
+                    Start Minigame
+                  </Text>
                 </Pressable>
               </View>
             )}
@@ -374,7 +405,10 @@ export default function StoryPlayer({
                 onPress={handleNodeContinue}
                 className="bg-green-700 rounded-xl p-4 active:bg-green-800 shadow-md"
               >
-                <Text className="text-white font-bold text-center text-lg">
+                <Text
+                  className="text-white text-center text-lg"
+                  style={{ fontFamily: "LilitaOne_400Regular" }}
+                >
                   Continue
                 </Text>
               </Pressable>
@@ -389,7 +423,10 @@ export default function StoryPlayer({
                 onPress={onGoBack}
                 className="bg-yellow-100 rounded-lg px-4 py-2 active:bg-yellow-200 flex-row items-center gap-1"
               >
-                <Text className="text-green-700 font-bold text-base">
+                <Text
+                  className="text-green-700 text-base"
+                  style={{ fontFamily: "LilitaOne_400Regular" }}
+                >
                   Go Back
                 </Text>
               </Pressable>

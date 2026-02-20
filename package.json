@@ -13,6 +13,8 @@
     "format:check": "node ./node_modules/prettier/bin/prettier.cjs . --check"
   },
   "dependencies": {
+    "@expo-google-fonts/lilita-one": "^0.4.1",
+    "@expo-google-fonts/pangolin": "^0.4.1",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-vector-icons/material-icons": "^12.4.0",
     "@react-navigation/bottom-tabs": "^7.4.0",

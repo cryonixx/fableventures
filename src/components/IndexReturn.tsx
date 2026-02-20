@@ -11,7 +11,12 @@ function IndexReturn() {
     >
       <Ionicons name="arrow-back" size={20} color="#fff" />
       <Link href="/">
-        <Text className="font-bold text-white">Back</Text>
+        <Text
+          className="text-white"
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
+          Back
+        </Text>
       </Link>
     </View>
   );
