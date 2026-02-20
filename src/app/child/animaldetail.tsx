@@ -61,7 +61,6 @@ export default function AnimalDetail() {
           >
             <Image
               source={image}
-              className="border-4 border-white rounded-lg"
               style={{ width: 200, height: 200 }}
               resizeMode="contain"
             />

@@ -83,6 +83,7 @@ export default function Achievements() {
                 key={achievement.achievement_id}
                 name={achievement.title}
                 description={achievement.description}
+                animalName={achievement.criteria}
                 isLocked={!isEarned}
               />
             );

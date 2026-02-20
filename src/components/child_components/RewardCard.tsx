@@ -1,9 +1,11 @@
+import { useImage } from "@/src/hooks/useImage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image, Text, View } from "react-native";
 
 type RewardCardProps = {
   name: string;
   description: string;
+  animalName?: string;
   image?: string;
   isLocked?: boolean;
 };
@@ -11,9 +13,12 @@ type RewardCardProps = {
 export default function RewardCard({
   name,
   description,
+  animalName,
   image,
   isLocked = false,
 }: RewardCardProps) {
+  const animalImage = useImage(animalName);
+
   return (
     <View
       className={[
@@ -54,12 +59,15 @@ export default function RewardCard({
         </View>
       ) : (
         <Image
-          source={
-            image
-              ? { uri: image }
-              : require("../../../assets/images/placeholder.png")
-          }
-          style={{ width: 64, height: 64 }}
+          source={image ? { uri: image } : animalImage}
+          style={{
+            width: 64,
+            height: 64,
+            tintColor: "#D4AF37",
+            borderRadius: 999,
+            borderWidth: 2,
+            borderColor: "#D4AF37",
+          }}
         />
       )}
     </View>
