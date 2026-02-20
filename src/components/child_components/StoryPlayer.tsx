@@ -118,11 +118,14 @@ export default function StoryPlayer({
     loadStory();
   }, [childId, storyId, chapterGroupStartId, chapterGroupEndId]);
 
-  const characterImageName =
-    story?.sections[currentChapterIndex]?.scenes[currentSceneIndex]?.animal ||
+  // Prefer current node's character for image if present, else fallback to scene animal
+  const currentNodeCharacter =
     story?.sections[currentChapterIndex]?.scenes[currentSceneIndex]?.nodes[
       currentNodeIndex
     ]?.character;
+  const sceneAnimal =
+    story?.sections[currentChapterIndex]?.scenes[currentSceneIndex]?.animal;
+  const characterImageName = currentNodeCharacter || sceneAnimal;
   const characterImage = useImage(characterImageName);
 
   if (loading || !story) {
@@ -299,7 +302,7 @@ export default function StoryPlayer({
             {currentNode.type === "narrator" && (
               <View className="bg-white rounded-2xl p-6 shadow-md mb-4 ">
                 <Text
-                  className="text-2xl text-gray-800 leading-relaxed"
+                  className="text-2xl text-red-950 leading-relaxed"
                   style={{ fontFamily: "Pangolin_400Regular" }}
                 >
                   {currentNode.text}
@@ -316,7 +319,7 @@ export default function StoryPlayer({
                 >
                   <View className="h-auto m-8 pt-8">
                     <Text
-                      className="text-2xl text-gray-800 leading-relaxed"
+                      className="text-2xl text-red-950 leading-relaxed"
                       style={{ fontFamily: "Pangolin_400Regular" }}
                     >
                       {currentNode.text}
@@ -343,13 +346,13 @@ export default function StoryPlayer({
                 {/* Question prompt */}
                 <View className="bg-white rounded-2xl p-4 mb-4 items-center">
                   <Text
-                    className="text-2xl text-gray-800 mb-1"
+                    className="text-2xl text-red-950 mb-1"
                     style={{ fontFamily: "LilitaOne_400Regular" }}
                   >
                     What will you say?
                   </Text>
                   <Text
-                    className="text-lg text-gray-500"
+                    className="text-lg text-neutral-500"
                     style={{ fontFamily: "Pangolin_400Regular" }}
                   >
                     (pick and read one choice)
@@ -378,7 +381,7 @@ export default function StoryPlayer({
             {currentNode.type === "minigame" && (
               <View className="bg-white rounded-2xl p-5 items-center justify-center shadow-md">
                 <Text
-                  className="text-base text-gray-800 mb-3 text-center"
+                  className="text-base text-red-950 mb-3 text-center"
                   style={{ fontFamily: "Pangolin_400Regular" }}
                 >
                   {currentScene.description || "Minigame"}
@@ -400,16 +403,27 @@ export default function StoryPlayer({
 
           {/* Continue Button - Only for narrator/dialogue */}
           {currentNode.type !== "choice" && currentNode.type !== "minigame" && (
-            <View className="px-4 pb-3">
+            <View className="px-4 pb-3 flex-row justify-between gap-3">
+              <Pressable
+                onPress={() => setCurrentNodeIndex((i) => Math.max(0, i - 1))}
+                className="flex-1 bg-green-200 rounded-xl p-4 active:bg-green-300 shadow-md items-center"
+              >
+                <Text
+                  className="text-green-900 text-center text-lg"
+                  style={{ fontFamily: "LilitaOne_400Regular" }}
+                >
+                  Prev
+                </Text>
+              </Pressable>
               <Pressable
                 onPress={handleNodeContinue}
-                className="bg-green-700 rounded-xl p-4 active:bg-green-800 shadow-md"
+                className="flex-1 bg-green-700 rounded-xl p-4 active:bg-green-800 shadow-md items-center"
               >
                 <Text
                   className="text-white text-center text-lg"
                   style={{ fontFamily: "LilitaOne_400Regular" }}
                 >
-                  Continue
+                  Next
                 </Text>
               </Pressable>
             </View>
@@ -440,15 +454,7 @@ export default function StoryPlayer({
               onPress={() => console.log("Sound button pressed")}
               className="p-2 active:opacity-70"
             >
-              <MaterialIcons name="volume-up" size={28} color="white" />
-            </Pressable>
-
-            {/* Mute Button */}
-            <Pressable
-              onPress={() => console.log("Mute button pressed")}
-              className="p-2 ml-2 active:opacity-70"
-            >
-              <MaterialIcons name="volume-mute" size={28} color="white" />
+              <MaterialIcons name="volume-up" size={32} color="white" />
             </Pressable>
           </View>
         </View>
