@@ -1,5 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
 import RewardCard from "../../../components/child_components/RewardCard";
@@ -9,7 +8,6 @@ import {
   getAllAchievements,
   getChildAchievements,
 } from "../../../database/achievementsManager";
-import { getTestChildId } from "../../../database/testData";
 import { useCollectedAnimalsCount } from "../../../hooks/useCollectedAnimalsCount";
 
 export default function Achievements() {
@@ -21,30 +19,34 @@ export default function Achievements() {
   const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
-      const loadAchievements = async () => {
-        try {
-          const childId = selectedChildId || (await getTestChildId());
-
-          // Get all achievements
-          const all = await getAllAchievements();
-          setAllAchievements(all);
-
-          // Get earned achievements
-          const earned = await getChildAchievements(childId);
-          setEarnedAchievements(earned);
-
+  useEffect(() => {
+    const loadAchievements = async () => {
+      console.log("Loading achievements for child ID:", selectedChildId);
+      try {
+        if (!selectedChildId) {
           setLoading(false);
-        } catch (error) {
-          console.error("Error loading achievements:", error);
-          setLoading(false);
+          return;
         }
-      };
+        const childId = selectedChildId;
 
-      loadAchievements();
-    }, [selectedChildId]),
-  );
+        // Get all achievements
+        const all = await getAllAchievements();
+        setAllAchievements(all);
+
+        // Get earned achievements
+        const earned = await getChildAchievements(childId);
+        setEarnedAchievements(earned);
+        console.log(earned);
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error loading achievements:", error);
+        setLoading(false);
+      }
+    };
+
+    loadAchievements();
+  }, []);
 
   if (loading) {
     return (

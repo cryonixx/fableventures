@@ -1,4 +1,12 @@
-import { database } from "../sqlite";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase";
 
 export interface Child {
   child_id: number;
@@ -10,27 +18,42 @@ export interface Child {
 }
 
 export const getChildNameById = async (
-  childId: number,
+  childDocId: string,
 ): Promise<{ firstName: string; lastName: string } | null> => {
-  const result = (await database.getAllAsync(
-    "SELECT child_first_name, child_last_name FROM children WHERE child_id = ?",
-    [childId],
-  )) as { child_first_name: string; child_last_name: string }[];
-  if (result && result.length > 0) {
-    return {
-      firstName: result[0].child_first_name,
-      lastName: result[0].child_last_name,
-    };
+  try {
+    const docRef = doc(db, "children", childDocId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        firstName: data.child_first_name,
+        lastName: data.child_last_name,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching child name by ID:", error);
+    return null;
   }
-  return null;
 };
 
 export const getAllChildren = async (): Promise<Child[]> => {
   try {
-    const result = (await database.getAllAsync(
-      "SELECT child_id, parent_id, child_first_name, child_last_name, child_age, child_gender FROM children",
-    )) as Child[];
-    return result || [];
+    const childrenCol = collection(db, "children");
+    const snapshot = await getDocs(childrenCol);
+    const children: Child[] = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      children.push({
+        child_id: Number(docSnap.id),
+        parent_id: data.parent_id,
+        child_first_name: data.child_first_name,
+        child_last_name: data.child_last_name,
+        child_age: data.child_age,
+        child_gender: data.child_gender,
+      });
+    });
+    return children;
   } catch (error) {
     console.error("Error fetching all children:", error);
     return [];
@@ -41,11 +64,22 @@ export const getChildrenByParentId = async (
   parentId: number,
 ): Promise<Child[]> => {
   try {
-    const result = (await database.getAllAsync(
-      "SELECT child_id, parent_id, child_first_name, child_last_name, child_age, child_gender FROM children WHERE parent_id = ?",
-      [parentId],
-    )) as Child[];
-    return result || [];
+    const childrenCol = collection(db, "children");
+    const q = query(childrenCol, where("parent_id", "==", parentId));
+    const snapshot = await getDocs(q);
+    const children: Child[] = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      children.push({
+        child_id: Number(docSnap.id),
+        parent_id: data.parent_id,
+        child_first_name: data.child_first_name,
+        child_last_name: data.child_last_name,
+        child_age: data.child_age,
+        child_gender: data.child_gender,
+      });
+    });
+    return children;
   } catch (error) {
     console.error("Error fetching children by parent ID:", error);
     return [];

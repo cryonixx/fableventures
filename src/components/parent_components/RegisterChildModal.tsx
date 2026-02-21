@@ -44,6 +44,7 @@ export function RegisterChildModal({
     age: "5",
     gender: "M",
   });
+  const [existingChildIds, setExistingChildIds] = useState<string[]>([]);
 
   const handleAddChild = () => {
     if (
@@ -61,14 +62,81 @@ export function RegisterChildModal({
     setChildren(children.filter((_, i) => i !== index));
   };
 
+  // Fetch all child document IDs for this parent when modal opens
+  React.useEffect(() => {
+    const fetchChildIds = async () => {
+      if (!visible) return;
+      const user = auth.currentUser;
+      if (user) {
+        const childrenCol = collection(db, "children");
+        const q = query(childrenCol, where("parent_id", "==", user.uid));
+        const prevDocs = await getDocs(q);
+        const ids = prevDocs.docs.map((docSnap) => docSnap.id);
+        setExistingChildIds(ids);
+      }
+    };
+    fetchChildIds();
+  }, [visible]);
+
   const handleSave = async () => {
     try {
       const user = auth.currentUser;
       if (user) {
         const childrenCol = collection(db, "children");
-        // Delete all previous children for this parent
+        // Fetch previous children for this parent
         const q = query(childrenCol, where("parent_id", "==", user.uid));
         const prevDocs = await getDocs(q);
+        const prevIds = prevDocs.docs.map((docSnap) => docSnap.id);
+
+        // Determine which children are being kept
+        const newChildrenNames = children.map(
+          (c) => `${c.firstName}|${c.lastName}|${c.age}|${c.gender}`,
+        );
+        const keptIds: string[] = [];
+        prevDocs.docs.forEach((docSnap) => {
+          const data = docSnap.data();
+          const key = `${data.child_first_name}|${data.child_last_name}|${data.child_age}|${data.child_gender}`;
+          if (newChildrenNames.includes(key)) {
+            keptIds.push(docSnap.id);
+          }
+        });
+
+        // Determine which child IDs are being deleted
+        const deletedIds = prevIds.filter((id) => !keptIds.includes(id));
+
+        // Cascade delete related tables for deleted child IDs
+        for (const childId of deletedIds) {
+          // Delete from child_achievements
+          const achCol = collection(db, "child_achievements");
+          const achQ = query(achCol, where("child_id", "==", childId));
+          const achSnap = await getDocs(achQ);
+          for (const docSnap of achSnap.docs) {
+            await deleteDoc(docSnap.ref);
+          }
+          // Delete from collected_animals
+          const caCol = collection(db, "collected_animals");
+          const caQ = query(caCol, where("child_id", "==", childId));
+          const caSnap = await getDocs(caQ);
+          for (const docSnap of caSnap.docs) {
+            await deleteDoc(docSnap.ref);
+          }
+          // Delete from favorite_animals
+          const faCol = collection(db, "favorite_animals");
+          const faQ = query(faCol, where("child_id", "==", childId));
+          const faSnap = await getDocs(faQ);
+          for (const docSnap of faSnap.docs) {
+            await deleteDoc(docSnap.ref);
+          }
+          // Delete from story_progress
+          const spCol = collection(db, "story_progress");
+          const spQ = query(spCol, where("child_id", "==", childId));
+          const spSnap = await getDocs(spQ);
+          for (const docSnap of spSnap.docs) {
+            await deleteDoc(docSnap.ref);
+          }
+        }
+
+        // Delete all previous children for this parent
         for (const docSnap of prevDocs.docs) {
           await deleteDoc(docSnap.ref);
         }

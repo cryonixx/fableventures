@@ -19,7 +19,7 @@ import {
 } from "react-native";
 
 interface StoryPlayerProps {
-  childId: number;
+  childId: string;
   storyId: string;
   onMinigameNeeded?: (minigameId: string) => void;
   chapterGroupStartId?: string;

@@ -1,4 +1,3 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import {
   collection,
@@ -8,13 +7,15 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert } from "react-native";
 import { useChildContext } from "../context/ChildContext";
 import { useParentAccessContext } from "../context/ParentAccessContext";
-import { getChildAchievements } from "../database/achievementsManager";
+import {
+  Achievement,
+  getChildAchievements,
+} from "../database/achievementsManager";
 import { getChildNameById } from "../database/data/child";
-import { getTestChildId } from "../database/testData";
 import { db } from "../firebase";
 import { useCollectedAnimalsCount } from "./useCollectedAnimalsCount";
 import { useParentCheck } from "./useParentCheck";
@@ -143,110 +144,116 @@ export const useChildProfileScreen = () => {
   const topCards = profileCards.slice(0, 2);
   const bottomCards = profileCards.slice(2, 4);
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchProfileData = async () => {
-        try {
-          const childId = selectedChildId || (await getTestChildId());
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const childId = selectedChildId;
+      if (!childId) {
+        setChildName("Child not found");
+        setLatestAchievement("No achievements yet");
+        setLatestAchievementDetail("Collect friends to unlock rewards");
+        setLatestAchievementCriteria("bookcover");
+        setFavoriteAnimal("No favorite yet");
+        setFavoriteAnimalDetail("Collect an animal to set a favorite");
+        setFavoriteAnimals([]);
+        setFavoriteThumbnailKey("bookcover");
+        setReadingLevel("Not set");
+        setReadingLevelDetail("Age data unavailable");
+        setRecentlyRead("No stories yet");
+        setRecentlyReadDetail("Start a story to track progress");
+        return;
+      }
 
-          const result = await getChildNameById(childId);
-          if (result) {
-            setChildName(`${result.firstName} ${result.lastName}`);
-          } else {
-            setChildName("Child not found");
-          }
+      // Get child name
+      const result = await getChildNameById(childId).catch(() => null);
+      if (result) {
+        setChildName(`${result.firstName} ${result.lastName}`);
+      } else {
+        setChildName("Child not found");
+      }
 
-          // TODO: Fetch child age from Firestore if needed
-          setReadingLevel("Not set");
-          setReadingLevelDetail("Age data unavailable");
+      // TODO: Fetch child age from Firestore if needed
+      setReadingLevel("Not set");
+      setReadingLevelDetail("Age data unavailable");
 
-          const achievements = await getChildAchievements(childId);
-          if (achievements.length > 0) {
-            setLatestAchievement(achievements[0].title);
-            setLatestAchievementDetail(
-              achievements[0].description || "Achievement unlocked",
-            );
-            setLatestAchievementCriteria(
-              achievements[0].criteria || "bookcover",
-            );
-          } else {
-            setLatestAchievement("No achievements yet");
-            setLatestAchievementDetail("Collect friends to unlock rewards");
-            setLatestAchievementCriteria("bookcover");
-          }
+      // Get achievements
+      let achievements: Achievement[] = [];
+      try {
+        achievements = childId ? await getChildAchievements(childId) : [];
+      } catch (err) {
+        achievements = [];
+      }
+      if (achievements.length > 0) {
+        setLatestAchievement(achievements[0].title);
+        setLatestAchievementDetail(
+          achievements[0].description || "Achievement unlocked",
+        );
+        setLatestAchievementCriteria(achievements[0].criteria || "bookcover");
+      } else {
+        setLatestAchievement("No achievements yet");
+        setLatestAchievementDetail("Collect friends to unlock rewards");
+        setLatestAchievementCriteria("bookcover");
+      }
 
-          // Fetch favorite animals from Firestore
-          const favRef = collection(db, "favorite_animals");
-          const favQ = query(favRef, where("child_id", "==", childId));
-          const favSnap = await getDocs(favQ);
-          const favoriteNames = favSnap.docs.map((doc) => doc.data().animal_id);
-          if (favoriteNames.length > 0) {
-            const previewNames = favoriteNames.slice(0, 2).join(", ");
-            const additionalCount = favoriteNames.length - 2;
-            setFavoriteAnimals(favoriteNames);
-            setFavoriteAnimal(
-              additionalCount > 0
-                ? `${previewNames} +${additionalCount}`
-                : previewNames,
-            );
-            setFavoriteAnimalDetail(
-              `${favoriteNames.length} favorite${favoriteNames.length > 1 ? "s" : ""} selected`,
-            );
-            setFavoriteThumbnailKey(favoriteNames[0]);
-          } else {
-            setFavoriteAnimal("No favorite yet");
-            setFavoriteAnimalDetail(
-              "Tap the heart on an animal to favorite it",
-            );
-            setFavoriteAnimals([]);
-            setFavoriteThumbnailKey("bookcover");
-          }
+      // Fetch favorite animals from Firestore
+      let favoriteNames: string[] = [];
+      try {
+        const favRef = collection(db, "favorite_animals");
+        const favQ = query(favRef, where("child_id", "==", childId));
+        const favSnap = await getDocs(favQ);
+        favoriteNames = favSnap.docs.map((doc) => doc.data().animal_id);
+      } catch {
+        favoriteNames = [];
+      }
+      if (favoriteNames.length > 0) {
+        const previewNames = favoriteNames.slice(0, 2).join(", ");
+        const additionalCount = favoriteNames.length - 2;
+        setFavoriteAnimals(favoriteNames);
+        setFavoriteAnimal(
+          additionalCount > 0
+            ? `${previewNames} +${additionalCount}`
+            : previewNames,
+        );
+        setFavoriteAnimalDetail(
+          `${favoriteNames.length} favorite${favoriteNames.length > 1 ? "s" : ""} selected`,
+        );
+        setFavoriteThumbnailKey(favoriteNames[0]);
+      } else {
+        setFavoriteAnimal("No favorite yet");
+        setFavoriteAnimalDetail("Tap the heart on an animal to favorite it");
+        setFavoriteAnimals([]);
+        setFavoriteThumbnailKey("bookcover");
+      }
 
-          // Fetch recent story from Firestore
-          const storyRef = collection(db, "story_progress");
-          const storyQ = query(
-            storyRef,
-            where("child_id", "==", childId),
-            orderBy("last_updated", "desc"),
-            limit(1),
-          );
-          const storySnap = await getDocs(storyQ);
-          const recentStory = storySnap.docs[0]?.data();
-          if (recentStory?.story_id) {
-            setRecentlyRead(getStoryTitleFromId(recentStory.story_id));
-            setRecentlyReadDetail(
-              recentStory.current_chapter_id
-                ? formatLabel(recentStory.current_chapter_id)
-                : "In progress",
-            );
-          } else {
-            setRecentlyRead("No stories yet");
-            setRecentlyReadDetail("Start a story to track progress");
-          }
-        } catch {
-          setChildName("Error fetching name");
-          setLatestAchievement("No achievements yet");
-          setLatestAchievementDetail("Collect friends to unlock rewards");
-          setLatestAchievementCriteria("bookcover");
-          setFavoriteAnimal("No favorite yet");
-          setFavoriteAnimalDetail("Collect an animal to set a favorite");
-          setFavoriteAnimals([]);
-          setFavoriteThumbnailKey("bookcover");
-          setReadingLevel("Not set");
-          setReadingLevelDetail("Age data unavailable");
-          setRecentlyRead("No stories yet");
-          setRecentlyReadDetail("Start a story to track progress");
-        }
-      };
+      // Fetch recent story from Firestore
+      let recentStory: any = null;
+      try {
+        const storyRef = collection(db, "story_progress");
+        const storyQ = query(
+          storyRef,
+          where("child_id", "==", childId),
+          orderBy("last_updated", "desc"),
+          limit(1),
+        );
+        const storySnap = await getDocs(storyQ);
+        recentStory = storySnap.docs[0]?.data();
+      } catch {
+        recentStory = null;
+      }
+      if (recentStory?.story_id) {
+        setRecentlyRead(getStoryTitleFromId(recentStory.story_id));
+        setRecentlyReadDetail(
+          recentStory.current_chapter_id
+            ? formatLabel(recentStory.current_chapter_id)
+            : "In progress",
+        );
+      } else {
+        setRecentlyRead("No stories yet");
+        setRecentlyReadDetail("Start a story to track progress");
+      }
+    };
 
-      fetchProfileData();
-    }, [
-      selectedChildId,
-      formatLabel,
-      getReadingLevelFromAge,
-      getStoryTitleFromId,
-    ]),
-  );
+    fetchProfileData();
+  }, [selectedChildId, getStoryTitleFromId, formatLabel]);
 
   const onCardPress = () => {};
 

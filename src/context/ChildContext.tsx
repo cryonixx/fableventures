@@ -1,8 +1,9 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
+// selectedChildId is the Firestore document ref id for the selected child
 interface ChildContextType {
-  selectedChildId: string | number | null;
-  setSelectedChildId: (id: string | number | null) => void;
+  selectedChildId: string | null;
+  setSelectedChildId: (id: string | null) => void;
 }
 
 const ChildContext = createContext<ChildContextType | undefined>(undefined);
@@ -10,9 +11,8 @@ const ChildContext = createContext<ChildContextType | undefined>(undefined);
 export const ChildProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [selectedChildId, setSelectedChildId] = useState<
-    string | number | null
-  >(null);
+  // selectedChildId is the Firestore document ref id for the selected child
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
   return (
     <ChildContext.Provider value={{ selectedChildId, setSelectedChildId }}>
       {children}
@@ -26,7 +26,7 @@ export const useChildContext = () => {
     // Return default values instead of throwing error
     return {
       selectedChildId: null,
-      setSelectedChildId: (_id: string | number | null) => {},
+      setSelectedChildId: (_id: string | null) => {},
     };
   }
   return context;

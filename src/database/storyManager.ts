@@ -1,20 +1,28 @@
 import storyJson from "@/assets/script/fable_friends_script.json";
+import { awardAchievementByCriteria } from "@/src/database/achievementsManager";
 import { ChildStoryProgress, CollectedAnimal, Story } from "@/src/types/story";
-import { awardAchievement } from "./achievementsManager";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  Timestamp,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export async function loadStoryData(): Promise<Story> {
   return storyJson as Story;
 }
 
 export async function getChildProgress(
-  childId: number,
+  childId: string,
   storyId: string,
 ): Promise<ChildStoryProgress | null> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const progressRef = collection(db, "story_progress");
     const q = query(
       progressRef,
@@ -41,7 +49,7 @@ export async function getChildProgress(
 }
 
 export async function saveChildProgress(
-  childId: number,
+  childId: string,
   storyId: string,
   currentChapterId: string,
   currentSceneId: string,
@@ -49,10 +57,6 @@ export async function saveChildProgress(
   completedChapters: string[] = [],
 ): Promise<void> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs, setDoc, doc, Timestamp } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const progressRef = collection(db, "story_progress");
     const q = query(
       progressRef,
@@ -82,14 +86,10 @@ export async function saveChildProgress(
 }
 
 export async function resetChildProgress(
-  childId: number,
+  childId: string,
   storyId: string,
 ): Promise<void> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs, deleteDoc } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const progressRef = collection(db, "story_progress");
     const q = query(
       progressRef,
@@ -109,16 +109,12 @@ export async function resetChildProgress(
 }
 
 export async function collectAnimal(
-  childId: number,
+  childId: string,
   animalName: string,
   storyId: string,
   sceneId: string,
 ): Promise<void> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs, addDoc } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const collectedRef = collection(db, "collected_animals");
     const q = query(
       collectedRef,
@@ -142,7 +138,7 @@ export async function collectAnimal(
     console.log(
       `Animal "${animalName}" collected for child ${childId} in Firestore`,
     );
-    await awardAchievement(childId, animalName);
+    await awardAchievementByCriteria(childId, animalName);
   } catch (error) {
     console.warn(
       `Error collecting animal "${animalName}" in Firestore:`,
@@ -153,13 +149,9 @@ export async function collectAnimal(
 }
 
 export async function getCollectedAnimals(
-  childId: number,
+  childId: string,
 ): Promise<CollectedAnimal[]> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const collectedRef = collection(db, "collected_animals");
     const q = query(collectedRef, where("child_id", "==", childId));
     const snap = await getDocs(q);
@@ -180,14 +172,10 @@ export async function getCollectedAnimals(
 }
 
 export async function isAnimalCollected(
-  childId: number,
+  childId: string,
   animalName: string,
 ): Promise<boolean> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const collectedRef = collection(db, "collected_animals");
     const q = query(
       collectedRef,
@@ -203,13 +191,9 @@ export async function isAnimalCollected(
 }
 
 export async function getCollectedAnimalsCount(
-  childId: number,
+  childId: string,
 ): Promise<number> {
   try {
-    // Firestore migration
-    const { collection, query, where, getDocs } =
-      await import("firebase/firestore");
-    const { db } = await import("../firebase");
     const collectedRef = collection(db, "collected_animals");
     const q = query(collectedRef, where("child_id", "==", childId));
     const snap = await getDocs(q);

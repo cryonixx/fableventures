@@ -63,15 +63,8 @@ export async function initializeAchievements() {
   }
 }
 
-export async function awardAchievement(
-  childId: number,
-  animalName: string,
-): Promise<void> {
-  await awardAchievementByCriteria(childId, animalName);
-}
-
 export async function awardAchievementByCriteria(
-  childId: number,
+  childDocId: string,
   criteria: string,
 ): Promise<void> {
   try {
@@ -90,35 +83,35 @@ export async function awardAchievementByCriteria(
     const childAchievementsRef = collection(db, "child_achievements");
     const checkQ = query(
       childAchievementsRef,
-      where("child_id", "==", childId),
+      where("child_id", "==", childDocId),
       where("achievement_id", "==", achievementId),
     );
     const checkSnap = await getDocs(checkQ);
     if (!checkSnap.empty) {
       console.log(
-        `Achievement ${achievementId} already earned by child ${childId}`,
+        `Achievement ${achievementId} already earned by child ${childDocId}`,
       );
       return;
     }
 
     // Award achievement
     await addDoc(childAchievementsRef, {
-      child_id: childId,
+      child_id: childDocId,
       achievement_id: achievementId,
       date_earned: Timestamp.now(),
     });
-    console.log(`Achievement awarded: ${achievementId} to child ${childId}`);
+    console.log(`Achievement awarded: ${achievementId} to child ${childDocId}`);
   } catch (error) {
     console.error("Error awarding achievement in Firestore:", error);
   }
 }
 
 export async function getChildAchievements(
-  childId: number,
+  childDocId: string,
 ): Promise<Achievement[]> {
   try {
     const childAchievementsRef = collection(db, "child_achievements");
-    const q = query(childAchievementsRef, where("child_id", "==", childId));
+    const q = query(childAchievementsRef, where("child_id", "==", childDocId));
     const childSnap = await getDocs(q);
     const achievementsRef = collection(db, "achievements");
     const achievementsSnap = await getDocs(achievementsRef);
@@ -162,20 +155,5 @@ export async function getAllAchievements(): Promise<Achievement[]> {
   } catch (error) {
     console.error("Error fetching all achievements from Firestore:", error);
     return [];
-  }
-}
-
-export async function syncAchievementsForCollectedAnimals(): Promise<void> {
-  try {
-    // Get all collected animals from Firestore and award achievements retroactively
-    const collectedAnimalsRef = collection(db, "collected_animals");
-    const collectedSnap = await getDocs(collectedAnimalsRef);
-    for (const doc of collectedSnap.docs) {
-      const record = doc.data();
-      await awardAchievement(record.child_id, record.animal_name);
-    }
-    console.log("Synced achievements for all collected animals in Firestore");
-  } catch (error) {
-    console.error("Error syncing achievements in Firestore:", error);
   }
 }

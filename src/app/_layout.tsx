@@ -16,8 +16,7 @@ import "../../global.css";
 import { ChildProvider } from "../context/ChildContext";
 import { ParentAccessProvider } from "../context/ParentAccessContext";
 import {
-  initializeAchievements,
-  syncAchievementsForCollectedAnimals,
+  initializeAchievements
 } from "../database/achievementsManager";
 import { initializeAnimals } from "../database/data/animals";
 import { resetRedTestChild, seedTestData } from "../database/testData";
@@ -73,13 +72,6 @@ export default function RootLayout() {
         console.log("Test data seeding completed.");
       } catch (error) {
         console.error("Test data seeding error:", error);
-      }
-      try {
-        console.log("Syncing achievements for collected animals...");
-        await syncAchievementsForCollectedAnimals();
-        console.log("Achievement sync completed.");
-      } catch (error) {
-        console.error("Achievement sync error:", error);
       }
       try {
         console.log("Resetting Red Test child...");

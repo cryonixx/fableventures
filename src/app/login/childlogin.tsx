@@ -9,6 +9,7 @@ import { useParentAccessContext } from "../../context/ParentAccessContext";
 import { db } from "../../firebase";
 
 type FirestoreChild = {
+  doc_id: string;
   child_first_name: string;
   child_last_name: string;
   parent_id: string;
@@ -16,7 +17,7 @@ type FirestoreChild = {
 
 export default function ChildLogin() {
   const [children, setChildren] = useState<FirestoreChild[]>([]);
-  const [selectedChildName, setSelectedChildName] = useState<string | null>(
+  const [selectedChildDocId, setSelectedChildDocId] = useState<string | null>(
     null,
   );
   const { setSelectedChildId: setGlobalChildId } = useChildContext();
@@ -38,6 +39,7 @@ export default function ChildLogin() {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           childrenData.push({
+            doc_id: doc.id,
             child_first_name: data.child_first_name,
             child_last_name: data.child_last_name,
             parent_id: data.parent_id,
@@ -52,8 +54,8 @@ export default function ChildLogin() {
     loadChildren();
   }, [parentId]);
 
-  const handleChildSelect = (childName: string) => {
-    setSelectedChildName(childName);
+  const handleChildSelect = (docId: string) => {
+    setSelectedChildDocId(docId);
   };
 
   return (
@@ -96,10 +98,10 @@ export default function ChildLogin() {
               const childName = `${child.child_first_name} ${child.child_last_name}`;
               return (
                 <ChildCard
-                  key={childName}
+                  key={child.doc_id}
                   name={childName}
-                  onPress={() => handleChildSelect(childName)}
-                  isSelected={selectedChildName === childName}
+                  onPress={() => handleChildSelect(child.doc_id)}
+                  isSelected={selectedChildDocId === child.doc_id}
                 />
               );
             })
@@ -108,17 +110,17 @@ export default function ChildLogin() {
 
         <Pressable
           onPress={() => {
-            if (!selectedChildName) return;
-            setGlobalChildId(selectedChildName);
+            if (!selectedChildDocId) return;
+            setGlobalChildId(selectedChildDocId);
             router.push("/child/(child-tabs)/library");
           }}
-          disabled={!selectedChildName}
+          disabled={!selectedChildDocId}
           className={[
             "mt-4",
             "w-full",
             "items-center",
             "rounded-xl",
-            selectedChildName ? "bg-yellow-500" : "bg-gray-400 opacity-50",
+            selectedChildDocId ? "bg-yellow-500" : "bg-gray-400 opacity-50",
           ].join(" ")}
         >
           <Text

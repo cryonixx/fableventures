@@ -6,7 +6,6 @@ import {
   loadStoryData,
   saveChildProgress,
 } from "@/src/database/storyManager";
-import { getTestChildId } from "@/src/database/testData";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -16,7 +15,7 @@ export default function Storybook() {
   const params = useLocalSearchParams();
   const chapterIdParam =
     typeof params.chapterId === "string" ? params.chapterId : null;
-  const [childId, setChildId] = useState<number | null>(null);
+  const [childId, setChildId] = useState<string | null>(null);
   const [hasProgress, setHasProgress] = useState<boolean>(false);
   const [showStory, setShowStory] = useState<boolean>(false);
   const [checkingProgress, setCheckingProgress] = useState(true);
@@ -45,7 +44,7 @@ export default function Storybook() {
   };
 
   const setChapterStart = async (
-    childIdValue: number,
+    childIdValue: string,
     startId: string,
     completedChapters: string[],
   ) => {
@@ -67,12 +66,16 @@ export default function Storybook() {
 
   useEffect(() => {
     const loadChildId = async () => {
-      // Use selected child ID from context, fallback to test child
-      const id = selectedChildId || (await getTestChildId());
-      setChildId(id);
+      // Use selected child ID from context only
+      if (!selectedChildId) {
+        setChildId(null);
+        setCheckingProgress(false);
+        return;
+      }
+      setChildId(selectedChildId);
 
       // Check if there's saved progress
-      const progress = await getChildProgress(id, "fable-friends");
+      const progress = await getChildProgress(selectedChildId, "fable-friends");
       const resolvedChapterId =
         chapterIdParam || progress?.current_chapter_id || "chapter_1";
       const group = getChapterGroup(resolvedChapterId);
@@ -138,7 +141,7 @@ export default function Storybook() {
     setShowChapterCompletePopup(true);
   };
 
-  if (childId === null || checkingProgress) {
+  if (!childId || checkingProgress) {
     return (
       <View className="flex-1 bg-amber-50 justify-center items-center">
         <Text className="text-lg">Loading...</Text>
@@ -146,7 +149,7 @@ export default function Storybook() {
     );
   }
 
-  if (!showStory && hasProgress) {
+  if (!showStory && hasProgress && childId) {
     return (
       <View className="flex-1 bg-amber-50 justify-center items-center p-8">
         <View className="bg-white rounded-2xl p-8 shadow-lg w-full max-w-md">
