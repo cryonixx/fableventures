@@ -104,6 +104,8 @@ export default function ParentSignup() {
             "rounded-2xl",
             "bg-gray-200",
           ].join(" ")}
+          placeholderTextColor="#888"
+          style={{ fontFamily: "Pangolin_400Regular" }}
         />
         <Text
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
@@ -123,7 +125,10 @@ export default function ParentSignup() {
             "justify-center",
           ].join(" ")}
         >
-          <Text className="text-green-700">
+          <Text
+            className="text-green-700"
+            style={{ fontFamily: "LilitaOne_400Regular" }}
+          >
             {children.length > 0
               ? `Edit Children (${children.length})`
               : "Add Children"}
@@ -167,6 +172,8 @@ export default function ParentSignup() {
             "rounded-2xl",
             "bg-gray-200",
           ].join(" ")}
+          placeholderTextColor="#888"
+          style={{ fontFamily: "Pangolin_400Regular" }}
         />
         <Text
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
@@ -186,6 +193,8 @@ export default function ParentSignup() {
             "rounded-2xl",
             "bg-gray-200",
           ].join(" ")}
+          placeholderTextColor="#888"
+          style={{ fontFamily: "Pangolin_400Regular" }}
         />
         <Pressable
           onPress={handleSignup}

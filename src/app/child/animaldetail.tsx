@@ -26,7 +26,7 @@ export default function AnimalDetail() {
   useFocusEffect(
     useCallback(() => {
       const loadFavoriteState = async () => {
-        const childId = selectedChildId || (await getTestChildId());
+        const childId = String(selectedChildId || (await getTestChildId()));
         const currentState = await isFavoriteAnimal(childId, name);
         setIsFavorite(currentState);
       };
@@ -36,7 +36,7 @@ export default function AnimalDetail() {
   );
 
   const onToggleFavorite = async () => {
-    const childId = selectedChildId || (await getTestChildId());
+    const childId = String(selectedChildId || (await getTestChildId()));
     const nextState = await toggleFavoriteAnimal(childId, name);
     setIsFavorite(nextState);
   };

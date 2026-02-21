@@ -178,7 +178,9 @@ export function RegisterChildModal({
             onChangeText={(text) =>
               setCurrentChild({ ...currentChild, firstName: text })
             }
-            className="mb-2 p-2 bg-gray-100 rounded"
+            className="mb-2 p-2 bg-gray-100 rounded-xl"
+            placeholderTextColor="#888"
+            style={{ fontFamily: "Pangolin_400Regular" }}
           />
           <TextInput
             placeholder="Last Name"
@@ -186,7 +188,9 @@ export function RegisterChildModal({
             onChangeText={(text) =>
               setCurrentChild({ ...currentChild, lastName: text })
             }
-            className="mb-2 p-2 bg-gray-100 rounded"
+            className="mb-2 p-2 bg-gray-100 rounded-xl"
+            placeholderTextColor="#888"
+            style={{ fontFamily: "Pangolin_400Regular" }}
           />
           <TextInput
             placeholder="Age"
@@ -195,7 +199,9 @@ export function RegisterChildModal({
               setCurrentChild({ ...currentChild, age: text })
             }
             keyboardType="numeric"
-            className="mb-2 p-2 bg-gray-100 rounded"
+            className="mb-2 p-2 bg-gray-100 rounded-xl"
+            placeholderTextColor="#888"
+            style={{ fontFamily: "Pangolin_400Regular" }}
           />
           <TextInput
             placeholder="Gender"
@@ -203,13 +209,20 @@ export function RegisterChildModal({
             onChangeText={(text) =>
               setCurrentChild({ ...currentChild, gender: text })
             }
-            className="mb-4 p-2 bg-gray-100 rounded"
+            className="mb-4 p-2 bg-gray-100 rounded-xl"
+            placeholderTextColor="#888"
+            style={{ fontFamily: "Pangolin_400Regular" }}
           />
           <Pressable
             onPress={handleAddChild}
-            className="bg-green-500 rounded p-2 mb-4 items-center"
+            className="bg-green-500 rounded-xl py-3 px-4 mb-4 items-center"
           >
-            <Text className="text-white">Add Child</Text>
+            <Text
+              className="text-white text-base"
+              style={{ fontFamily: "LilitaOne_400Regular" }}
+            >
+              Add Child
+            </Text>
           </Pressable>
           <FlatList
             data={children}
@@ -219,25 +232,45 @@ export function RegisterChildModal({
                 <Text>{`${item.firstName} ${item.lastName}, Age: ${item.age}, Gender: ${item.gender}`}</Text>
                 <Pressable
                   onPress={() => handleRemoveChild(index)}
-                  className="ml-2 bg-red-400 rounded px-2 py-1"
+                  className="ml-2 bg-red-400 rounded-xl px-2 py-1"
                 >
-                  <Text className="text-white">Remove</Text>
+                  <Text
+                    className="text-white"
+                    style={{ fontFamily: "LilitaOne_400Regular" }}
+                  >
+                    Remove
+                  </Text>
                 </Pressable>
               </View>
             )}
             ListEmptyComponent={
-              <Text className="text-gray-500">No children added yet.</Text>
+              <Text
+                className="text-gray-500"
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
+                No children added yet.
+              </Text>
             }
           />
           <View className="flex-row justify-end mt-4">
-            <Pressable onPress={onClose} className="mr-4 p-2">
-              <Text className="text-green-700">Cancel</Text>
+            <Pressable onPress={onClose} className="mr-4 p-2 rounded-xl">
+              <Text
+                className="text-green-700"
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Cancel
+              </Text>
             </Pressable>
             <Pressable
               onPress={handleSave}
-              className="bg-green-500 rounded p-2"
+              className="bg-green-500 rounded-xl p-2"
             >
-              <Text className="text-white">Save</Text>
+              <Text
+                className="text-white"
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Save
+              </Text>
             </Pressable>
           </View>
         </View>

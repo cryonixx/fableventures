@@ -1,10 +1,10 @@
 import {
-    addDoc,
-    collection,
-    deleteDoc,
-    getDocs,
-    query,
-    where,
+  addDoc,
+  collection,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -17,7 +17,7 @@ async function getAnimalIdByName(animalName: string): Promise<string> {
 }
 
 export async function isFavoriteAnimal(
-  childId: number,
+  childId: string,
   animalName: string,
 ): Promise<boolean> {
   try {
@@ -37,7 +37,7 @@ export async function isFavoriteAnimal(
 }
 
 export async function setFavoriteAnimal(
-  childId: number,
+  childId: string,
   animalName: string,
 ): Promise<boolean> {
   try {
@@ -55,7 +55,7 @@ export async function setFavoriteAnimal(
 }
 
 export async function removeFavoriteAnimal(
-  childId: number,
+  childId: string,
   animalName: string,
 ): Promise<boolean> {
   try {
@@ -78,7 +78,7 @@ export async function removeFavoriteAnimal(
 }
 
 export async function toggleFavoriteAnimal(
-  childId: number,
+  childId: string,
   animalName: string,
 ): Promise<boolean> {
   const alreadyFavorite = await isFavoriteAnimal(childId, animalName);

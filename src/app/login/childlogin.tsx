@@ -92,7 +92,17 @@ export default function ChildLogin() {
           }}
         >
           {children.length === 0 ? (
-            <Text className="text-gray-500">No children found</Text>
+            <View
+              className="w-full justify-center items-center"
+              style={{ flexGrow: 1, minHeight: 200 }}
+            >
+              <Text
+                className="text-gray-500 text-lg"
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
+                No children found
+              </Text>
+            </View>
           ) : (
             children.map((child) => {
               const childName = `${child.child_first_name} ${child.child_last_name}`;
