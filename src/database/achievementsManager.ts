@@ -1,7 +1,15 @@
-import { database } from "./sqlite";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  Timestamp,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export interface Achievement {
-  achievement_id: number;
+  achievement_id: string;
   title: string;
   description: string;
   criteria: string;
@@ -39,38 +47,19 @@ const ACHIEVEMENTS = [
 
 export async function initializeAchievements() {
   try {
-    // Drop and recreate achievements table to ensure correct schema
-    await database.execAsync(`
-      DROP TABLE IF EXISTS child_achievements;
-      DROP TABLE IF EXISTS achievements;
-      
-      CREATE TABLE achievements (
-        achievement_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        description TEXT,
-        criteria TEXT
-      );
-      
-      CREATE TABLE child_achievements (
-        child_id INTEGER NOT NULL,
-        achievement_id INTEGER NOT NULL,
-        date_earned TEXT,
-        PRIMARY KEY (child_id, achievement_id),
-        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE,
-        FOREIGN KEY (achievement_id) REFERENCES achievements(achievement_id) ON DELETE CASCADE
-      );
-    `);
-
-    for (const achievement of ACHIEVEMENTS) {
-      await database.runAsync(
-        `INSERT INTO achievements (title, description, criteria) 
-         VALUES (?, ?, ?)`,
-        [achievement.title, achievement.description, achievement.criteria],
-      );
+    // Add achievements to Firestore if not already present
+    const achievementsRef = collection(db, "achievements");
+    const snapshot = await getDocs(achievementsRef);
+    if (snapshot.empty) {
+      for (const achievement of ACHIEVEMENTS) {
+        await addDoc(achievementsRef, achievement);
+      }
+      console.log("Achievements initialized in Firestore.");
+    } else {
+      console.log("Achievements already exist in Firestore.");
     }
-    console.log("Achievements initialized successfully.");
   } catch (error) {
-    console.error("Error initializing achievements:", error);
+    console.error("Error initializing achievements in Firestore:", error);
   }
 }
 
@@ -86,42 +75,41 @@ export async function awardAchievementByCriteria(
   criteria: string,
 ): Promise<void> {
   try {
-    // Find the achievement matching this criteria
-    const achievement = await database.getFirstAsync(
-      `SELECT achievement_id FROM achievements WHERE criteria = ?`,
-      [criteria],
-    );
-
-    if (!achievement) {
+    // Find achievement by criteria in Firestore
+    const achievementsRef = collection(db, "achievements");
+    const q = query(achievementsRef, where("criteria", "==", criteria));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
       console.log(`No achievement found for criteria "${criteria}"`);
       return;
     }
-
-    const achievementId = (achievement as any).achievement_id;
+    const achievementDoc = snapshot.docs[0];
+    const achievementId = achievementDoc.id;
 
     // Check if already earned
-    const existing = await database.getFirstAsync(
-      `SELECT child_id FROM child_achievements WHERE child_id = ? AND achievement_id = ?`,
-      [childId, achievementId],
+    const childAchievementsRef = collection(db, "child_achievements");
+    const checkQ = query(
+      childAchievementsRef,
+      where("child_id", "==", childId),
+      where("achievement_id", "==", achievementId),
     );
-
-    if (existing) {
+    const checkSnap = await getDocs(checkQ);
+    if (!checkSnap.empty) {
       console.log(
         `Achievement ${achievementId} already earned by child ${childId}`,
       );
       return;
     }
 
-    // Award the achievement (idempotent in case of duplicate/race calls)
-    await database.runAsync(
-      `INSERT OR IGNORE INTO child_achievements (child_id, achievement_id, date_earned)
-       VALUES (?, ?, datetime('now'))`,
-      [childId, achievementId],
-    );
-
+    // Award achievement
+    await addDoc(childAchievementsRef, {
+      child_id: childId,
+      achievement_id: achievementId,
+      date_earned: Timestamp.now(),
+    });
     console.log(`Achievement awarded: ${achievementId} to child ${childId}`);
   } catch (error) {
-    console.error("Error awarding achievement:", error);
+    console.error("Error awarding achievement in Firestore:", error);
   }
 }
 
@@ -129,52 +117,65 @@ export async function getChildAchievements(
   childId: number,
 ): Promise<Achievement[]> {
   try {
-    const results = await database.getAllAsync(
-      `SELECT a.achievement_id, a.title, a.description, a.criteria, ca.date_earned
-       FROM achievements a
-       INNER JOIN child_achievements ca ON a.achievement_id = ca.achievement_id
-       WHERE ca.child_id = ?
-       ORDER BY ca.date_earned DESC`,
-      [childId],
-    );
-
-    return results as Achievement[];
+    const childAchievementsRef = collection(db, "child_achievements");
+    const q = query(childAchievementsRef, where("child_id", "==", childId));
+    const childSnap = await getDocs(q);
+    const achievementsRef = collection(db, "achievements");
+    const achievementsSnap = await getDocs(achievementsRef);
+    const achievementsMap = new Map();
+    achievementsSnap.forEach((doc) => achievementsMap.set(doc.id, doc.data()));
+    const result: Achievement[] = [];
+    childSnap.forEach((doc) => {
+      const ach = achievementsMap.get(doc.data().achievement_id);
+      if (ach) {
+        result.push({
+          achievement_id: doc.data().achievement_id,
+          title: ach.title,
+          description: ach.description,
+          criteria: ach.criteria,
+          date_earned: doc.data().date_earned?.toDate().toISOString(),
+        });
+      }
+    });
+    return result;
   } catch (error) {
-    console.error("Error fetching child achievements:", error);
+    console.error("Error fetching child achievements from Firestore:", error);
     return [];
   }
 }
 
 export async function getAllAchievements(): Promise<Achievement[]> {
   try {
-    const results = await database.getAllAsync(
-      `SELECT achievement_id, title, description, criteria
-       FROM achievements
-       ORDER BY achievement_id ASC`,
-    );
-
-    return results as Achievement[];
+    const achievementsRef = collection(db, "achievements");
+    const snapshot = await getDocs(achievementsRef);
+    const results: Achievement[] = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      results.push({
+        achievement_id: doc.id,
+        title: data.title,
+        description: data.description,
+        criteria: data.criteria,
+      });
+    });
+    return results;
   } catch (error) {
-    console.error("Error fetching all achievements:", error);
+    console.error("Error fetching all achievements from Firestore:", error);
     return [];
   }
 }
 
 export async function syncAchievementsForCollectedAnimals(): Promise<void> {
   try {
-    // Get all collected animals and award achievements retroactively
-    const collectedAnimals = await database.getAllAsync(
-      `SELECT DISTINCT ca.child_id, a.name
-       FROM collected_animals ca
-       INNER JOIN animals a ON ca.animal_id = a.animal_id`,
-    );
-
-    for (const record of collectedAnimals as any[]) {
-      await awardAchievement(record.child_id, record.name);
+    // Get all collected animals from Firestore and award achievements retroactively
+    const collectedAnimalsRef = collection(db, "collected_animals");
+    const collectedSnap = await getDocs(collectedAnimalsRef);
+    for (const doc of collectedSnap.docs) {
+      const record = doc.data();
+      await awardAchievement(record.child_id, record.animal_name);
     }
-
-    console.log("Synced achievements for all collected animals");
+    console.log("Synced achievements for all collected animals in Firestore");
   } catch (error) {
-    console.error("Error syncing achievements:", error);
+    console.error("Error syncing achievements in Firestore:", error);
   }
 }

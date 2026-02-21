@@ -6,8 +6,7 @@ export const initializeDatabase = async () => {
   await database.execAsync("PRAGMA journal_mode = WAL;");
   await database.execAsync("PRAGMA foreign_keys = ON;");
 
-  let animalsTableInit: SQLite.SQLiteStatement | null = null;
-  let achievementsTableInit: SQLite.SQLiteStatement | null = null;
+  // Animals and achievements tables migrated to Firestore. No longer created in SQLite.
   let parentTableInit: SQLite.SQLiteStatement | null = null;
   let childTableInit: SQLite.SQLiteStatement | null = null;
   let progressTableInit: SQLite.SQLiteStatement | null = null;
@@ -17,25 +16,7 @@ export const initializeDatabase = async () => {
   let collectedAnimalsTableInit: SQLite.SQLiteStatement | null = null;
 
   try {
-    animalsTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS animals (
-        animal_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        category TEXT,
-        habitat TEXT,
-        description TEXT,
-        image_url TEXT
-      );
-    `);
-
-    achievementsTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS achievements (
-        achievement_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        description TEXT,
-        criteria TEXT
-      );
-    `);
+    // Animals and achievements tables migrated to Firestore. No longer created in SQLite.
 
     // Parent and child tables migrated to Firebase. No longer created in SQLite.
     progressTableInit = await database.prepareAsync(`
@@ -98,8 +79,7 @@ export const initializeDatabase = async () => {
       );
     `);
 
-    await animalsTableInit.executeAsync();
-    await achievementsTableInit.executeAsync();
+    // Animals and achievements tables migrated to Firestore. No longer executed in SQLite.
     // Parent and child tables migrated to Firebase, so skip execution.
     await progressTableInit.executeAsync();
     await favoriteAnimalsTableInit.executeAsync();
@@ -109,8 +89,7 @@ export const initializeDatabase = async () => {
 
     console.log("Database initialized successfully.");
   } finally {
-    if (animalsTableInit) await animalsTableInit.finalizeAsync();
-    if (achievementsTableInit) await achievementsTableInit.finalizeAsync();
+    // Animals and achievements tables migrated to Firestore. No longer finalized in SQLite.
     // Parent and child tables migrated to Firebase, so skip finalize.
     if (progressTableInit) await progressTableInit.finalizeAsync();
     if (favoriteAnimalsTableInit)

@@ -1,4 +1,5 @@
-import { database } from "../sqlite";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export const ANIMALS_DATA = [
   {
@@ -28,23 +29,20 @@ export const ANIMALS_DATA = [
 ];
 
 export const initializeAnimals = async () => {
-  for (const animal of ANIMALS_DATA) {
-    await database.runAsync(
-      `INSERT OR IGNORE INTO animals 
-       (name, category, habitat, description) 
-       VALUES (?, ?, ?, ?)`,
-      [animal.name, animal.category, animal.habitat, animal.description],
-    );
+  const animalsRef = collection(db, "animals");
+  const snapshot = await getDocs(animalsRef);
+  if (snapshot.empty) {
+    for (const animal of ANIMALS_DATA) {
+      await addDoc(animalsRef, animal);
+    }
+    console.log("Animals seeded successfully in Firestore.");
+  } else {
+    console.log("Animals already exist in Firestore.");
   }
-  console.log("Animals seeded successfully.");
 };
 
 export const getAnimalCount = async (): Promise<number> => {
-  const result = await database.getAllAsync(
-    "SELECT COUNT(*) as count FROM animals",
-  );
-  if (result && result.length > 0) {
-    return (result[0] as { count: number }).count;
-  }
-  return 0;
+  const animalsRef = collection(db, "animals");
+  const snapshot = await getDocs(animalsRef);
+  return snapshot.size;
 };

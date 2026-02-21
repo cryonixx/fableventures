@@ -1,13 +1,21 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { useCallback, useMemo, useState } from "react";
 import { Alert } from "react-native";
 import { useChildContext } from "../context/ChildContext";
 import { useParentAccessContext } from "../context/ParentAccessContext";
 import { getChildAchievements } from "../database/achievementsManager";
 import { getChildNameById } from "../database/data/child";
-import { database } from "../database/sqlite";
 import { getTestChildId } from "../database/testData";
+import { db } from "../firebase";
 import { useCollectedAnimalsCount } from "./useCollectedAnimalsCount";
 import { useParentCheck } from "./useParentCheck";
 import { useProfileHelpers } from "./useProfileHelpers";
@@ -148,15 +156,9 @@ export const useChildProfileScreen = () => {
             setChildName("Child not found");
           }
 
-          const childInfo = (await database.getFirstAsync(
-            "SELECT child_age FROM children WHERE child_id = ?",
-            [childId],
-          )) as { child_age: number } | null;
-          const childAge = childInfo?.child_age ?? null;
-          setReadingLevel(getReadingLevelFromAge(childAge));
-          setReadingLevelDetail(
-            childAge !== null ? `Age ${childAge}` : "Age data unavailable",
-          );
+          // TODO: Fetch child age from Firestore if needed
+          setReadingLevel("Not set");
+          setReadingLevelDetail("Age data unavailable");
 
           const achievements = await getChildAchievements(childId);
           if (achievements.length > 0) {
@@ -173,24 +175,15 @@ export const useChildProfileScreen = () => {
             setLatestAchievementCriteria("bookcover");
           }
 
-          const favoriteRecords = (await database.getAllAsync(
-            `SELECT a.name as animal_name
-               FROM favorite_animals fa
-               JOIN animals a ON a.animal_id = fa.animal_id
-               JOIN collected_animals ca ON ca.child_id = fa.child_id AND ca.animal_id = fa.animal_id
-               WHERE fa.child_id = ?
-               ORDER BY a.name ASC`,
-            [childId],
-          )) as { animal_name: string }[];
-
-          if (favoriteRecords.length > 0) {
-            const favoriteNames = favoriteRecords.map(
-              (item) => item.animal_name,
-            );
+          // Fetch favorite animals from Firestore
+          const favRef = collection(db, "favorite_animals");
+          const favQ = query(favRef, where("child_id", "==", childId));
+          const favSnap = await getDocs(favQ);
+          const favoriteNames = favSnap.docs.map((doc) => doc.data().animal_id);
+          if (favoriteNames.length > 0) {
             const previewNames = favoriteNames.slice(0, 2).join(", ");
             const additionalCount = favoriteNames.length - 2;
             setFavoriteAnimals(favoriteNames);
-
             setFavoriteAnimal(
               additionalCount > 0
                 ? `${previewNames} +${additionalCount}`
@@ -209,15 +202,16 @@ export const useChildProfileScreen = () => {
             setFavoriteThumbnailKey("bookcover");
           }
 
-          const recentStory = (await database.getFirstAsync(
-            `SELECT story_id, current_chapter_id
-             FROM story_progress
-             WHERE child_id = ?
-             ORDER BY datetime(last_updated) DESC
-             LIMIT 1`,
-            [childId],
-          )) as { story_id: string; current_chapter_id: string } | null;
-
+          // Fetch recent story from Firestore
+          const storyRef = collection(db, "story_progress");
+          const storyQ = query(
+            storyRef,
+            where("child_id", "==", childId),
+            orderBy("last_updated", "desc"),
+            limit(1),
+          );
+          const storySnap = await getDocs(storyQ);
+          const recentStory = storySnap.docs[0]?.data();
           if (recentStory?.story_id) {
             setRecentlyRead(getStoryTitleFromId(recentStory.story_id));
             setRecentlyReadDetail(

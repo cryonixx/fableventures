@@ -20,7 +20,6 @@ import {
   syncAchievementsForCollectedAnimals,
 } from "../database/achievementsManager";
 import { initializeAnimals } from "../database/data/animals";
-import { initializeDatabase } from "../database/sqlite";
 import { resetRedTestChild, seedTestData } from "../database/testData";
 
 export default function RootLayout() {
@@ -32,16 +31,16 @@ export default function RootLayout() {
   useEffect(() => {
     if (!fontsLoaded || fontError) return;
 
-    Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.style = [
+    (Text as any).defaultProps = (Text as any).defaultProps || {};
+    (Text as any).defaultProps.style = [
       { fontFamily: "Pangolin_400Regular" },
-      Text.defaultProps.style,
+      (Text as any).defaultProps.style,
     ];
 
-    TextInput.defaultProps = TextInput.defaultProps || {};
-    TextInput.defaultProps.style = [
+    (TextInput as any).defaultProps = (TextInput as any).defaultProps || {};
+    (TextInput as any).defaultProps.style = [
       { fontFamily: "Pangolin_400Regular" },
-      TextInput.defaultProps.style,
+      (TextInput as any).defaultProps.style,
     ];
   }, [fontsLoaded]);
 
@@ -52,14 +51,7 @@ export default function RootLayout() {
     }
 
     const setup = async () => {
-      try {
-        console.log("Starting database initialization...");
-        await initializeDatabase();
-        console.log("Database initialization completed.");
-      } catch (error) {
-        console.error("Database setup error:", error);
-        alert(`Database setup error: ${error}`);
-      }
+      // Database initialization removed: animals and achievements now use Firestore
       try {
         console.log("Starting animals initialization...");
         await initializeAnimals();

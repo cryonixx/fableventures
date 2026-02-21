@@ -1,14 +1,19 @@
-import { database } from "./sqlite";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    getDocs,
+    query,
+    where,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
-type AnimalIdRow = { animal_id: number } | null;
+// AnimalIdRow type removed: not used in Firestore context
 
-async function getAnimalIdByName(animalName: string): Promise<number | null> {
-  const result = (await database.getFirstAsync(
-    "SELECT animal_id FROM animals WHERE name = ?",
-    [animalName],
-  )) as AnimalIdRow;
-
-  return result?.animal_id ?? null;
+async function getAnimalIdByName(animalName: string): Promise<string> {
+  // In Firestore, animalName is used as unique identifier
+  // Return animalName directly
+  return animalName;
 }
 
 export async function isFavoriteAnimal(
@@ -17,18 +22,16 @@ export async function isFavoriteAnimal(
 ): Promise<boolean> {
   try {
     const animalId = await getAnimalIdByName(animalName);
-    if (!animalId) return false;
-
-    const result = await database.getFirstAsync(
-      `SELECT 1
-       FROM favorite_animals
-       WHERE child_id = ? AND animal_id = ?`,
-      [childId, animalId],
+    const favRef = collection(db, "favorite_animals");
+    const q = query(
+      favRef,
+      where("child_id", "==", childId),
+      where("animal_id", "==", animalId),
     );
-
-    return !!result;
+    const snap = await getDocs(q);
+    return !snap.empty;
   } catch (error) {
-    console.error("Error checking favorite animal:", error);
+    console.error("Error checking favorite animal in Firestore:", error);
     return false;
   }
 }
@@ -39,16 +42,14 @@ export async function setFavoriteAnimal(
 ): Promise<boolean> {
   try {
     const animalId = await getAnimalIdByName(animalName);
-    if (!animalId) return false;
-
-    await database.runAsync(
-      "INSERT OR IGNORE INTO favorite_animals (child_id, animal_id) VALUES (?, ?)",
-      [childId, animalId],
-    );
-
+    const favRef = collection(db, "favorite_animals");
+    await addDoc(favRef, {
+      child_id: childId,
+      animal_id: animalId,
+    });
     return true;
   } catch (error) {
-    console.error("Error setting favorite animal:", error);
+    console.error("Error setting favorite animal in Firestore:", error);
     return false;
   }
 }
@@ -59,16 +60,19 @@ export async function removeFavoriteAnimal(
 ): Promise<boolean> {
   try {
     const animalId = await getAnimalIdByName(animalName);
-    if (!animalId) return false;
-
-    await database.runAsync(
-      "DELETE FROM favorite_animals WHERE child_id = ? AND animal_id = ?",
-      [childId, animalId],
+    const favRef = collection(db, "favorite_animals");
+    const q = query(
+      favRef,
+      where("child_id", "==", childId),
+      where("animal_id", "==", animalId),
     );
-
+    const snap = await getDocs(q);
+    for (const docSnap of snap.docs) {
+      await deleteDoc(docSnap.ref);
+    }
     return true;
   } catch (error) {
-    console.error("Error removing favorite animal:", error);
+    console.error("Error removing favorite animal in Firestore:", error);
     return false;
   }
 }
