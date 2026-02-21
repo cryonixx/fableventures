@@ -1,3 +1,11 @@
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    getDocs,
+    query,
+    where,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import {
     FlatList,
@@ -7,6 +15,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { auth, db } from "../../firebase";
 
 interface ChildInput {
   firstName: string;
@@ -19,19 +28,21 @@ interface RegisterChildModalProps {
   visible: boolean;
   onClose: () => void;
   onSave: (children: ChildInput[]) => void;
+  initialChildren?: ChildInput[];
 }
 
-export default function RegisterChildModal({
+export function RegisterChildModal({
   visible,
   onClose,
   onSave,
+  initialChildren = [],
 }: RegisterChildModalProps) {
-  const [children, setChildren] = useState<ChildInput[]>([]);
+  const [children, setChildren] = useState<ChildInput[]>(initialChildren);
   const [currentChild, setCurrentChild] = useState<ChildInput>({
-    firstName: "",
-    lastName: "",
-    age: "",
-    gender: "",
+    firstName: "Test",
+    lastName: "Child",
+    age: "5",
+    gender: "M",
   });
 
   const handleAddChild = () => {
@@ -50,10 +61,34 @@ export default function RegisterChildModal({
     setChildren(children.filter((_, i) => i !== index));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const childrenCol = collection(db, "children");
+        // Delete all previous children for this parent
+        const q = query(childrenCol, where("parent_id", "==", user.uid));
+        const prevDocs = await getDocs(q);
+        for (const docSnap of prevDocs.docs) {
+          await deleteDoc(docSnap.ref);
+        }
+        // Add all new children
+        for (const child of children) {
+          await addDoc(childrenCol, {
+            child_first_name: child.firstName,
+            child_last_name: child.lastName,
+            child_age: Number(child.age),
+            child_gender: child.gender,
+            parent_id: user.uid,
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to update children in Firestore:", err);
+    }
     if (children.length > 0) {
       onSave(children);
-      setChildren([]);
+      setChildren(initialChildren);
       setCurrentChild({ firstName: "", lastName: "", age: "", gender: "" });
     }
     onClose();

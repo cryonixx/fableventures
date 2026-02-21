@@ -1,26 +1,59 @@
 import { router } from "expo-router";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import ChildCard from "../../components/ChildCard";
 import IndexReturn from "../../components/IndexReturn";
 import { useChildContext } from "../../context/ChildContext";
-import { Child, getAllChildren } from "../../database/data/child";
+import { useParentAccessContext } from "../../context/ParentAccessContext";
+import { db } from "../../firebase";
+
+type FirestoreChild = {
+  child_first_name: string;
+  child_last_name: string;
+  parent_id: string;
+};
 
 export default function ChildLogin() {
-  const [children, setChildren] = useState<Child[]>([]);
-  const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
+  const [children, setChildren] = useState<FirestoreChild[]>([]);
+  const [selectedChildName, setSelectedChildName] = useState<string | null>(
+    null,
+  );
   const { setSelectedChildId: setGlobalChildId } = useChildContext();
+  const { parentId } = useParentAccessContext();
 
   useEffect(() => {
     const loadChildren = async () => {
-      const allChildren = await getAllChildren();
-      setChildren(allChildren);
+      if (!parentId) {
+        setChildren([]);
+        return;
+      }
+      try {
+        const q = query(
+          collection(db, "children"),
+          where("parent_id", "==", parentId),
+        );
+        const querySnapshot = await getDocs(q);
+        const childrenData: FirestoreChild[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          childrenData.push({
+            child_first_name: data.child_first_name,
+            child_last_name: data.child_last_name,
+            parent_id: data.parent_id,
+          });
+        });
+        setChildren(childrenData);
+        console.log(childrenData);
+      } catch (error) {
+        setChildren([]);
+      }
     };
     loadChildren();
-  }, []);
+  }, [parentId]);
 
-  const handleChildSelect = (childId: number) => {
-    setSelectedChildId(childId);
+  const handleChildSelect = (childName: string) => {
+    setSelectedChildName(childName);
   };
 
   return (
@@ -59,31 +92,33 @@ export default function ChildLogin() {
           {children.length === 0 ? (
             <Text className="text-gray-500">No children found</Text>
           ) : (
-            children.map((child) => (
-              <ChildCard
-                key={child.child_id}
-                id={child.child_id}
-                name={`${child.child_first_name} ${child.child_last_name}`}
-                onPress={() => handleChildSelect(child.child_id)}
-                isSelected={selectedChildId === child.child_id}
-              />
-            ))
+            children.map((child) => {
+              const childName = `${child.child_first_name} ${child.child_last_name}`;
+              return (
+                <ChildCard
+                  key={childName}
+                  name={childName}
+                  onPress={() => handleChildSelect(childName)}
+                  isSelected={selectedChildName === childName}
+                />
+              );
+            })
           )}
         </ScrollView>
 
         <Pressable
           onPress={() => {
-            if (!selectedChildId) return;
-            setGlobalChildId(selectedChildId);
+            if (!selectedChildName) return;
+            setGlobalChildId(selectedChildName);
             router.push("/child/(child-tabs)/library");
           }}
-          disabled={!selectedChildId}
+          disabled={!selectedChildName}
           className={[
             "mt-4",
             "w-full",
             "items-center",
             "rounded-xl",
-            selectedChildId ? "bg-yellow-500" : "bg-gray-400 opacity-50",
+            selectedChildName ? "bg-yellow-500" : "bg-gray-400 opacity-50",
           ].join(" ")}
         >
           <Text

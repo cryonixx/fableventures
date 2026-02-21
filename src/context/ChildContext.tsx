@@ -1,8 +1,8 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface ChildContextType {
-  selectedChildId: number | null;
-  setSelectedChildId: (id: number) => void;
+  selectedChildId: string | number | null;
+  setSelectedChildId: (id: string | number | null) => void;
 }
 
 const ChildContext = createContext<ChildContextType | undefined>(undefined);
@@ -10,8 +10,9 @@ const ChildContext = createContext<ChildContextType | undefined>(undefined);
 export const ChildProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [selectedChildId, setSelectedChildId] = useState<number | null>(null);
-
+  const [selectedChildId, setSelectedChildId] = useState<
+    string | number | null
+  >(null);
   return (
     <ChildContext.Provider value={{ selectedChildId, setSelectedChildId }}>
       {children}
@@ -25,7 +26,7 @@ export const useChildContext = () => {
     // Return default values instead of throwing error
     return {
       selectedChildId: null,
-      setSelectedChildId: () => {},
+      setSelectedChildId: (_id: string | number | null) => {},
     };
   }
   return context;

@@ -12,6 +12,8 @@ interface ParentAccessContextType {
   grantParentAccess: (durationMs?: number) => void;
   revokeParentAccess: () => void;
   isParentAccessValid: () => boolean;
+  parentId: string | null;
+  setParentId: (id: string | null) => void;
 }
 
 const ParentAccessContext = createContext<ParentAccessContextType | undefined>(
@@ -24,6 +26,7 @@ export const ParentAccessProvider: React.FC<{ children: ReactNode }> = ({
   const [parentAccessExpiresAt, setParentAccessExpiresAt] = useState<
     number | null
   >(null);
+  const [parentId, setParentId] = useState<string | null>(null);
 
   const isParentAccessValid = () =>
     parentAccessExpiresAt == null || Date.now() < parentAccessExpiresAt;
@@ -34,6 +37,7 @@ export const ParentAccessProvider: React.FC<{ children: ReactNode }> = ({
 
   const revokeParentAccess = () => {
     setParentAccessExpiresAt(null);
+    setParentId(null);
   };
 
   const value = useMemo(
@@ -43,8 +47,10 @@ export const ParentAccessProvider: React.FC<{ children: ReactNode }> = ({
       grantParentAccess,
       revokeParentAccess,
       isParentAccessValid,
+      parentId,
+      setParentId,
     }),
-    [parentAccessExpiresAt],
+    [parentAccessExpiresAt, parentId],
   );
 
   return (
@@ -63,6 +69,8 @@ export const useParentAccessContext = () => {
       grantParentAccess: () => {},
       revokeParentAccess: () => {},
       isParentAccessValid: () => false,
+      parentId: null,
+      setParentId: () => {},
     };
   }
   return context;

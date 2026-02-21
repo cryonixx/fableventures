@@ -1,18 +1,32 @@
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import IndexReturn from "../components/IndexReturn";
+
+import { RegisterChildModal } from "../components/parent_components/RegisterChildModal";
+import { useChildContext } from "../context/ChildContext";
+import { useParentAccessContext } from "../context/ParentAccessContext";
 import { auth, db } from "../firebase";
 
 export default function ParentSignup() {
+  type ChildInput = {
+    firstName: string;
+    lastName: string;
+    age: string;
+    gender: string;
+  };
   const [surname, setSurname] = useState("TestParent");
-  const [childName, setChildName] = useState("TestChild");
+  const [children, setChildren] = useState<ChildInput[]>([]); // Array of children
   const [email, setEmail] = useState("testparent@example.com");
   const [password, setPassword] = useState("testpassword");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const { grantParentAccess } = useParentAccessContext();
+  const { setSelectedChildId } = useChildContext();
 
   const handleSignup = async () => {
     setLoading(true);
@@ -26,9 +40,23 @@ export default function ParentSignup() {
       const user = userCredential.user;
       await setDoc(doc(db, "parents", user.uid), {
         surname,
-        childName,
         email,
       });
+      // Add each child as a separate document in 'children' collection
+      const childrenCol = collection(db, "children");
+      for (const child of children) {
+        await addDoc(childrenCol, {
+          child_first_name: child.firstName,
+          child_last_name: child.lastName,
+          child_age: Number(child.age),
+          child_gender: child.gender,
+          parent_id: user.uid,
+        });
+      }
+      // Set parent access context as valid
+      grantParentAccess();
+      // Clear any selected child context
+      setSelectedChildId(null);
       router.push("/parent/parentdashboardtest");
     } catch (err: any) {
       setError(err.message);
@@ -81,19 +109,46 @@ export default function ParentSignup() {
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
           style={{ fontFamily: "LilitaOne_400Regular" }}
         >
-          Child's Full Name
+          Children
         </Text>
-        <TextInput
-          placeholder="Enter child's full name"
-          value={childName}
-          onChangeText={setChildName}
+        <Pressable
+          onPress={() => setModalVisible(true)}
           className={[
             "h-10",
             "p-2",
             "w-full",
             "rounded-2xl",
-            "bg-gray-200",
+            "bg-green-200",
+            "items-center",
+            "justify-center",
           ].join(" ")}
+        >
+          <Text className="text-green-700">
+            {children.length > 0
+              ? `Edit Children (${children.length})`
+              : "Add Children"}
+          </Text>
+        </Pressable>
+        <RegisterChildModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          initialChildren={children}
+          onSave={(childList) => {
+            setChildren([
+              ...children,
+              ...childList.filter(
+                (c) =>
+                  !children.some(
+                    (existing) =>
+                      existing.firstName === c.firstName &&
+                      existing.lastName === c.lastName &&
+                      existing.age === c.age &&
+                      existing.gender === c.gender,
+                  ),
+              ),
+            ]);
+            setModalVisible(false);
+          }}
         />
         <Text
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}

@@ -1,4 +1,6 @@
 import IndexReturn from "@/src/components/IndexReturn";
+import { useChildContext } from "@/src/context/ChildContext";
+import { useParentAccessContext } from "@/src/context/ParentAccessContext";
 import { auth } from "@/src/firebase";
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -10,12 +12,24 @@ export default function ParentLogin() {
   const [password, setPassword] = useState("testpassword");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { grantParentAccess, setParentId } = useParentAccessContext();
+  const { setSelectedChildId } = useChildContext();
 
   const handleLogin = async () => {
     setLoading(true);
     setError("");
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const user = userCredential.user;
+      if (user && user.uid) {
+        setParentId(user.uid);
+      }
+      grantParentAccess();
+      setSelectedChildId(null);
       router.push("/parent/parentdashboardtest");
     } catch (err: any) {
       setError(err?.message || "An error occurred during login.");
