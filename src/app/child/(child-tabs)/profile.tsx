@@ -67,7 +67,7 @@ export default function Profile() {
                 favoriteAnimals={favoriteAnimals}
                 getProfileThumbnail={getProfileThumbnail}
                 isStoryCompleteCriteria={isStoryCompleteCriteria}
-                onPress={() => onCardPress(card.title, card.value, card.detail)}
+                onPress={onCardPress}
               />
             ))}
 
@@ -78,9 +78,7 @@ export default function Profile() {
                   card={card}
                   cardIndex={cardIndex}
                   getProfileThumbnail={getProfileThumbnail}
-                  onPress={() =>
-                    onCardPress(card.title, card.value, card.detail)
-                  }
+                  onPress={onCardPress}
                 />
               ))}
             </View>

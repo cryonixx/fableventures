@@ -254,9 +254,7 @@ export const useChildProfileScreen = () => {
     ]),
   );
 
-  const onCardPress = (title: string, value: string, detail: string) => {
-    Alert.alert(title, `${value}\n${detail}`);
-  };
+  const onCardPress = () => {};
 
   const onParentAreaTap = () => {
     Alert.alert(

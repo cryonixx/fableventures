@@ -9,7 +9,9 @@ import {
   isFavoriteAnimal,
   toggleFavoriteAnimal,
 } from "../../database/favoriteAnimalsManager";
+import { getAnimalInfoByName } from "../../database/getAnimalInfoByName";
 import { getTestChildId } from "../../database/testData";
+const animalInfoData = require("../../../assets/script/animal_info.json");
 
 export default function AnimalDetail() {
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function AnimalDetail() {
   const classification = (params.classification as string) || "";
   const image = useImage(name);
   const [isFavorite, setIsFavorite] = useState(false);
+  const animalInfo = getAnimalInfoByName(name, animalInfoData);
 
   useFocusEffect(
     useCallback(() => {
@@ -179,49 +182,111 @@ export default function AnimalDetail() {
         </View>
 
         <View className={["mt-4", "pb-12", "px-2"].join(" ")}>
-          <View
-            className={["bg-white", "rounded-xl", "p-4", "drop-shadow"].join(
-              " ",
-            )}
-          >
-            <Text
-              className={["mb-2"].join(" ")}
-              style={{ fontFamily: "LilitaOne_400Regular" }}
+          {/* Fun Facts Section */}
+          {animalInfo?.fun_facts && (
+            <View
+              className={[
+                "bg-white",
+                "rounded-xl",
+                "p-4",
+                "drop-shadow",
+                "mb-4",
+              ].join(" ")}
             >
-              Social Butterfly
-            </Text>
-            <Text
-              className={["text-sm", "text-gray-600"].join(" ")}
-              style={{ fontFamily: "Pangolin_400Regular" }}
+              <Text
+                className={["mb-2"].join(" ")}
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Fun Facts
+              </Text>
+              {animalInfo.fun_facts.map((fact: string, idx: number) => (
+                <Text
+                  key={idx}
+                  className={["text-sm", "text-gray-600", "mb-1"].join(" ")}
+                  style={{ fontFamily: "Pangolin_400Regular" }}
+                >
+                  • {fact}
+                </Text>
+              ))}
+            </View>
+          )}
+          {/* Habitat Section */}
+          {animalInfo?.habitat && (
+            <View
+              className={[
+                "bg-white",
+                "rounded-xl",
+                "p-4",
+                "drop-shadow",
+                "mb-4",
+              ].join(" ")}
             >
-              Did you know? {name} are herd animals. This means they like
-              spending time in large groups around their friends and family!
-            </Text>
-          </View>
-
-          <View
-            className={[
-              "bg-white",
-              "rounded-xl",
-              "p-4",
-              "drop-shadow",
-              "mt-4",
-            ].join(" ")}
-          >
-            <Text
-              className={["mb-2"].join(" ")}
-              style={{ fontFamily: "LilitaOne_400Regular" }}
+              <Text
+                className={["mb-2"].join(" ")}
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Habitat
+              </Text>
+              <Text
+                className={["text-sm", "text-gray-600"].join(" ")}
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
+                {animalInfo.habitat}
+              </Text>
+            </View>
+          )}
+          {/* Diet Section */}
+          {animalInfo?.diet && (
+            <View
+              className={[
+                "bg-white",
+                "rounded-xl",
+                "p-4",
+                "drop-shadow",
+                "mb-4",
+              ].join(" ")}
             >
-              Amazing Feature
-            </Text>
-            <Text
-              className={["text-sm", "text-gray-600"].join(" ")}
-              style={{ fontFamily: "Pangolin_400Regular" }}
+              <Text
+                className={["mb-2"].join(" ")}
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Diet
+              </Text>
+              <Text
+                className={["text-sm", "text-gray-600"].join(" ")}
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
+                {animalInfo.diet}
+              </Text>
+            </View>
+          )}
+          {/* Lifespan Section */}
+          {(animalInfo?.average_lifespan_in_the_wild ||
+            animalInfo?.average_lifespan_in_professional_care) && (
+            <View
+              className={[
+                "bg-white",
+                "rounded-xl",
+                "p-4",
+                "drop-shadow",
+                "mb-4",
+              ].join(" ")}
             >
-              Interesting facts about {name} will go here. Replace this with
-              real data.
-            </Text>
-          </View>
+              <Text
+                className={["mb-2"].join(" ")}
+                style={{ fontFamily: "LilitaOne_400Regular" }}
+              >
+                Lifespan
+              </Text>
+              <Text
+                className={["text-sm", "text-gray-600"].join(" ")}
+                style={{ fontFamily: "Pangolin_400Regular" }}
+              >
+                {animalInfo.average_lifespan_in_the_wild ||
+                  animalInfo.average_lifespan_in_professional_care}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </ScrollView>
