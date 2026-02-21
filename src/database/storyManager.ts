@@ -1,7 +1,6 @@
 import storyJson from "@/assets/script/fable_friends_script.json";
 import { ChildStoryProgress, CollectedAnimal, Story } from "@/src/types/story";
 import { awardAchievement } from "./achievementsManager";
-import { database } from "./sqlite";
 
 export async function loadStoryData(): Promise<Story> {
   return storyJson as Story;
@@ -12,28 +11,31 @@ export async function getChildProgress(
   storyId: string,
 ): Promise<ChildStoryProgress | null> {
   try {
-    const result = await database.getFirstAsync(
-      `SELECT * FROM story_progress WHERE child_id = ? AND story_id = ?`,
-      [childId, storyId],
+    // Firestore migration
+    const { collection, query, where, getDocs } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const progressRef = collection(db, "story_progress");
+    const q = query(
+      progressRef,
+      where("child_id", "==", childId),
+      where("story_id", "==", storyId),
     );
-
-    if (!result) return null;
-
-    const row = result as any;
+    const snap = await getDocs(q);
+    if (snap.empty) return null;
+    const row = snap.docs[0].data();
     return {
       child_id: row.child_id,
       story_id: row.story_id,
       current_chapter_id: row.current_chapter_id || "",
       current_scene_id: row.current_scene_id || "",
       current_node_index: row.current_node_index || 0,
-      completed_chapters: row.completed_chapters
-        ? JSON.parse(row.completed_chapters)
-        : [],
-      collected_animals: [],
+      completed_chapters: row.completed_chapters || [],
+      collected_animals: row.collected_animals || [],
       last_updated: row.last_updated,
     };
   } catch (error) {
-    console.error("Error fetching child progress:", error);
+    console.error("Error fetching child progress from Firestore:", error);
     return null;
   }
 }
@@ -47,35 +49,33 @@ export async function saveChildProgress(
   completedChapters: string[] = [],
 ): Promise<void> {
   try {
-    // First verify the child exists
-    const childCheck = await database.getFirstAsync(
-      `SELECT child_id FROM children WHERE child_id = ?`,
-      [childId],
+    // Firestore migration
+    const { collection, query, where, getDocs, setDoc, doc, Timestamp } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const progressRef = collection(db, "story_progress");
+    const q = query(
+      progressRef,
+      where("child_id", "==", childId),
+      where("story_id", "==", storyId),
     );
-
-    if (!childCheck) {
-      console.warn(
-        `Child with ID ${childId} not found in database. Skipping progress save.`,
-      );
-      return;
-    }
-
-    await database.runAsync(
-      `INSERT OR REPLACE INTO story_progress 
-       (child_id, story_id, current_chapter_id, current_scene_id, current_node_index, completed_chapters, last_updated)
-       VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
-      [
-        childId,
-        storyId,
-        currentChapterId,
-        currentSceneId,
-        currentNodeIndex,
-        JSON.stringify(completedChapters),
-      ],
-    );
+    const snap = await getDocs(q);
+    let docId = snap.empty ? undefined : snap.docs[0].id;
+    const progressDoc = docId
+      ? doc(db, "story_progress", docId)
+      : doc(progressRef);
+    await setDoc(progressDoc, {
+      child_id: childId,
+      story_id: storyId,
+      current_chapter_id: currentChapterId,
+      current_scene_id: currentSceneId,
+      current_node_index: currentNodeIndex,
+      completed_chapters: completedChapters,
+      last_updated: Timestamp ? Timestamp.now() : new Date().toISOString(),
+    });
   } catch (error) {
     console.warn(
-      "Could not save progress:",
+      "Could not save progress to Firestore:",
       error instanceof Error ? error.message : error,
     );
   }
@@ -86,13 +86,25 @@ export async function resetChildProgress(
   storyId: string,
 ): Promise<void> {
   try {
-    await database.runAsync(
-      `DELETE FROM story_progress WHERE child_id = ? AND story_id = ?`,
-      [childId, storyId],
+    // Firestore migration
+    const { collection, query, where, getDocs, deleteDoc } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const progressRef = collection(db, "story_progress");
+    const q = query(
+      progressRef,
+      where("child_id", "==", childId),
+      where("story_id", "==", storyId),
     );
-    console.log(`Progress reset for child ${childId}, story ${storyId}`);
+    const snap = await getDocs(q);
+    for (const docSnap of snap.docs) {
+      await deleteDoc(docSnap.ref);
+    }
+    console.log(
+      `Progress reset for child ${childId}, story ${storyId} in Firestore`,
+    );
   } catch (error) {
-    console.error("Error resetting progress:", error);
+    console.error("Error resetting progress in Firestore:", error);
   }
 }
 
@@ -103,60 +115,37 @@ export async function collectAnimal(
   sceneId: string,
 ): Promise<void> {
   try {
-    // First verify the child exists
-    const childCheck = await database.getFirstAsync(
-      `SELECT child_id FROM children WHERE child_id = ?`,
-      [childId],
+    // Firestore migration
+    const { collection, query, where, getDocs, addDoc } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const collectedRef = collection(db, "collected_animals");
+    const q = query(
+      collectedRef,
+      where("child_id", "==", childId),
+      where("animal_name", "==", animalName),
     );
-
-    if (!childCheck) {
-      console.warn(
-        `Child with ID ${childId} not found in database. Skipping animal collection.`,
-      );
-      return;
-    }
-
-    // Get the animal_id from the animals table
-    const animalResult = await database.getFirstAsync(
-      `SELECT animal_id FROM animals WHERE name = ?`,
-      [animalName],
-    );
-
-    if (!animalResult) {
-      console.warn(`Animal "${animalName}" not found in database`);
-      return;
-    }
-
-    const animalId = (animalResult as any).animal_id;
-
-    // Check if already collected
-    const existingCollection = await database.getFirstAsync(
-      `SELECT child_id FROM collected_animals WHERE child_id = ? AND animal_id = ?`,
-      [childId, animalId],
-    );
-
-    if (existingCollection) {
+    const snap = await getDocs(q);
+    if (!snap.empty) {
       console.log(
         `Animal "${animalName}" already collected by child ${childId}`,
       );
       return;
     }
-
-    // Insert new collection
-    await database.runAsync(
-      `INSERT INTO collected_animals 
-       (child_id, animal_id, collected_from_story, collected_from_scene, date_collected)
-       VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`,
-      [childId, animalId, storyId, sceneId],
+    await addDoc(collectedRef, {
+      child_id: childId,
+      animal_name: animalName,
+      collected_from_story: storyId,
+      collected_from_scene: sceneId,
+      date_collected: new Date().toISOString(),
+    });
+    console.log(
+      `Animal "${animalName}" collected for child ${childId} in Firestore`,
     );
-
-    console.log(`Animal "${animalName}" collected for child ${childId}`);
-
-    // Award achievement for meeting this animal
     await awardAchievement(childId, animalName);
   } catch (error) {
     console.warn(
-      `Error collecting animal "${animalName}":`,
+      `Error collecting animal "${animalName}" in Firestore:`,
       error instanceof Error ? error.message : error,
     );
     // Don't throw - allow story to continue
@@ -167,25 +156,25 @@ export async function getCollectedAnimals(
   childId: number,
 ): Promise<CollectedAnimal[]> {
   try {
-    const results = await database.getAllAsync(
-      `SELECT ca.child_id, a.name as animal_name, ca.collected_from_story, 
-              ca.collected_from_scene, ca.date_collected
-       FROM collected_animals ca
-       JOIN animals a ON ca.animal_id = a.animal_id
-       WHERE ca.child_id = ?
-       ORDER BY ca.date_collected DESC`,
-      [childId],
-    );
-
-    return (results || []).map((row: any) => ({
-      child_id: row.child_id,
-      animal_name: row.animal_name,
-      collected_from_story: row.collected_from_story,
-      collected_from_scene: row.collected_from_scene,
-      date_collected: row.date_collected,
-    }));
+    // Firestore migration
+    const { collection, query, where, getDocs } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const collectedRef = collection(db, "collected_animals");
+    const q = query(collectedRef, where("child_id", "==", childId));
+    const snap = await getDocs(q);
+    return snap.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        child_id: data.child_id,
+        animal_name: data.animal_name,
+        collected_from_story: data.collected_from_story,
+        collected_from_scene: data.collected_from_scene,
+        date_collected: data.date_collected,
+      } as CollectedAnimal;
+    });
   } catch (error) {
-    console.error("Error fetching collected animals:", error);
+    console.error("Error fetching collected animals from Firestore:", error);
     return [];
   }
 }
@@ -195,15 +184,20 @@ export async function isAnimalCollected(
   animalName: string,
 ): Promise<boolean> {
   try {
-    const result = await database.getFirstAsync(
-      `SELECT ca.child_id FROM collected_animals ca
-       JOIN animals a ON ca.animal_id = a.animal_id
-       WHERE ca.child_id = ? AND a.name = ?`,
-      [childId, animalName],
+    // Firestore migration
+    const { collection, query, where, getDocs } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const collectedRef = collection(db, "collected_animals");
+    const q = query(
+      collectedRef,
+      where("child_id", "==", childId),
+      where("animal_name", "==", animalName),
     );
-    return !!result;
+    const snap = await getDocs(q);
+    return !snap.empty;
   } catch (error) {
-    console.error("Error checking if animal is collected:", error);
+    console.error("Error checking if animal is collected in Firestore:", error);
     return false;
   }
 }
@@ -212,13 +206,16 @@ export async function getCollectedAnimalsCount(
   childId: number,
 ): Promise<number> {
   try {
-    const result = await database.getFirstAsync(
-      `SELECT COUNT(*) as count FROM collected_animals WHERE child_id = ?`,
-      [childId],
-    );
-    return (result as any)?.count || 0;
+    // Firestore migration
+    const { collection, query, where, getDocs } =
+      await import("firebase/firestore");
+    const { db } = await import("../firebase");
+    const collectedRef = collection(db, "collected_animals");
+    const q = query(collectedRef, where("child_id", "==", childId));
+    const snap = await getDocs(q);
+    return snap.size;
   } catch (error) {
-    console.error("Error counting collected animals:", error);
+    console.error("Error counting collected animals in Firestore:", error);
     return 0;
   }
 }

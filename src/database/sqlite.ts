@@ -9,9 +9,8 @@ export const initializeDatabase = async () => {
   // Animals and achievements tables migrated to Firestore. No longer created in SQLite.
   let parentTableInit: SQLite.SQLiteStatement | null = null;
   let childTableInit: SQLite.SQLiteStatement | null = null;
-  let progressTableInit: SQLite.SQLiteStatement | null = null;
-  let favoriteAnimalsTableInit: SQLite.SQLiteStatement | null = null;
-  let childAchievementsTableInit: SQLite.SQLiteStatement | null = null;
+  // Progress and favorite_animals tables migrated to Firestore. No longer created in SQLite.
+  // child_achievements table migrated to Firestore. No longer created in SQLite.
   let storyProgressTableInit: SQLite.SQLiteStatement | null = null;
   let collectedAnimalsTableInit: SQLite.SQLiteStatement | null = null;
 
@@ -19,38 +18,9 @@ export const initializeDatabase = async () => {
     // Animals and achievements tables migrated to Firestore. No longer created in SQLite.
 
     // Parent and child tables migrated to Firebase. No longer created in SQLite.
-    progressTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS progress (
-        child_id INTEGER NOT NULL,
-        animal_id INTEGER NOT NULL,
-        total_collected INTEGER DEFAULT 0,
-        total_screen_time INTEGER DEFAULT 0,
-        PRIMARY KEY (child_id, animal_id),
-        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE,
-        FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
-      );
-    `);
+    // Progress and favorite_animals tables migrated to Firestore. No longer created in SQLite.
 
-    favoriteAnimalsTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS favorite_animals (
-        child_id INTEGER NOT NULL,
-        animal_id INTEGER NOT NULL,
-        PRIMARY KEY (child_id, animal_id),
-        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE,
-        FOREIGN KEY (animal_id) REFERENCES animals(animal_id) ON DELETE CASCADE
-      );
-    `);
-
-    childAchievementsTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS child_achievements (
-        child_id INTEGER NOT NULL,
-        achievement_id INTEGER NOT NULL,
-        date_earned TEXT,
-        PRIMARY KEY (child_id, achievement_id),
-        FOREIGN KEY (child_id) REFERENCES children(child_id) ON DELETE CASCADE,
-        FOREIGN KEY (achievement_id) REFERENCES achievements(achievement_id) ON DELETE CASCADE
-      );
-    `);
+    // child_achievements table migrated to Firestore. No longer created in SQLite.
 
     storyProgressTableInit = await database.prepareAsync(`
       CREATE TABLE IF NOT EXISTS story_progress (
@@ -81,9 +51,8 @@ export const initializeDatabase = async () => {
 
     // Animals and achievements tables migrated to Firestore. No longer executed in SQLite.
     // Parent and child tables migrated to Firebase, so skip execution.
-    await progressTableInit.executeAsync();
-    await favoriteAnimalsTableInit.executeAsync();
-    await childAchievementsTableInit.executeAsync();
+    // Progress and favorite_animals tables migrated to Firestore. No longer executed in SQLite.
+    // child_achievements table migrated to Firestore. No longer executed in SQLite.
     await storyProgressTableInit.executeAsync();
     await collectedAnimalsTableInit.executeAsync();
 
@@ -91,11 +60,8 @@ export const initializeDatabase = async () => {
   } finally {
     // Animals and achievements tables migrated to Firestore. No longer finalized in SQLite.
     // Parent and child tables migrated to Firebase, so skip finalize.
-    if (progressTableInit) await progressTableInit.finalizeAsync();
-    if (favoriteAnimalsTableInit)
-      await favoriteAnimalsTableInit.finalizeAsync();
-    if (childAchievementsTableInit)
-      await childAchievementsTableInit.finalizeAsync();
+    // Progress and favorite_animals tables migrated to Firestore. No longer finalized in SQLite.
+    // child_achievements table migrated to Firestore. No longer finalized in SQLite.
     if (storyProgressTableInit) await storyProgressTableInit.finalizeAsync();
     if (collectedAnimalsTableInit)
       await collectedAnimalsTableInit.finalizeAsync();

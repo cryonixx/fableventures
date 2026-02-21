@@ -1,7 +1,16 @@
 import { Text, View } from "react-native";
 import * as Progress from "react-native-progress";
+import { useEffect, useState } from "react";
+import { getAnimalCount } from "../../database/data/animals";
 
-export default function OverviewTab() {
+const OverviewTab = () => {
+  const [animalCount, setAnimalCount] = useState(0);
+  const totalAnimals = 10; // Set this to the actual total if dynamic
+
+  useEffect(() => {
+    getAnimalCount().then(setAnimalCount);
+  }, []);
+
   return (
     <View className="flex-1 rounded-lg gap-3">
       <View className="bg-white rounded-2xl p-5 shadow-sm">
@@ -17,7 +26,7 @@ export default function OverviewTab() {
 
         <View className="flex-row gap-3">
           <View className="flex-1 bg-green-50 rounded-2xl p-4 items-center">
-            <Text className="text-green-600 text-3xl font-bold mb-1">3</Text>
+            <Text className="text-green-600 text-3xl font-bold mb-1">{animalCount}</Text>
             <Text className="text-gray-500 text-sm">Animals</Text>
             <Text className="text-gray-500 text-sm">Collected</Text>
           </View>
@@ -33,9 +42,9 @@ export default function OverviewTab() {
         <View className="flex-1 bg-white rounded-2xl p-5 shadow-sm">
           <Text className="font-bold text-gray-700 mb-1">Collection</Text>
           <Text className="font-bold text-gray-700 mb-3">Progress</Text>
-          <Text className="text-gray-400 text-sm mb-2">3/10</Text>
+          <Text className="text-gray-400 text-sm mb-2">{animalCount}/{totalAnimals}</Text>
           <Progress.Bar
-            progress={0.3}
+            progress={animalCount / totalAnimals}
             width={null}
             height={8}
             color="#22c55e"
@@ -75,4 +84,6 @@ export default function OverviewTab() {
       </View>
     </View>
   );
-}
+};
+
+export default OverviewTab;
