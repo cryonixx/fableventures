@@ -37,27 +37,7 @@ export const initializeDatabase = async () => {
       );
     `);
 
-    parentTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS parents (
-        parent_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        parent_first_name TEXT,
-        parent_last_name TEXT,
-        parent_email TEXT UNIQUE NOT NULL,
-        parent_passwordhash TEXT NOT NULL
-      );
-    `);
-
-    childTableInit = await database.prepareAsync(`
-      CREATE TABLE IF NOT EXISTS children (
-        child_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        parent_id INTEGER NOT NULL,
-        child_first_name TEXT,
-        child_last_name TEXT,
-        child_age INTEGER,
-        child_gender TEXT CHECK(child_gender IN ('M', 'F')),
-        FOREIGN KEY (parent_id) REFERENCES parents(parent_id) ON DELETE CASCADE
-      );
-    `);
+    // Parent and child tables migrated to Firebase. No longer created in SQLite.
     progressTableInit = await database.prepareAsync(`
       CREATE TABLE IF NOT EXISTS progress (
         child_id INTEGER NOT NULL,
@@ -120,8 +100,7 @@ export const initializeDatabase = async () => {
 
     await animalsTableInit.executeAsync();
     await achievementsTableInit.executeAsync();
-    await parentTableInit.executeAsync();
-    await childTableInit.executeAsync();
+    // Parent and child tables migrated to Firebase, so skip execution.
     await progressTableInit.executeAsync();
     await favoriteAnimalsTableInit.executeAsync();
     await childAchievementsTableInit.executeAsync();
@@ -132,8 +111,7 @@ export const initializeDatabase = async () => {
   } finally {
     if (animalsTableInit) await animalsTableInit.finalizeAsync();
     if (achievementsTableInit) await achievementsTableInit.finalizeAsync();
-    if (parentTableInit) await parentTableInit.finalizeAsync();
-    if (childTableInit) await childTableInit.finalizeAsync();
+    // Parent and child tables migrated to Firebase, so skip finalize.
     if (progressTableInit) await progressTableInit.finalizeAsync();
     if (favoriteAnimalsTableInit)
       await favoriteAnimalsTableInit.finalizeAsync();

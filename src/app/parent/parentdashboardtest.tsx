@@ -18,6 +18,9 @@ export default function ParentDashboardTest() {
   useFocusEffect(
     React.useCallback(() => {
       if (!isParentAccessValid()) {
+        console.warn(
+          "Parent access expired or not granted. Redirecting to login.",
+        );
         router.replace("/login/parentlogin");
       }
     }, [isParentAccessValid, router]),

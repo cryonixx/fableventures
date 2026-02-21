@@ -1,10 +1,27 @@
 import IndexReturn from "@/src/components/IndexReturn";
-import { useParentAccessContext } from "@/src/context/ParentAccessContext";
+import { auth } from "@/src/firebase";
 import { router } from "expo-router";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function ParentLogin() {
-  const { grantParentAccess } = useParentAccessContext();
+  const [email, setEmail] = useState("testparent@example.com");
+  const [password, setPassword] = useState("testpassword");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push("/parent/parentdashboardtest");
+    } catch (err: any) {
+      setError(err?.message || "An error occurred during login.");
+    }
+    setLoading(false);
+  };
 
   return (
     <View className="flex-1 items-center justify-center bg-green-500">
@@ -29,16 +46,16 @@ export default function ParentLogin() {
             Parent Log In
           </Text>
         </View>
-
         <Text
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
           style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           Email
         </Text>
-
         <TextInput
           placeholder="email@example.com"
+          value={email}
+          onChangeText={setEmail}
           className={[
             "h-10",
             "p-2",
@@ -47,16 +64,17 @@ export default function ParentLogin() {
             "bg-gray-200",
           ].join(" ")}
         />
-
         <Text
           className={["mt-4", "text-gray-950", "text-lg"].join(" ")}
           style={{ fontFamily: "LilitaOne_400Regular" }}
         >
           Password
         </Text>
-
         <TextInput
           placeholder="Enter your password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
           className={[
             "h-10",
             "p-2",
@@ -66,10 +84,8 @@ export default function ParentLogin() {
           ].join(" ")}
         />
         <Pressable
-          onPress={() => {
-            grantParentAccess();
-            router.push("/parent/parentdashboardtest");
-          }}
+          onPress={handleLogin}
+          disabled={loading}
           className={[
             "mt-4",
             "w-full",
@@ -85,6 +101,7 @@ export default function ParentLogin() {
             Continue to Dashboard
           </Text>
         </Pressable>
+        {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
       </View>
     </View>
   );

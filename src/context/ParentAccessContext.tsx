@@ -26,7 +26,7 @@ export const ParentAccessProvider: React.FC<{ children: ReactNode }> = ({
   >(null);
 
   const isParentAccessValid = () =>
-    parentAccessExpiresAt !== null && Date.now() < parentAccessExpiresAt;
+    parentAccessExpiresAt == null || Date.now() < parentAccessExpiresAt;
 
   const grantParentAccess = (durationMs: number = 5 * 60 * 1000) => {
     setParentAccessExpiresAt(Date.now() + durationMs);
