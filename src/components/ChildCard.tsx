@@ -3,11 +3,18 @@ type RewardCardProps = {
   id?: number;
   name: string;
   image?: string;
+  avatar?: string;
   onPress?: () => void;
   isSelected?: boolean;
 };
 
-function ChildCard({ name, image, onPress, isSelected }: RewardCardProps) {
+function ChildCard({
+  name,
+  image,
+  avatar,
+  onPress,
+  isSelected,
+}: RewardCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -36,11 +43,13 @@ function ChildCard({ name, image, onPress, isSelected }: RewardCardProps) {
       </View>
       <Image
         source={
-          image
-            ? { uri: image }
-            : require("../../assets/images/placeholder.png")
+          avatar
+            ? { uri: avatar }
+            : image
+              ? { uri: image }
+              : require("../../assets/images/placeholder.png")
         }
-        style={{ width: 40, height: 40 }}
+        style={{ width: 40, height: 40, borderRadius: 20 }}
       />
     </TouchableOpacity>
   );

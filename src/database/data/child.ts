@@ -9,8 +9,8 @@ import {
 import { db } from "../../firebase";
 
 export interface Child {
-  child_id: number;
-  parent_id: number;
+  child_id: string;
+  parent_id: string;
   child_first_name: string;
   child_last_name: string;
   child_age: number;
@@ -45,7 +45,7 @@ export const getAllChildren = async (): Promise<Child[]> => {
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
       children.push({
-        child_id: Number(docSnap.id),
+        child_id: docSnap.id,
         parent_id: data.parent_id,
         child_first_name: data.child_first_name,
         child_last_name: data.child_last_name,
@@ -61,7 +61,7 @@ export const getAllChildren = async (): Promise<Child[]> => {
 };
 
 export const getChildrenByParentId = async (
-  parentId: number,
+  parentId: string,
 ): Promise<Child[]> => {
   try {
     const childrenCol = collection(db, "children");
@@ -71,7 +71,7 @@ export const getChildrenByParentId = async (
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
       children.push({
-        child_id: Number(docSnap.id),
+        child_id: docSnap.id,
         parent_id: data.parent_id,
         child_first_name: data.child_first_name,
         child_last_name: data.child_last_name,

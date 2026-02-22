@@ -39,6 +39,7 @@ export default function AnimalDetail() {
     const childId = String(selectedChildId || (await getTestChildId()));
     const nextState = await toggleFavoriteAnimal(childId, name);
     setIsFavorite(nextState);
+    // Refresh favorites in profile after toggling
   };
 
   return (
@@ -62,7 +63,7 @@ export default function AnimalDetail() {
           ].join(" ")}
         >
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => router.replace("/child/favorites")}
             className={["p-2"].join(" ")}
           >
             <Ionicons name="arrow-back" size={20} color="#fff" />

@@ -36,7 +36,6 @@ export default function Achievements() {
         // Get earned achievements
         const earned = await getChildAchievements(childId);
         setEarnedAchievements(earned);
-        console.log(earned);
 
         setLoading(false);
       } catch (error) {

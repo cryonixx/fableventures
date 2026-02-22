@@ -70,19 +70,55 @@ export default function RewardCard({
         </View>
       ) : (
         <View className="h-16 w-16 items-center justify-center rounded-full border-2 border-yellow-600 bg-white">
-          {isStoryCompleteAchievement ? (
-            <MaterialIcons name="menu-book" size={34} color="#D4AF37" />
-          ) : (
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {isStoryCompleteAchievement ? (
+              <MaterialIcons
+                name="menu-book"
+                size={34}
+                color="#D4AF37"
+                style={{
+                  position: "absolute",
+                  left: 15,
+                  top: 15,
+                  zIndex: 1,
+                }}
+              />
+            ) : (
+              <Image
+                source={image ? { uri: image } : animalImage}
+                style={{
+                  width: 44,
+                  height: 44,
+                  tintColor: "#D4AF37",
+                  position: "absolute",
+                  left: 10,
+                  top: 10,
+                  zIndex: 1,
+                }}
+                resizeMode="contain"
+              />
+            )}
             <Image
-              source={image ? { uri: image } : animalImage}
+              source={require("@/assets/images/ui/frame.png")}
               style={{
-                width: 44,
-                height: 44,
-                tintColor: "#D4AF37",
+                width: 64,
+                height: 64,
+                position: "absolute",
+                left: 0,
+                top: 0,
+                zIndex: 2,
               }}
               resizeMode="contain"
             />
-          )}
+          </View>
         </View>
       )}
     </View>

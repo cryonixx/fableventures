@@ -1,3 +1,4 @@
+import { useImage } from "@/src/hooks/useImage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image, Pressable, Text, View } from "react-native";
 import { ProfileCard } from "../../hooks/useChildProfileScreen";
@@ -45,7 +46,7 @@ export default function ProfileBottomCard({
             </View>
           ) : (
             <Image
-              source={getProfileThumbnail(card.thumbnailKey)}
+              source={useImage(card.thumbnailKey)}
               className="mr-2 h-10 w-10 rounded-lg bg-sky-200"
               resizeMode="cover"
             />

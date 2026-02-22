@@ -1,25 +1,20 @@
+import storyJson from "@/assets/script/fable_friends_script.json";
 import { useCallback } from "react";
 
 export const useProfileHelpers = () => {
   const getProfileThumbnail = useCallback((name?: string) => {
     switch (name?.toLowerCase()) {
       case "owl":
-        return require("@/assets/images/animals/owl.png");
+        return require("@/assets/images/achievements/owl.png");
       case "chicken":
-        return require("@/assets/images/animals/chicken.png");
+        return require("@/assets/images/achievements/chicken.png");
       case "red fox":
       case "fox":
-        return require("@/assets/images/animals/fox.png");
+        return require("@/assets/images/achievements/fox.png");
       case "turtle":
-        return require("@/assets/images/animals/freshwaterturtle.png");
+        return require("@/assets/images/achievements/turtle.png");
       case "little red":
         return require("@/assets/images/story/littlered.png");
-      case "farmer":
-        return require("@/assets/images/story/farmer.png");
-      case "grandmother":
-        return require("@/assets/images/story/grandma.png");
-      default:
-        return require("@/assets/images/story/BookCover.png");
     }
   }, []);
 
@@ -38,8 +33,10 @@ export const useProfileHelpers = () => {
         .replace(/[^a-z0-9]/g, "")
         .trim();
 
+      // If the story id is 'fablefriends', use the title from the story JSON
       if (normalizedStoryId === "fablefriends") {
-        return "The tale of little red";
+        // fallback if title missing
+        return storyJson && storyJson.title ? storyJson.title : "Fable Friends";
       }
 
       return formatLabel(storyId);

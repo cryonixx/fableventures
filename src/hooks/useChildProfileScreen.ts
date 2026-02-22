@@ -15,7 +15,6 @@ import {
   Achievement,
   getChildAchievements,
 } from "../database/achievementsManager";
-import { getChildNameById } from "../database/data/child";
 import { db } from "../firebase";
 import { useCollectedAnimalsCount } from "./useCollectedAnimalsCount";
 import { useParentCheck } from "./useParentCheck";
@@ -32,6 +31,40 @@ export type ProfileCard = {
 };
 
 export const useChildProfileScreen = () => {
+  // Helper to refresh favorites after change
+  const refreshFavorites = async () => {
+    if (!selectedChildId) return;
+    try {
+      const favRef = collection(db, "favorite_animals");
+      const favQ = query(favRef, where("child_id", "==", selectedChildId));
+      const favSnap = await getDocs(favQ);
+      const favoriteNames = favSnap.docs.map((doc) => doc.data().animal_id);
+      if (favoriteNames.length > 0) {
+        const previewNames = favoriteNames.slice(0, 2).join(", ");
+        const additionalCount = favoriteNames.length - 2;
+        setFavoriteAnimals(favoriteNames);
+        setFavoriteAnimal(
+          additionalCount > 0
+            ? `${previewNames} +${additionalCount}`
+            : previewNames,
+        );
+        setFavoriteAnimalDetail(
+          `${favoriteNames.length} favorite${favoriteNames.length > 1 ? "s" : ""} selected`,
+        );
+        setFavoriteThumbnailKey(favoriteNames[0]);
+      } else {
+        setFavoriteAnimal("No favorite yet");
+        setFavoriteAnimalDetail("Tap the heart on an animal to favorite it");
+        setFavoriteAnimals([]);
+        setFavoriteThumbnailKey("bookcover");
+      }
+    } catch {
+      setFavoriteAnimal("No favorite yet");
+      setFavoriteAnimalDetail("Tap the heart on an animal to favorite it");
+      setFavoriteAnimals([]);
+      setFavoriteThumbnailKey("bookcover");
+    }
+  };
   const router = useRouter();
   const { selectedChildId } = useChildContext();
   const { grantParentAccess } = useParentAccessContext();
@@ -65,6 +98,7 @@ export const useChildProfileScreen = () => {
   const [recentlyReadDetail, setRecentlyReadDetail] = useState(
     "Start a story to track progress",
   );
+  const [recentStoryId, setRecentStoryId] = useState<string | null>(null);
 
   const {
     formatLabel,
@@ -122,7 +156,7 @@ export const useChildProfileScreen = () => {
         title: "Recently Read",
         value: recentlyRead,
         detail: recentlyReadDetail,
-        thumbnailKey: "bookcover",
+        thumbnailKey: recentStoryId ? recentStoryId : "bookcover",
         cardClass: "bg-sky-100",
         textClass: "text-sky-900",
       },
@@ -163,12 +197,22 @@ export const useChildProfileScreen = () => {
         return;
       }
 
-      // Get child name
-      const result = await getChildNameById(childId).catch(() => null);
-      if (result) {
-        setChildName(`${result.firstName} ${result.lastName}`);
-      } else {
+      // Get child name and avatar from Firestore
+      try {
+        const { doc, getDoc } = await import("firebase/firestore");
+        const childDocRef = doc(db, "children", childId);
+        const childSnap = await getDoc(childDocRef);
+        if (childSnap.exists()) {
+          const data = childSnap.data();
+          setChildName(`${data.child_first_name} ${data.child_last_name}`);
+          setSelectedAvatar(data.avatar || undefined);
+        } else {
+          setChildName("Child not found");
+          setSelectedAvatar(undefined);
+        }
+      } catch {
         setChildName("Child not found");
+        setSelectedAvatar(undefined);
       }
 
       // TODO: Fetch child age from Firestore if needed
@@ -182,7 +226,17 @@ export const useChildProfileScreen = () => {
       } catch (err) {
         achievements = [];
       }
+      // Sort by date_earned descending if available
       if (achievements.length > 0) {
+        achievements.sort((a, b) => {
+          if (a.date_earned && b.date_earned) {
+            return (
+              new Date(b.date_earned).getTime() -
+              new Date(a.date_earned).getTime()
+            );
+          }
+          return 0;
+        });
         setLatestAchievement(achievements[0].title);
         setLatestAchievementDetail(
           achievements[0].description || "Achievement unlocked",
@@ -241,14 +295,12 @@ export const useChildProfileScreen = () => {
       }
       if (recentStory?.story_id) {
         setRecentlyRead(getStoryTitleFromId(recentStory.story_id));
-        setRecentlyReadDetail(
-          recentStory.current_chapter_id
-            ? formatLabel(recentStory.current_chapter_id)
-            : "In progress",
-        );
+        setRecentlyReadDetail("");
+        setRecentStoryId(recentStory.story_id);
       } else {
         setRecentlyRead("No stories yet");
         setRecentlyReadDetail("Start a story to track progress");
+        setRecentStoryId(null);
       }
     };
 
@@ -269,7 +321,13 @@ export const useChildProfileScreen = () => {
   const handleAvatarSelect = (animal: string) => {
     setSelectedAvatar(animal);
     setAvatarPickerVisible(false);
-    // TODO: Persist avatar selection in database
+    // Persist avatar selection in Firestore
+    if (selectedChildId) {
+      import("firebase/firestore").then(({ doc, updateDoc }) => {
+        const childDocRef = doc(db, "children", selectedChildId);
+        updateDoc(childDocRef, { avatar: animal });
+      });
+    }
   };
 
   return {
@@ -293,5 +351,7 @@ export const useChildProfileScreen = () => {
     closeAvatarPicker,
     handleAvatarSelect,
     selectedAvatar,
+    refreshFavorites,
+    recentStoryId,
   };
 };

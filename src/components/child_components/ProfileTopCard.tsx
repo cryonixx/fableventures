@@ -1,10 +1,11 @@
+import { useImage } from "@/src/hooks/useImage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image, Pressable, Text, View } from "react-native";
 import { ProfileCard } from "../../hooks/useChildProfileScreen";
 
 type ProfileTopCardProps = {
   card: ProfileCard;
-  favoriteAnimals: string[];
+  favoriteAnimals?: string[];
   getProfileThumbnail: (name?: string) => any;
   isStoryCompleteCriteria: (criteria?: string) => boolean;
   onPress: () => void;
@@ -12,7 +13,7 @@ type ProfileTopCardProps = {
 
 export default function ProfileTopCard({
   card,
-  favoriteAnimals,
+  favoriteAnimals = [],
   getProfileThumbnail,
   isStoryCompleteCriteria,
   onPress,
@@ -25,6 +26,9 @@ export default function ProfileTopCard({
     recent: "bg-sky-100",
   };
   const cardBgClass = cardBgMap[card.id] || "bg-white";
+  // Use useImage for favorite animal images
+  const getFavoriteAnimalImage = (animalName: string) => useImage(animalName);
+
   return (
     <Pressable
       className={`w-full min-h-28 rounded-2xl p-4 ${cardBgClass}`}
@@ -82,17 +86,6 @@ export default function ProfileTopCard({
         </View>
       ) : (
         <View className="mt-3 flex-row items-center rounded-xl bg-white/70 p-3">
-          {card.id === "favorite" && card.value === "No favorite yet" ? (
-            <View className="mr-3 h-[72px] w-[72px] items-center justify-center rounded-lg bg-gray-200">
-              <MaterialIcons name="help-outline" size={32} color="#6B7280" />
-            </View>
-          ) : (
-            <Image
-              source={getProfileThumbnail(card.thumbnailKey)}
-              className="mr-3 h-[72px] w-[72px] rounded-lg bg-amber-200"
-              resizeMode="cover"
-            />
-          )}
           <View className="flex-1">
             <Text
               className={`text-base ${card.textClass}`}
@@ -116,7 +109,7 @@ export default function ProfileTopCard({
                     className="mr-1.5 h-10 w-10 items-center justify-center rounded-lg bg-lime-200"
                   >
                     <Image
-                      source={getProfileThumbnail(animalName)}
+                      source={getFavoriteAnimalImage(animalName)}
                       style={{ width: 26, height: 26 }}
                       resizeMode="contain"
                     />

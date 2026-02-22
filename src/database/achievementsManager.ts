@@ -38,10 +38,10 @@ const ACHIEVEMENTS = [
     criteria: "Chicken",
   },
   {
-    title: "The tale of little red complete",
+    title: "Little Red",
     description:
-      "Completed the story! You earned this reward by finishing the tale of little red adventure.",
-    criteria: "story_complete_fable_friends",
+      "Completed the story! You earned this reward by finishing The Tale of Little Red.",
+    criteria: "story_complete_little_red",
   },
 ];
 

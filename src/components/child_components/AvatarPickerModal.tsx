@@ -3,7 +3,8 @@ import { Image, Modal, Pressable, Text, View } from "react-native";
 
 interface AvatarPickerModalProps {
   visible: boolean;
-  favoriteAnimals: string[];
+  avatarOptions: string[];
+  loadingAvatars: boolean;
   getProfileThumbnail: (name: string) => any;
   onSelect: (animal: string) => void;
   onCancel: () => void;
@@ -11,7 +12,8 @@ interface AvatarPickerModalProps {
 
 const AvatarPickerModal: React.FC<AvatarPickerModalProps> = ({
   visible,
-  favoriteAnimals,
+  avatarOptions,
+  loadingAvatars,
   getProfileThumbnail,
   onSelect,
   onCancel,
@@ -35,13 +37,15 @@ const AvatarPickerModal: React.FC<AvatarPickerModalProps> = ({
             className="mt-2 text-sm text-neutral-600"
             style={{ fontFamily: "Pangolin_400Regular" }}
           >
-            Tap a favorite animal to set as your profile picture.
+            Tap an unlocked achievement icon to set as your profile picture.
           </Text>
           <View className="mt-4 flex-row flex-wrap gap-3 justify-center">
-            {favoriteAnimals.length === 0 ? (
-              <Text className="text-neutral-500">No favorite animals yet.</Text>
+            {loadingAvatars ? (
+              <Text className="text-neutral-500">Loading avatars...</Text>
+            ) : avatarOptions.length === 0 ? (
+              <Text className="text-neutral-500">No avatars unlocked yet.</Text>
             ) : (
-              favoriteAnimals.map((animal) => (
+              avatarOptions.map((animal) => (
                 <Pressable
                   key={animal}
                   className="items-center justify-center rounded-xl border border-lime-400 bg-lime-50 p-2"

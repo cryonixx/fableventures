@@ -163,7 +163,7 @@ export function RegisterChildModal({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
+    <Modal visible={visible} animationType="fade" transparent>
       <View className="flex-1 justify-center items-center bg-black/40">
         <View className="bg-white rounded-xl p-6 w-11/12 max-w-lg">
           <Text

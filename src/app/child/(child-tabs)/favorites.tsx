@@ -1,7 +1,6 @@
 import AnimalCardView from "@/src/components/child_components/AnimalCardView";
 import { database } from "@/src/database/sqlite";
 import { getCollectedAnimals } from "@/src/database/storyManager";
-import { getTestChildId } from "@/src/database/testData";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -29,7 +28,13 @@ export default function Favorites() {
       const loadCollectedAnimals = async () => {
         try {
           // Use selected child ID from context, fallback to test child
-          const currentChildId = selectedChildId || (await getTestChildId());
+          const currentChildId = selectedChildId;
+
+          if (!currentChildId) {
+            setAnimals([]);
+            setLoading(false);
+            return;
+          }
 
           const collected = await getCollectedAnimals(currentChildId);
 

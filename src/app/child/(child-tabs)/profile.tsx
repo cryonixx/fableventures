@@ -1,17 +1,22 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import AvatarPickerModal from "../../../components/child_components/AvatarPickerModal";
 import { ChildHeader } from "../../../components/child_components/ChildHeader";
 import ParentCheckModal from "../../../components/child_components/ParentCheckModal";
 import ProfileBottomCard from "../../../components/child_components/ProfileBottomCard";
 import ProfileTopCard from "../../../components/child_components/ProfileTopCard";
+import RewardCard from "../../../components/child_components/RewardCard";
+import {
+  Achievement,
+  getChildAchievements,
+} from "../../../database/achievementsManager";
 import { useChildProfileScreen } from "../../../hooks/useChildProfileScreen";
 
-export default function Profile() {
+const ProfileInner = () => {
   const {
     childName,
     collectedCount,
-    favoriteAnimals,
     topCards,
     bottomCards,
     getProfileThumbnail,
@@ -29,7 +34,34 @@ export default function Profile() {
     closeAvatarPicker,
     handleAvatarSelect,
     selectedAvatar,
+    // favoriteAnimals,
   } = useChildProfileScreen();
+
+  // Avatar options are unlocked achievements' criteria
+  const [avatarOptions, setAvatarOptions] = useState<string[]>([]);
+  const [loadingAvatars, setLoadingAvatars] = useState(true);
+  const { selectedChildId } =
+    require("../../../context/ChildContext").useChildContext();
+  useEffect(() => {
+    async function fetchAvatars() {
+      setLoadingAvatars(true);
+      if (!selectedChildId) {
+        setAvatarOptions([]);
+        setLoadingAvatars(false);
+        return;
+      }
+      const achievements: Achievement[] =
+        await getChildAchievements(selectedChildId);
+      // Only use achievements with a valid criteria (animal name or story)
+      setAvatarOptions(
+        achievements
+          .map((a) => a.criteria)
+          .filter((c) => c !== "story_complete_fable_friends"),
+      );
+      setLoadingAvatars(false);
+    }
+    fetchAvatars();
+  }, [selectedChildId, avatarPickerVisible]);
 
   return (
     <View className={["flex-1", "bg-amber-50"].join(" ")}>
@@ -43,15 +75,24 @@ export default function Profile() {
             className="h-28 w-28 items-center justify-center rounded-full bg-yellow-400"
             onPress={openAvatarPicker}
           >
-            {selectedAvatar ? (
+            <View className="relative w-28 h-28">
+              {selectedAvatar ? (
+                <Image
+                  source={getProfileThumbnail(selectedAvatar)}
+                  className="absolute w-24 h-24 rounded-full left-2 top-2 z-10"
+                  resizeMode="contain"
+                />
+              ) : (
+                <View className="absolute w-24 h-24 rounded-full bg-neutral-50 left-2 top-2 z-10 items-center justify-center">
+                  <MaterialIcons name="person" size={72} color="#f8fafc" />
+                </View>
+              )}
               <Image
-                source={getProfileThumbnail(selectedAvatar)}
-                style={{ width: 96, height: 96, borderRadius: 48 }}
+                source={require("../../../../assets/images/ui/frame.png")}
+                className="absolute w-28 h-28 z-20"
                 resizeMode="contain"
               />
-            ) : (
-              <MaterialIcons name="person" size={72} color="#f8fafc" />
-            )}
+            </View>
           </Pressable>
           <Text
             className="text-2xl mb-2"
@@ -60,16 +101,43 @@ export default function Profile() {
             {childName}
           </Text>
           <View className="mb-2 w-full gap-3 px-1">
-            {topCards.map((card) => (
-              <ProfileTopCard
-                key={card.id}
-                card={card}
-                favoriteAnimals={favoriteAnimals}
-                getProfileThumbnail={getProfileThumbnail}
-                isStoryCompleteCriteria={isStoryCompleteCriteria}
-                onPress={onCardPress}
-              />
-            ))}
+            {topCards.map((card) => {
+              if (card.id === "achievement") {
+                return (
+                  <RewardCard
+                    key={card.id}
+                    name={card.value}
+                    description={card.detail}
+                    animalName={card.thumbnailKey}
+                    isLocked={card.value === "No achievements yet"}
+                  />
+                );
+              } else if (card.id === "favorite") {
+                return (
+                  <ProfileTopCard
+                    key={card.id}
+                    card={card}
+                    favoriteAnimals={
+                      require("../../../hooks/useChildProfileScreen").useChildProfileScreen()
+                        .favoriteAnimals
+                    }
+                    getProfileThumbnail={getProfileThumbnail}
+                    isStoryCompleteCriteria={isStoryCompleteCriteria}
+                    onPress={onCardPress}
+                  />
+                );
+              } else {
+                return (
+                  <ProfileTopCard
+                    key={card.id}
+                    card={card}
+                    getProfileThumbnail={getProfileThumbnail}
+                    isStoryCompleteCriteria={isStoryCompleteCriteria}
+                    onPress={onCardPress}
+                  />
+                );
+              }
+            })}
 
             <View className="flex-row">
               {bottomCards.map((card, cardIndex) => (
@@ -123,11 +191,16 @@ export default function Profile() {
       />
       <AvatarPickerModal
         visible={avatarPickerVisible}
-        favoriteAnimals={favoriteAnimals}
+        avatarOptions={avatarOptions}
+        loadingAvatars={loadingAvatars}
         getProfileThumbnail={getProfileThumbnail}
         onSelect={handleAvatarSelect}
         onCancel={closeAvatarPicker}
       />
     </View>
   );
+};
+
+export default function Profile() {
+  return <ProfileInner />;
 }

@@ -13,6 +13,7 @@ type FirestoreChild = {
   child_first_name: string;
   child_last_name: string;
   parent_id: string;
+  avatar?: string; // Add avatar field
 };
 
 export default function ChildLogin() {
@@ -43,6 +44,7 @@ export default function ChildLogin() {
             child_first_name: data.child_first_name,
             child_last_name: data.child_last_name,
             parent_id: data.parent_id,
+            avatar: data.avatar || undefined,
           });
         });
         setChildren(childrenData);
