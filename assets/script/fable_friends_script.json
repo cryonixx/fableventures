@@ -170,7 +170,13 @@
             {
               "type": "narrator",
               "text": "(Puzzle is completed)"
-            },
+            }
+          ]
+        },
+        {
+          "id": "ch1_post_minigame",
+          "title": "After the Broken Sign Puzzle",
+          "nodes": [
             {
               "type": "dialogue",
               "character": "Owl",
@@ -363,7 +369,13 @@
             {
               "type": "narrator",
               "text": "(After completion)"
-            },
+            }
+          ]
+        },
+        {
+          "id": "ch2_post_minigame",
+          "title": "After the Flower Field Navigation",
+          "nodes": [
             {
               "type": "dialogue",
               "character": "Chicken",
@@ -530,7 +542,13 @@
             {
               "type": "narrator",
               "text": "(After completion)"
-            },
+            }
+          ]
+        },
+        {
+          "id": "ch3_post_minigame",
+          "title": "After the Stone Path Puzzle",
+          "nodes": [
             {
               "type": "dialogue",
               "character": "Little Red",
