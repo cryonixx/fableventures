@@ -1,0 +1,54 @@
+[
+  {
+    "common_name": "Red Fox",
+    "scientific_name": "Vulpes vulpes",
+    "type": "Mammal",
+    "diet": "Omnivore",
+    "average_lifespan_in_the_wild": "2 to 4 years",
+    "fun_facts": [
+      "Foxes have extraordinary hearing! They can hear noises from miles away that human ears cannot, such as movement in bushes and burrowing underground.",
+      "A group of foxes is called a Skulk. As a verb, it means to move in a stealthy manner.",
+      "Both a thick coating of snow and the fox's thick coat will keep them warm during winter months. Burrowing in snow provides great insulation."
+    ],
+    "habitat": "Their preferred habitats are mixed landscapes, but they live in environments ranging from Arctic tundra to arid desert. Red foxes adapt very well to human presence, thriving in areas with farmland and woods, and populations can be found in many large cities and suburbs."
+  },
+  {
+    "common_name": "Freshwater Turtle",
+    "scientific_name": "Varies by species (example: Trachemys scripta – pond slider turtles)",
+    "type": "Reptile",
+    "diet": "Omnivore",
+    "average_lifespan_in_the_wild": "Around 20–40 years (varies by species)",
+    "fun_facts": [
+      "Turtles are easily recognized by their bony, cartilaginous shell, which acts like a shield to protect them from predators. Some turtles can even tuck their head inside their shell for extra protection.",
+      "These creatures date back to the time of the dinosaurs, over 200 million years ago.",
+      "Contrary to popular belief, a turtle cannot come out of its shell. The shell grows with them, so it's impossible for them to grow too big for it."
+    ],
+    "habitat": "Like other reptiles, they are ectothermic, or 'cold-blooded', meaning their internal temperature matches that of their surroundings. They have scaly skin, enabling them, as opposed to most amphibians, to live outside of water."
+  },
+  {
+    "common_name": "Chicken",
+    "scientific_name": "Gallus gallus domesticus",
+    "type": "Bird",
+    "diet": "Omnivore",
+    "average_lifespan_in_professional_care": "8 to 10 years",
+    "fun_facts": [
+      "Chickens are living descendants of dinosaurs and the closest living relatives of the Tyrannosaurus rex, as proven by scientific evidence of shared common ancestry.",
+      "Chickens experience REM (rapid eye movement) sleep, meaning they can dream. They also have a sleep phase where one half of the brain is asleep and the other is awake, allowing them to sleep with one eye open.",
+      "Chickens can recognize over 100 different faces — including human faces — even after being separated for extended periods of time, highlighting their long-term memory capabilities."
+    ],
+    "habitat": "They live where they can obtain food and shelter, occurring in agricultural areas, natural forests, planted forests, grasslands, and urban areas. Wild Gallus can be found from coastal areas to highlands in the Galapagos Islands."
+  },
+  {
+    "common_name": "Owl",
+    "scientific_name": "Strigiformes",
+    "type": "Bird",
+    "diet": "Carnivore",
+    "average_lifespan_in_the_wild": "5 to 12 years",
+    "fun_facts": [
+      "A group of owls is called a parliament, originating from C.S. Lewis' description of a meeting of owls in The Chronicles of Narnia.",
+      "Owls do not have round eyeballs; theirs are shaped like long tubes. Because of this, their eyes cannot move. Instead, they use them like built-in binoculars to focus on prey and gauge distance.",
+      "Owls can turn their heads almost all the way around without moving their body, thanks to extra neck bones and special muscles. This helps them watch for danger or spot food, especially at night."
+    ],
+    "habitat": "Owls can be found in nearly every environment in the world, from deserts to coniferous forests to the Arctic tundra. All roughly 250 owl species live aboveground except for the burrowing owl, found in North and South America, which nests in abandoned holes dug by other animals."
+  }
+]

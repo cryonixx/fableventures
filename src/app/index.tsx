@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 export default function index() {
@@ -20,6 +20,7 @@ export default function index() {
       </View>
       <Text
         className={["m-4", "text-center", "text-4xl", "text-white"].join(" ")}
+        style={{ fontFamily: "LilitaOne_400Regular" }}
       >
         Welcome to the Farm!
       </Text>
@@ -31,8 +32,9 @@ export default function index() {
           "text-md",
           "text-white",
         ].join(" ")}
+        style={{ fontFamily: "Pangolin_400Regular" }}
       >
-        Choose how you'd like to explore.
+        Choose how you&apos;d like to explore.
       </Text>
 
       <Pressable
@@ -46,7 +48,10 @@ export default function index() {
           "drop-shadow-lg",
         ].join(" ")}
       >
-        <Text className={["p-4", "font-bold", "text-green-500"].join(" ")}>
+        <Text
+          className={["p-4", "text-green-500"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
           Log In as Parent
         </Text>
       </Pressable>
@@ -61,10 +66,30 @@ export default function index() {
           "drop-shadow-lg",
         ].join(" ")}
       >
-        <Text className={["p-4", "font-bold", "text-white"].join(" ")}>
+        <Text
+          className={["p-4", "text-white"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
           Log In as Child
         </Text>
       </Pressable>
+      <Link
+        href="/signup"
+        className={[
+          "mt-6",
+          "w-4/5",
+          "items-center",
+          "rounded-xl",
+          "drop-shadow-lg",
+        ].join(" ")}
+      >
+        <Text
+          className={["p-4", "text-white"].join(" ")}
+          style={{ fontFamily: "LilitaOne_400Regular" }}
+        >
+          Don&apos;t have an account? Sign Up
+        </Text>
+      </Link>
     </View>
   );
 }

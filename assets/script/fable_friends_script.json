@@ -1,0 +1,649 @@
+{
+  "title": "The tale of little red",
+  "sections": [
+    {
+      "id": "prologue",
+      "title": "Prologue Village Path",
+      "subtitle": "Missing Chicken Scene",
+      "scenes": [
+        {
+          "id": "prologue_scene_1",
+          "title": "The Worried Farmer",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Once upon a time in a peaceful village deep in the forest there was a little girl named Red.",
+              "audio": "NarratorAF/N-01.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "Little Red's adventure today is going on a journey to visit her grandmother who she will celebrate her birthday with.",
+              "audio": "NarratorAF/N-02.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "As Little Red walks through the village, she hears hurried footsteps and worried sighs.",
+              "audio": "NarratorAF/N-03.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Farmer",
+              "text": "Oh dear… where could she have gone?",
+              "audio": "FarmerAF/FM-01.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Hello, sir. You look upset. What's wrong?"
+            },
+            {
+              "type": "dialogue",
+              "character": "Farmer",
+              "text": "My chicken is missing. She wandered off this morning, and she's never been away this long before.",
+              "audio": "FarmerAF/FM-02.m4a"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": ["I can help you look!", "What does she look like?"]
+            },
+            {
+              "type": "dialogue",
+              "character": "Farmer",
+              "text": "That's very kind of you, Little Red. She's small, white, and wears a tiny yellow scarf I knitted to keep her warm.",
+              "audio": "FarmerAF/FM-03.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "A scarf? I'll remember that."
+            },
+            {
+              "type": "dialogue",
+              "character": "Farmer",
+              "text": "She gets scared easily. If you see her, please tell her she's safe and that I'm waiting.",
+              "audio": "FarmerAF/FM-04.m4a"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "I promise I'll bring her back.",
+                "I'll keep an eye out on my way."
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Farmer",
+              "text": "Thank you, truly. I know she'll feel braver knowing someone is looking out for her.",
+              "audio": "FarmerAF/FM-05.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "With a determined nod, Little Red continues down the village path, keeping her eyes open for a small chicken in a yellow scarf.",
+              "audio": "NarratorAF/N-04.m4a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_1",
+      "title": "Chapter 1 – The Village & The Crossroads",
+      "subtitle": "The Owl",
+      "scenes": [
+        {
+          "id": "ch1_scene_1",
+          "title": "The Crossroads",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Little Red walks past the edge of the village until the road splits in two. Old wooden signs stand at the crossroads, but they're cracked and broken. The arrows point nowhere, and the words are hard to read.",
+              "audio": "NarratorAF/N-05.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Oh no… I don't know which way to go."
+            }
+          ]
+        },
+        {
+          "id": "ch1_scene_2",
+          "title": "Meeting the Owl",
+          "animal": "Owl",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "A calm voice comes from above.",
+              "audio": "NarratorAF/N-06.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "Hoo… travelers often get lost here.",
+              "audio": "OwlAF/O-01.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Oh! Hello."
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "Can you help me figure out which path to take?",
+                "Do you know how I can find the right way?"
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "I may be able to help. Let us take a closer look together.",
+              "audio": "OwlAF/O-02.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The Owl tilts his head toward the broken signs at the crossroads.",
+              "audio": "NarratorAF/N-07.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "These signs once guided travelers. If we place the pieces correctly, the path will show itself again.",
+              "audio": "OwlAF/O-03.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch1_minigame",
+          "title": "Minigame – Broken Sign Puzzle",
+          "type": "minigame",
+          "minigame_id": "broken_sign_puzzle",
+          "description": "Help Little Red arrange the broken sign pieces so the arrows point clearly.",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Help Little Red arrange the broken sign pieces so the arrows point clearly."
+            },
+            {
+              "type": "narrator",
+              "text": "(Puzzle is completed)"
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "Well done. The sign now points the correct way.",
+              "audio": "OwlAF/O-04.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "I see it now!"
+            }
+          ]
+        },
+        {
+          "id": "ch1_scene_3",
+          "title": "Chicken Clue",
+          "nodes": [
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Have you seen a chicken around here?"
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "I have. A chicken ran past in a hurry… with a quick orange blur chasing after her. I could not see clearly, only the speed.",
+              "audio": "OwlAF/O-05.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "That sounds scary…"
+            },
+            {
+              "type": "dialogue",
+              "character": "Owl",
+              "text": "Be careful, Little Red. Sometimes, fear makes things seem worse than they are.",
+              "audio": "OwlAF/O-06.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "With new confidence, Little Red follows the path the Owl helped reveal, stepping away from the village and into the forest beyond.",
+              "audio": "NarratorAF/N-08.m4a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_2",
+      "title": "Chapter 2 – Flower Field",
+      "subtitle": "Fox & Chicken",
+      "scenes": [
+        {
+          "id": "ch2_scene_1",
+          "title": "Meeting the Fox",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "The road opens into a wide field filled with tall, colorful flowers. Pollen floats in the air, making Little Red sneeze.",
+              "audio": "NarratorAF/N-09.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "Achoo! Ah—achoo!",
+              "audio": "FoxAF/F-01.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Oh! Are you okay?"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "Oh I am, thank you for asking! All these flowers are just making me sneeze.",
+              "audio": "FoxAF/F-02.m4a"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "Why are you running around out here?",
+                "Did something happen?"
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "I'm looking for a chicken. She ran off before I could talk to her.",
+              "audio": "FoxAF/F-03.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Why were you trying to talk to her?"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "She dropped something important. I tried calling out, but she just kept running.",
+              "audio": "FoxAF/F-04.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The Fox sneezes again and rubs his nose.",
+              "audio": "NarratorAF/N-10.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "I guess I ran too fast. I scare people without meaning to.",
+              "audio": "FoxAF/F-05.m4a"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "I hope you find her.",
+                "I think she was very scared."
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "Yeah… I hope she's okay. That's what matters most.",
+              "audio": "FoxAF/F-06.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "With another sneeze, the Fox hurries off into the flowers, leaving Little Red with a strange feeling—unsure what to think.",
+              "audio": "NarratorAF/N-11.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch2_scene_2",
+          "title": "Finding the Chicken",
+          "animal": "Chicken",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Not far ahead, Little Red hears soft sobbing.",
+              "audio": "NarratorAF/N-12.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "P-please don't let the fox find me…",
+              "audio": "ChickenAF/C-01.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "It's okay. I won't let anything bad happen to you."
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "I think he was trying to say something.",
+                "You're safe with me."
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "I panicked… He was running and shouting, but I was too scared to listen.",
+              "audio": "ChickenAF/C-02.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The chicken decides to stay close to Little Red.",
+              "audio": "NarratorAF/N-13.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch2_minigame",
+          "title": "Minigame – Flower Field Navigation",
+          "type": "minigame",
+          "minigame_id": "flower_field_maze",
+          "description": "Help Little Red and the chicken find the way out through the tall, confusing flowers.",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "The flowers are tall and confusing. Help Little Red and the chicken find the way out together."
+            },
+            {
+              "type": "narrator",
+              "text": "(After completion)"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "Thank you for not leaving me.",
+              "audio": "ChickenAF/C-03.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Let's visit my grandma first. Then I'll help you get home."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_3",
+      "title": "Chapter 3 – The River",
+      "subtitle": "Freshwater Turtle",
+      "scenes": [
+        {
+          "id": "ch3_scene_1",
+          "title": "The Broken Bridge",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "The forest path leads Little Red and the chicken to a gently flowing river. The old bridge that once crossed it has fallen apart, leaving only water and scattered stones behind.",
+              "audio": "NarratorAF/N-14.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "Oh no… the bridge is gone.",
+              "audio": "ChickenAF/C-04.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "We can't jump that far."
+            }
+          ]
+        },
+        {
+          "id": "ch3_scene_2",
+          "title": "Meeting the Turtle",
+          "animal": "Turtle",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Near the riverbank, a small freshwater turtle was swimming in circles, muttering to himself.",
+              "audio": "NarratorAF/N-15.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "No… too plain. That won't work either.",
+              "audio": "TurtleAF/T-01.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "Hello there. Are you okay?"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": ["You look worried.", "What are you thinking about?"]
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "Oh! I didn't mean to talk out loud. I'm trying to think of a gift… for someone special.",
+              "audio": "TurtleAF/T-02.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "That's kind of sweet.",
+              "audio": "ChickenAF/C-05.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "I want it to be something they'll really like.",
+              "audio": "TurtleAF/T-03.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "Little Red remembers the flowers she picked in the flower field.",
+              "audio": "NarratorAF/N-16.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "I picked these earlier. Maybe flowers could be a nice gift?"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "They made me happy when I saw them.",
+                "I thought someone special might like them."
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "Flowers…? Yes. That feels right.",
+              "audio": "TurtleAF/T-04.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The Turtle gently takes the flowers, smiling shyly.",
+              "audio": "NarratorAF/N-17.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "Thank you. I think this will be perfect.",
+              "audio": "TurtleAF/T-05.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch3_scene_3",
+          "title": "Crossing the River",
+          "nodes": [
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "We actually need help too. We can't cross the river."
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "I can help with that.",
+              "audio": "TurtleAF/T-06.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "You can?",
+              "audio": "ChickenAF/C-06.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "I live here. I know which stones are safe to step on.",
+              "audio": "TurtleAF/T-07.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch3_minigame",
+          "title": "Minigame – Stone Path Puzzle",
+          "type": "minigame",
+          "minigame_id": "stone_path_puzzle",
+          "description": "Help the Turtle show Little Red and the chicken which stones to step on to cross the river safely. Teaches left and right for kids.",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Help the Turtle show Little Red and the chicken which stones to step on to cross the river safely."
+            },
+            {
+              "type": "narrator",
+              "text": "(After completion)"
+            },
+            {
+              "type": "dialogue",
+              "character": "Little Red",
+              "text": "We made it across!"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "Thank you for helping us!",
+              "audio": "ChickenAF/C-07.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Turtle",
+              "text": "I'm glad I could help. And… thank you for helping me too.",
+              "audio": "TurtleAF/T-08.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "With the river behind them, Little Red and the chicken continue down the path toward Grandmother's home. While walking, they see a familiar figure.",
+              "audio": "NarratorAF/N-18.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch3_scene_4",
+          "title": "Fox Confrontation & Resolution",
+          "animal": "Red Fox",
+          "nodes": [
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "It's him!",
+              "audio": "ChickenAF/C-08.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "Wait—please don't run!",
+              "audio": "FoxAF/F-07.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "I wasn't chasing you to eat you! You dropped this!",
+              "audio": "FoxAF/F-08.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The Fox holds up a tiny yellow scarf.",
+              "audio": "NarratorAF/N-19.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "My scarf…?",
+              "audio": "ChickenAF/C-09.m4a"
+            },
+            {
+              "type": "choice",
+              "character": "Little Red",
+              "options": [
+                "Let him explain.",
+                "I think there was a misunderstanding."
+              ]
+            },
+            {
+              "type": "dialogue",
+              "character": "Fox",
+              "text": "I run fast… and I talk loudly. I didn't mean to scare you.",
+              "audio": "FoxAF/F-09.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Chicken",
+              "text": "I'm sorry I didn't listen…",
+              "audio": "ChickenAF/C-10.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "The two smile shyly at each other.",
+              "audio": "NarratorAF/N-20.m4a"
+            }
+          ]
+        },
+        {
+          "id": "ch3_scene_5",
+          "title": "Journey's End",
+          "nodes": [
+            {
+              "type": "narrator",
+              "text": "Together, the group walks the rest of the way—laughing, talking, and helping each other.",
+              "audio": "NarratorAF/N-21.m4a"
+            },
+            {
+              "type": "dialogue",
+              "character": "Grandmother",
+              "text": "Little Red! You made it! Come on over, my dear.",
+              "audio": "GrandmotherAF/GM-01.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "Before the sun sets, they arrive home. Bread is shared, friends are welcomed, and Little Red's birthday is filled with warmth and joy.",
+              "audio": "NarratorAF/N-22.m4a"
+            },
+            {
+              "type": "narrator",
+              "text": "And so ends this chapter of Little Red's story—but many more adventures await.",
+              "audio": "NarratorAF/N-23.m4a"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

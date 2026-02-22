@@ -1,11 +1,14 @@
 {
-  "extends": "expo/tsconfig.base.json",
+  // Source - https://stackoverflow.com/a/77021337
+  // Posted by Olalekan Ajayi, modified by community. See post 'Timeline' for change history
+  // Retrieved 2026-02-21, License - CC BY-SA 4.0
   "compilerOptions": {
     "jsx": "react-native",
     "esModuleInterop": true,
     "strict": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
     }
   },
   "include": [
@@ -14,5 +17,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }
